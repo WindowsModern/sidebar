@@ -14,3 +14,8 @@ Download: https://github.com/modernw/Sidebar/releases/tag/sdk2026.6.20
 ## Acknowledgements
 
 Sidebar was inspired by the LongBar project. Thanks to the original LongBar authors for their work.
+
+## Screenshot
+
+<img width="1024" height="768" alt="Windows XP Professional-2026-06-28-21-41-17" src="https://github.com/user-attachments/assets/bb8a1c5d-67a3-4f29-b0e8-8f70a8d8a50e" />
+
