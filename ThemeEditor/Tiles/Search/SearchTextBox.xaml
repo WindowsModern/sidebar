@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="ThemeEditor.Tiles.Search.SearchTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ThemeEditor.Tiles.Search"
+			 xmlns:p="clr-namespace:ThemeEditor"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<UserControl.Resources>
+		<p:TextEmptyToVisibilityConverter x:Key="TextEmptyToVisibility"/>
+	</UserControl.Resources>
+	<Grid>
+		<Grid>
+			<StackPanel>
+				<Border Margin="5" Style="{DynamicResource TileSearchTextboxBorder}">
+					<Border Style="{DynamicResource TileSearchTextboxBorderInner}">
+						<Grid Name="ClipGrid" ClipToBounds="True" Style="{DynamicResource TileSearchTextboxInnerClip}" SizeChanged="UserControl_SizeChanged" >
+							<Grid>
+								<Rectangle Style="{DynamicResource TileSearchTextboxBackground}" ClipToBounds="True"></Rectangle>
+							</Grid>
+							<Grid>
+								<TextBox Tag="Search..." Name="SearchBox" Style="{DynamicResource TileSearchTextboxTextInput}" KeyDown="SearchBox_KeyDown">
+									<TextBox.Template>
+										<ControlTemplate TargetType="{x:Type TextBox}">
+											<Border x:Name="border"
+										Background="{TemplateBinding Background}"
+										BorderBrush="{TemplateBinding BorderBrush}"
+										BorderThickness="{TemplateBinding BorderThickness}">
+												<Grid>
+													<!-- 占位文字 -->
+													<TextBlock x:Name="Placeholder"
+											   Text="{TemplateBinding Tag}"
+											   Style="{DynamicResource TileSearchTextboxPlaceholder}"
+											   IsHitTestVisible="False"
+											   Visibility="{Binding Text,
+												RelativeSource={RelativeSource TemplatedParent},
+												Converter={StaticResource TextEmptyToVisibility}}"/>
+													<!-- 实际输入区域 -->
+													<ScrollViewer x:Name="PART_ContentHost"
+												 Margin="{TemplateBinding Padding}"/>
+												</Grid>
+											</Border>
+											<ControlTemplate.Triggers>
+												<Trigger Property="Text" Value="">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+												</Trigger>
+												<Trigger Property="Text" Value="{x:Null}">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+												</Trigger>
+												<DataTrigger Binding="{Binding Text.Length, RelativeSource={RelativeSource Self}}" Value="0">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+												</DataTrigger>
+												<Trigger Property="IsFocused" Value="True">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+												</Trigger>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter TargetName="border" Property="Background" Value="#7BFFFFFF"/>
+												</Trigger>
+												<Trigger Property="IsFocused" Value="True">
+													<Setter TargetName="border" Property="Background" Value="White"/>
+													<Setter Property="Foreground" Value="Black"/>
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+												</Trigger>
+											</ControlTemplate.Triggers>
+										</ControlTemplate>
+									</TextBox.Template>
+								</TextBox>
+							</Grid>
+							<Grid IsHitTestVisible="False" Style="{DynamicResource TileSearchTextboxInnerShadowRegion}">
+								<Rectangle Style="{DynamicResource TileSearchTextboxInnerShadowTop}"/>
+								<Rectangle Style="{DynamicResource TileSearchTextboxInnerShadowLeft}"/>
+							</Grid>
+						</Grid>
+					</Border>
+				</Border>
+				<Border Margin="5" Style="{DynamicResource TileSearchTextboxBorder}">
+					<Border Style="{DynamicResource TileSearchTextboxBorderInner}">
+						<Grid Name="ClipGrid1" ClipToBounds="True" Style="{DynamicResource TileSearchTextboxInnerClip}" SizeChanged="UserControl_SizeChanged" >
+							<Grid>
+								<Rectangle Style="{DynamicResource TileSearchTextboxBackground}" ClipToBounds="True"></Rectangle>
+							</Grid>
+							<Grid>
+								<TextBox Text="Search for..." Name="SearchBoxHasContent" Style="{DynamicResource TileSearchTextboxTextInput}" KeyDown="SearchBox_KeyDown">
+									<TextBox.Template>
+										<ControlTemplate TargetType="{x:Type TextBox}">
+											<Border x:Name="border"
+										Background="{TemplateBinding Background}"
+										BorderBrush="{TemplateBinding BorderBrush}"
+										BorderThickness="{TemplateBinding BorderThickness}">
+												<Grid>
+													<!-- 占位文字 -->
+													<TextBlock x:Name="Placeholder"
+											   Text="{TemplateBinding Tag}"
+											   Style="{DynamicResource TileSearchTextboxPlaceholder}"
+											   IsHitTestVisible="False"
+											   Visibility="{Binding Text,
+												RelativeSource={RelativeSource TemplatedParent},
+												Converter={StaticResource TextEmptyToVisibility}}"/>
+													<!-- 实际输入区域 -->
+													<ScrollViewer x:Name="PART_ContentHost"
+												 Margin="{TemplateBinding Padding}"/>
+												</Grid>
+											</Border>
+											<ControlTemplate.Triggers>
+												<Trigger Property="Text" Value="">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+												</Trigger>
+												<Trigger Property="Text" Value="{x:Null}">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+												</Trigger>
+												<DataTrigger Binding="{Binding Text.Length, RelativeSource={RelativeSource Self}}" Value="0">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+												</DataTrigger>
+												<Trigger Property="IsFocused" Value="True">
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+												</Trigger>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter TargetName="border" Property="Background" Value="#7BFFFFFF"/>
+												</Trigger>
+												<Trigger Property="IsFocused" Value="True">
+													<Setter TargetName="border" Property="Background" Value="White"/>
+													<Setter Property="Foreground" Value="Black"/>
+													<Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+												</Trigger>
+											</ControlTemplate.Triggers>
+										</ControlTemplate>
+									</TextBox.Template>
+								</TextBox>
+							</Grid>
+							<Grid IsHitTestVisible="False" Style="{DynamicResource TileSearchTextboxInnerShadowRegion}">
+								<Rectangle Style="{DynamicResource TileSearchTextboxInnerShadowTop}"/>
+								<Rectangle Style="{DynamicResource TileSearchTextboxInnerShadowLeft}"/>
+							</Grid>
+						</Grid>
+					</Border>
+				</Border>
+			</StackPanel>
+		</Grid>
+	</Grid>
+</UserControl>

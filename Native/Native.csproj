@@ -63,6 +63,7 @@
     <Compile Include="DWinMgr.cs" />
     <Compile Include="HResult.cs" />
     <Compile Include="Ini.cs" />
+    <Compile Include="INotifyCollectionChanged.cs" />
     <Compile Include="Localization.cs" />
     <Compile Include="Normalization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="TileProp.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Version.cs" />
+    <Compile Include="View.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="XmlConfig.cs" />
   </ItemGroup>

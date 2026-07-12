@@ -1042,6 +1042,7 @@
 						<Setter Property="Height" Value="24"/>
 						<Setter Property="Cursor" Value="Hand"/>
 						<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+						<Setter Property="Padding" Value="4,4,4,4"></Setter>
 						<Setter Property="Template">
 							<Setter.Value>
 								<ControlTemplate TargetType="ToggleButton">
@@ -1108,6 +1109,7 @@
 						<Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
 						<Setter Property="Height" Value="24"/>
 						<Setter Property="Cursor" Value="Hand"/>
+						<Setter Property="Padding" Value="4,4,4,4"></Setter>
 						<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 						<Setter Property="Template">
 							<Setter.Value>
@@ -1174,6 +1176,20 @@
 						<Setter Property="Margin" Value="5,3,1,3"></Setter>
 					</Style>
 					<!-- Tray -->
+					<Style x:Key="TileIconItemForTrayTile" TargetType="ToggleButton" BasedOn="{StaticResource TileIconItemButtonStyle}">
+						<Setter Property="Width" Value="24"></Setter>
+						<Setter Property="Height" Value="24"></Setter>
+					</Style>
+					<ItemsPanelTemplate x:Key="TileIconItemWrapPanelForTrayTile">
+						<WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+					</ItemsPanelTemplate>
+					<Style x:Key="TileIconItemTileContainerForTrayTile" TargetType="ItemsControl" BasedOn="{StaticResource TileIconItemTileContainer}"></Style>
+					<Style x:Key="TileIconItemWithTextForTrayTile" TargetType="ToggleButton" BasedOn="{StaticResource TileIconItemWithTextButtonStyle}">
+						<Setter Property="Height" Value="Auto"></Setter>
+					</Style>
+					<ItemsPanelTemplate x:Key="TileIconItemWithTextWrapPanelForTrayTile">
+						<WrapPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+					</ItemsPanelTemplate>
 					<!-- Quick Launch -->
 					<!-- Quick Launch:Tile -->
 					<Style x:Key="TileIconItemForQuickLaunchTile" TargetType="ToggleButton" BasedOn="{StaticResource TileIconItemButtonStyle}">

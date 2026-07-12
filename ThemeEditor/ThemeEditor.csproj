@@ -175,6 +175,9 @@
     <Compile Include="Tiles\Search\FlyoutPanel.xaml.cs">
       <DependentUpon>FlyoutPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tiles\Search\SearchTextBox.xaml.cs">
+      <DependentUpon>SearchTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tiles\Search\TilePanel.xaml.cs">
       <DependentUpon>TilePanel.xaml</DependentUpon>
     </Compile>
@@ -183,6 +186,12 @@
     </Compile>
     <Compile Include="Tiles\Slideshow\Others.xaml.cs">
       <DependentUpon>Others.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tiles\Tray\ItemContainer.xaml.cs">
+      <DependentUpon>ItemContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tiles\Tray\TileItem.xaml.cs">
+      <DependentUpon>TileItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="UIConfig.cs" />
     <Compile Include="WindowCtrl.cs" />
@@ -346,6 +355,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Tiles\Search\SearchTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Tiles\Search\TilePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -357,6 +370,14 @@
     <Page Include="Tiles\Slideshow\Others.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tiles\Tray\ItemContainer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tiles\Tray\TileItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

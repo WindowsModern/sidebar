@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <resource id="TILE_PROP_DISPNAME">
+    <lang name="zh-CN">系统图标</lang>
+    <lang name="en-US">Classic Tray</lang>
+  </resource>
+  <resource id="TILE_PROP_DESC">
+    <lang name="zh-CN">显示任务栏通知区域的图标，并执行一些任务。不支持使用新的任务栏的 Windows 11 及未来版本。</lang>
+    <lang name="en-US">Show the icon in the taskbar notification area and execute certain tasks associated with the icon. Windows 11 and future versions that use the new taskbar are not supported.</lang>
+  </resource>
+</resources>
