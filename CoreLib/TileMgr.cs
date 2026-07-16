@@ -655,7 +655,12 @@ namespace Sidebar
 			Manifest = TileManifest.FromFile (infoFile);
 			TileFolder = ProgramFolder.CreateFromPath (folderPath);
 			TileCurrentUserFolder = ProgramFolder.CreateFromPath (Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData), "Windows Modern\\Sidebar\\Tiles", Manifest.Identity.FamilyName));
-		} 
+		}
+		public override string ToString ()
+		{
+			if (Manifest == null) return base.ToString ();
+			else return Manifest.Identity.FullName;
+		}
 	}
 	public class TileManager: IDisposable, INotifyPropertyChanged
 	{

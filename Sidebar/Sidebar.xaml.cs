@@ -33,6 +33,8 @@ namespace Sidebar
 		private bool isClosed = false;
 		private bool isSourceInitialized = false;
 		protected IntPtr Handle { get; private set; } = IntPtr.Zero;
+		protected View<string> PinnedTopTiles { get; set; }
+		protected View<string> PinnedBottomTiles { get; set; }
 		public MainWindow ()
 		{
 			InitializeComponent ();
@@ -58,16 +60,26 @@ namespace Sidebar
 			SidebarPipe.Mail += Pipe_OnMail;
 			OverflowTiles.CollectionChanged += OverflowTiles_CollectionChanged;
 			TileOverflowItems.ItemsSource = OverflowTiles;
+			PinnedTopTiles = new View<string> (App.CurrentUserConfig.PinnedTiles, (item, index) => {
+				var ts = App.TileMgr.GetByFamilyName (item);
+				if (ts == null) return false;
+				return !ts.TileCurrentUserFolder.InitConfig ["Settings"].GetKey ("Pinned").ReadBool (false);
+			});
+			PinnedBottomTiles = new View<string> (App.CurrentUserConfig.PinnedTiles, (item, index) => {
+				var ts = App.TileMgr.GetByFamilyName (item);
+				if (ts == null) return false;
+				return ts.TileCurrentUserFolder.InitConfig ["Settings"].GetKey ("Pinned").ReadBool (false);
+			});
+			var i = 9;
 		}
 		private void OverflowTiles_CollectionChanged (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
 		{
-			    Dispatcher.Invoke(new Action (() =>
-				{
-					if (OverflowTiles.Count == 0)
-						OverflowTilesRegion.Height = 0;
-					else
-						OverflowTilesRegion.Height = double.NaN; // 自动
-				}));
+			Dispatcher.Invoke (new Action (() => {
+				if (OverflowTiles.Count == 0)
+					OverflowTilesRegion.Height = 0;
+				else
+					OverflowTilesRegion.Height = double.NaN; // 自动
+			}));
 		}
 		private void Pipe_OnMail (string name, object data, Type datatype)
 		{
@@ -225,6 +237,8 @@ namespace Sidebar
 				ArrangeRegion (TilesRegion, desiredList, false);
 				OnTileHeightChanged (null, null);
 			}, TaskScheduler.FromCurrentSynchronizationContext ()); // 确保在 UI 线程执行
+			PinnedTopTiles?.Refresh ();
+			PinnedBottomTiles?.Refresh ();
 		}
 		private void ArrangeRegion (StackPanel panel, List<string> orderedFamilyNames, bool targetPinned)
 		{
@@ -567,38 +581,61 @@ namespace Sidebar
 		}
 		private void Region_Drop (object sender, DragEventArgs e)
 		{
-			if (!e.Data.GetDataPresent ("SidebarTile")) return;
+			if (!e.Data.GetDataPresent ("SidebarTile"))
+				return;
+
 			var region = sender as StackPanel;
 			var tile = e.Data.GetData ("SidebarTile") as Tile;
-			if (tile == null) return;
+			if (tile == null)
+				return;
 
 			// 1. 移除占位符
 			int placeholderIndex = region.Children.IndexOf (_dragPlaceholder);
 			if (placeholderIndex >= 0)
 				region.Children.Remove (_dragPlaceholder);
 
-			// 2. 确保磁贴可见
+			// 2. 恢复磁贴显示
 			tile.Visibility = Visibility.Visible;
 
-			// 3. 获取磁贴家族名并更新列表
+			// 3. 获取磁贴标识
 			string familyName = tile.TileInstance != null
-								 ? tile.TileInstance.Storage.Manifest.Identity.FamilyName
-								 : null;
+				? tile.TileInstance.Storage.Manifest.Identity.FamilyName
+				: null;
+
 			if (!string.IsNullOrEmpty (familyName))
 			{
-				var tiles = App.CurrentUserConfig.PinnedTiles;
-				int oldIndex = tiles.IndexOf (familyName);
+				View<string> view = null;
+				int oldIndex = -1;
+
+				oldIndex = PinnedTopTiles.IndexOf (familyName);
 				if (oldIndex >= 0)
-				{
-					int targetIndex = placeholderIndex >= 0 ? placeholderIndex : region.Children.Count;
-					if (oldIndex < targetIndex) targetIndex--;
-					tiles.Move (oldIndex, targetIndex);
-				}
+					view = PinnedTopTiles;
 				else
 				{
-					int insertPos = placeholderIndex >= 0 ? placeholderIndex : tiles.Count;
-					//tiles.Insert (insertPos, familyName);
-					SafeInsert (tiles, insertPos, familyName);
+					oldIndex = PinnedBottomTiles.IndexOf (familyName);
+					if (oldIndex >= 0)
+						view = PinnedBottomTiles;
+				}
+
+				if (view != null)
+				{
+					int targetIndex = placeholderIndex >= 0 ? placeholderIndex : view.Count;
+
+					if (targetIndex < 0)
+						targetIndex = 0;
+					if (targetIndex > view.Count)
+						targetIndex = view.Count;
+
+					if (oldIndex >= 0)
+					{
+						// View 自己负责源集合索引转换
+						view.Move (oldIndex, targetIndex);
+					}
+					else
+					{
+						// View 自己负责插入到源集合正确位置
+						view.Insert (targetIndex, familyName);
+					}
 				}
 			}
 

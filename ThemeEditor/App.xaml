@@ -233,31 +233,29 @@
 						<Setter Property="DockPanel.Dock" Value="Top" />
 					</Style>
 					<Style x:Key="AutoHideScrollViewer" TargetType="ScrollViewer">
-						<Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-						<Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+						<Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+						<Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
 						<Setter Property="Template">
 							<Setter.Value>
 								<ControlTemplate TargetType="ScrollViewer">
 									<Grid Background="{TemplateBinding Background}">
 										<ScrollContentPresenter
 											x:Name="PART_ScrollContentPresenter"
-											Width="{TemplateBinding Width}"
-											Height="{TemplateBinding Height}"
 											Margin="{TemplateBinding Padding}"
 											CanContentScroll="{TemplateBinding CanContentScroll}"
 											Content="{TemplateBinding Content}" />
+										<!-- Vertical -->
 										<ScrollBar
 											x:Name="PART_VerticalScrollBar"
 											Width="6"
-											Margin="0,0,2,2"
+											Margin="0,0,2,8"
 											HorizontalAlignment="Right"
-											Maximum="{TemplateBinding ScrollableHeight}"
-											Opacity="0"
 											Orientation="Vertical"
+											Maximum="{TemplateBinding ScrollableHeight}"
 											ViewportSize="{TemplateBinding ViewportHeight}"
+											Value="{TemplateBinding VerticalOffset}"
 											Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-											Value="{TemplateBinding VerticalOffset}">
-											<!--  按下时立即完全不透明，松开时恢复半透明  -->
+											Opacity="0">
 											<ScrollBar.Triggers>
 												<EventTrigger RoutedEvent="Mouse.MouseDown">
 													<BeginStoryboard>
@@ -266,7 +264,7 @@
 																Storyboard.TargetName="PART_VerticalScrollBar"
 																Storyboard.TargetProperty="Opacity"
 																To="1"
-																Duration="0:0:0" />
+																Duration="0:0:0"/>
 														</Storyboard>
 													</BeginStoryboard>
 												</EventTrigger>
@@ -277,7 +275,44 @@
 																Storyboard.TargetName="PART_VerticalScrollBar"
 																Storyboard.TargetProperty="Opacity"
 																To="0.8"
-																Duration="0:0:0" />
+																Duration="0:0:0"/>
+														</Storyboard>
+													</BeginStoryboard>
+												</EventTrigger>
+											</ScrollBar.Triggers>
+										</ScrollBar>
+										<!-- Horizontal -->
+										<ScrollBar
+											x:Name="PART_HorizontalScrollBar"
+											Height="6"
+											Margin="0,0,8,2"
+											VerticalAlignment="Bottom"
+											Orientation="Horizontal"
+											Maximum="{TemplateBinding ScrollableWidth}"
+											ViewportSize="{TemplateBinding ViewportWidth}"
+											Value="{TemplateBinding HorizontalOffset}"
+											Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+											Opacity="0">
+											<ScrollBar.Triggers>
+												<EventTrigger RoutedEvent="Mouse.MouseDown">
+													<BeginStoryboard>
+														<Storyboard>
+															<DoubleAnimation
+																Storyboard.TargetName="PART_HorizontalScrollBar"
+																Storyboard.TargetProperty="Opacity"
+																To="1"
+																Duration="0:0:0"/>
+														</Storyboard>
+													</BeginStoryboard>
+												</EventTrigger>
+												<EventTrigger RoutedEvent="Mouse.MouseUp">
+													<BeginStoryboard>
+														<Storyboard>
+															<DoubleAnimation
+																Storyboard.TargetName="PART_HorizontalScrollBar"
+																Storyboard.TargetProperty="Opacity"
+																To="0.8"
+																Duration="0:0:0"/>
 														</Storyboard>
 													</BeginStoryboard>
 												</EventTrigger>
@@ -293,7 +328,12 @@
 															Storyboard.TargetName="PART_VerticalScrollBar"
 															Storyboard.TargetProperty="Opacity"
 															To="0.8"
-															Duration="0:0:0.2" />
+															Duration="0:0:0.2"/>
+														<DoubleAnimation
+															Storyboard.TargetName="PART_HorizontalScrollBar"
+															Storyboard.TargetProperty="Opacity"
+															To="0.8"
+															Duration="0:0:0.2"/>
 													</Storyboard>
 												</BeginStoryboard>
 											</Trigger.EnterActions>
@@ -304,7 +344,12 @@
 															Storyboard.TargetName="PART_VerticalScrollBar"
 															Storyboard.TargetProperty="Opacity"
 															To="0"
-															Duration="0:0:0.5" />
+															Duration="0:0:0.5"/>
+														<DoubleAnimation
+															Storyboard.TargetName="PART_HorizontalScrollBar"
+															Storyboard.TargetProperty="Opacity"
+															To="0"
+															Duration="0:0:0.5"/>
 													</Storyboard>
 												</BeginStoryboard>
 											</Trigger.ExitActions>
