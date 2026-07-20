@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sidebar Gadget Package Read Report</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style id="body-style">
+        body {
+            margin: 0;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+            width: 100%;
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+    </style>
+    <style>
+        table {
+            width: auto;
+            max-width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 1rem;
+            background-color: transparent;
+            font-size: 9pt;
+            box-sizing: border-box;
+        }
+        
+        th,
+        td {
+            padding: 5px;
+            vertical-align: top;
+            border: 1px solid #2d2d2d;
+        }
+        
+        tr.head {
+            background-color: rgb(0, 0, 124);
+            color: white;
+            font-weight: bolder;
+        }
+        
+        tr.spec {
+            background-color: yellow;
+            font-weight: normal;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="msg" style="font-size: 10pt;"></p>
+    <table>
+        <tbody>
+            <tr class="head">
+                <td colspan="2">Sidebar Gadget Package Information Report</td>
+            </tr>
+            <tr>
+                <td>File</td>
+                <td name="file" style="word-break: break-all;"></td>
+            </tr>
+            <tr>
+                <td>Is Valid</td>
+                <td name="valid"></td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td name="type"></td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Identity</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td name="name"></td>
+            </tr>
+            <tr>
+                <td>Publisher</td>
+                <td name="publisher"></td>
+            </tr>
+            <tr>
+                <td>Version</td>
+                <td name="version"></td>
+            </tr>
+            <tr>
+                <td>Support Processor Architecture</td>
+                <td name="architecture"></td>
+            </tr>
+            <tr>
+                <td>Package Family Name</td>
+                <td name="package_family_name"></td>
+            </tr>
+            <tr>
+                <td>Package Full Name</td>
+                <td name="package_full_name"></td>
+            </tr>
+            <tr>
+                <td>Publisher ID</td>
+                <td name="publisher_id"></td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Properties</td>
+            </tr>
+            <tr>
+                <td>Display Name</td>
+                <td name="display_name"></td>
+            </tr>
+            <tr>
+                <td>Publisher Display Name</td>
+                <td name="publisher_display_name"></td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td name="description"></td>
+            </tr>
+            <tr>
+                <td>Logo</td>
+                <td name="logo" style="background-image: linear-gradient(to right, darkgray, lightgray);"><!-- <img src="" id="logo"> --></td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Prerequisites</td>
+            </tr>
+            <tr>
+                <td>OS Min Version</td>
+                <td name="os_min_version"></td>
+            </tr>
+            <tr>
+                <td>OS Max Version Tested</td>
+                <td name="os_max_version_tested"></td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Visual Elements</td>
+            </tr>
+            <tr>
+                <td>Minimum Height</td>
+                <td name="min_height"></td>
+            </tr>
+            <tr>
+                <td>Maximun Height</td>
+                <td name="max_height"></td>
+            </tr>
+            <tr>
+                <td>Default Height</td>
+                <td name="default_height"></td>
+            </tr>
+            <tr>
+                <td>Can Pin Bottom</td>
+                <td name="can_pin_bottom"></td>
+            </tr>
+            <tr>
+                <td>Tile Has Flyout Window</td>
+                <td name="tile_has_flyout_window"></td>
+            </tr>
+            <tr>
+                <td>Flyout Window Width</td>
+                <td name="flyout_window_width"></td>
+            </tr>
+            <tr>
+                <td>Flyout Window Height</td>
+                <td name="flyout_window_height"></td>
+            </tr>
+            <tr>
+                <td>Flyout Window Can Resize</td>
+                <td name="flyout_window_can_resize"></td>
+            </tr>
+            <tr>
+                <td>Overflow Mode</td>
+                <td name="overflow_mode"></td>
+            </tr>
+            <tr>
+                <td>Tile Display Name</td>
+                <td name="tile_display_name"></td>
+            </tr>
+            <tr>
+                <td>Tile Has Properties Window</td>
+                <td name="tile_has_properties_window"></td>
+            </tr>
+            <tr>
+                <td>Tile Logo</td>
+                <td name="tile_logo" style="background-image: linear-gradient(to right, darkgray, lightgray);"><!-- <img src="" id="tile_logo"> --></td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        function setElementTextById(elementId, text) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.innerText = text;
+            }
+        }
+
+        function setElementHtmlById(elementId, html) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = html;
+            }
+        }
+
+        function setElementTextByName(elementName, text) {
+        	var element = null;
+        	var elements = document.getElementsByName(elementName);
+        	if (elements && elements.length > 0) {
+        		element = elements[0];
+        	} else {
+        		var allElements = document.getElementsByTagName('*');
+        		for (var i = 0; i < allElements.length; i++) {
+        			if (allElements[i].getAttribute('name') === elementName) {
+        				element = allElements[i];
+        				break;
+        			}
+        		}
+        	}
+        	if (element) {
+        		element.innerText = text;
+        	}
+        }
+
+        function setElementHtmlByName(elementName, html) {
+            var element = document.getElementsByName(elementName)[0];
+            if (element) {
+                element.innerHTML = html;
+            }
+        }
+
+        function setElementSrcById(elementId, src) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.src = src;
+            }
+        }
+
+        function setElementSrcByName(elementName, src) {
+            var element = document.getElementsByName(elementName)[0];
+            if (element) {
+                element.src = src;
+            }
+        }
+
+        function setElementTooltipById(elementId, tooltip) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.title = tooltip;
+            }
+        }
+
+        function setElementTooltipByName(elementName, tooltip) {
+            var element = document.getElementsByName(elementName)[0];
+            if (element) {
+                element.title = tooltip;
+            }
+        }
+
+        function getHtmlString() {
+            var bodyStyle = document.getElementById("body-style");
+            var bodyStyleHTML = bodyStyle.innerHTML;
+            bodyStyle.innerHTML = "";
+            var ret = document.documentElement.outerHTML;
+            bodyStyle.innerHTML = bodyStyleHTML;
+            return ret;
+        }
+    </script>
+</body>
+
+</html>

@@ -243,9 +243,10 @@ namespace Sidebar
 					{
 						var xmldom = new XmlDocument ();
 						xmldom.Load (ms);
-						StringResources = LocaleResources.CreateFromXml(xmldom);
+						StringResources = LocaleResources.CreateFromXml (xmldom);
 					}
 				}
+				else StringResources = new LocaleResources ();
 				byte [] fileResContent = ExtractFile ("Path.xml");
 				if (fileResContent != null && fileResContent.Length > 0)
 				{
@@ -253,9 +254,10 @@ namespace Sidebar
 					{
 						var xmldom = new XmlDocument ();
 						xmldom.Load (ms);
-						FileResources = PathResources.CreateFromXml(xmldom);
+						FileResources = PathResources.CreateFromXml (xmldom);
 					}
 				}
+				else FileResources = new PathResources ();
 			}
 			catch
 			{
