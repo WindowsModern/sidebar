@@ -60,7 +60,7 @@ namespace SGenWebRelease
 									name = i.Name,
 									publisher = i.Publisher,
 									version = i.Version.Expression,
-									processorArchitecture = i.ProcessorArchitecture.ToString (),
+									processorArchitecture = new [] { i.ProcessorArchitecture.ToString () },
 									familyName = i.FamilyName,
 									fullName = i.FullName
 								};
