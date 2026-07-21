@@ -26,6 +26,9 @@ The following files contain code derived from LongBar:
 - Sidebar/Flyout.xaml
   Portions derived from LongBar/Flyout.xaml
 
+- SGStore/MainWindow.xaml
+  Portions derived from LongBar/Library.xaml
+
 These files have been modified for use in the Sidebar project.
 
 The original LongBar source code and copyright notices are retained in accordance with the terms of the Microsoft Public License (Ms-PL).

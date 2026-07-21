@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGReader", "SGReader\SGRead
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGenWebRelease", "SGenWebRelease\SGenWebRelease.csproj", "{907D68C3-3B20-45FA-B557-6CFD3E1A8738}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGStore", "SGStore\SGStore.csproj", "{C45A5064-F433-4784-8CDB-4C5296049993}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -251,6 +253,18 @@ Global
 		{907D68C3-3B20-45FA-B557-6CFD3E1A8738}.Release|x64.Build.0 = Release|Any CPU
 		{907D68C3-3B20-45FA-B557-6CFD3E1A8738}.Release|x86.ActiveCfg = Release|Any CPU
 		{907D68C3-3B20-45FA-B557-6CFD3E1A8738}.Release|x86.Build.0 = Release|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Debug|x64.Build.0 = Debug|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Debug|x86.Build.0 = Debug|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Release|x64.ActiveCfg = Release|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Release|x64.Build.0 = Release|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Release|x86.ActiveCfg = Release|Any CPU
+		{C45A5064-F433-4784-8CDB-4C5296049993}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

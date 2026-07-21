@@ -1,0 +1,22 @@
+﻿<Application x:Class="Sidebar.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Sidebar"
+			 Startup="Application_Startup"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary>
+					<!--  Global Fonts  -->
+					<FontFamily x:Key="GlobalFontFamily">
+						Microsoft YaHei, Segoe UI, Ebrima, Nirmala, Gadugi, Segoe UI Emoji, Segoe UI Symbol,
+						Meiryo, Leelawadee, Microsoft JhengHei, Malgun Gothic, Estrangelo Edessa, Microsoft Himalaya,
+						Microsoft New Tai Lue, Microsoft PhagsPa, Microsoft Tai Le, Microsoft Yi Baiti, Mongolian Baiti,
+						MV Boli, Myanmar Text, Javanese Text, Cambria Math
+					</FontFamily>
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
+</Application>
