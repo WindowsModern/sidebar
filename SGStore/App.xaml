@@ -7,6 +7,7 @@
     <Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
+				<!-- <ResourceDictionary Source="/PresentationFramework.Aero;component/themes/aero.normalcolor.xaml" /> -->
 				<ResourceDictionary>
 					<!--  Global Fonts  -->
 					<FontFamily x:Key="GlobalFontFamily">
@@ -15,6 +16,133 @@
 						Microsoft New Tai Lue, Microsoft PhagsPa, Microsoft Tai Le, Microsoft Yi Baiti, Mongolian Baiti,
 						MV Boli, Myanmar Text, Javanese Text, Cambria Math
 					</FontFamily>
+					<Style x:Key="AutoHideScrollViewer" TargetType="ScrollViewer">
+						<Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+						<Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="ScrollViewer">
+									<Grid Background="{TemplateBinding Background}">
+										<ScrollContentPresenter
+											x:Name="PART_ScrollContentPresenter"
+											Margin="{TemplateBinding Padding}"
+											CanContentScroll="{TemplateBinding CanContentScroll}"
+											Content="{TemplateBinding Content}" />
+										<!-- Vertical -->
+										<ScrollBar
+											x:Name="PART_VerticalScrollBar"
+											Width="6"
+											Margin="0,0,2,8"
+											HorizontalAlignment="Right"
+											Orientation="Vertical"
+											Maximum="{TemplateBinding ScrollableHeight}"
+											ViewportSize="{TemplateBinding ViewportHeight}"
+											Value="{TemplateBinding VerticalOffset}"
+											Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+											Opacity="0">
+											<ScrollBar.Triggers>
+												<EventTrigger RoutedEvent="Mouse.MouseDown">
+													<BeginStoryboard>
+														<Storyboard>
+															<DoubleAnimation
+																Storyboard.TargetName="PART_VerticalScrollBar"
+																Storyboard.TargetProperty="Opacity"
+																To="1"
+																Duration="0:0:0"/>
+														</Storyboard>
+													</BeginStoryboard>
+												</EventTrigger>
+												<EventTrigger RoutedEvent="Mouse.MouseUp">
+													<BeginStoryboard>
+														<Storyboard>
+															<DoubleAnimation
+																Storyboard.TargetName="PART_VerticalScrollBar"
+																Storyboard.TargetProperty="Opacity"
+																To="0.8"
+																Duration="0:0:0"/>
+														</Storyboard>
+													</BeginStoryboard>
+												</EventTrigger>
+											</ScrollBar.Triggers>
+										</ScrollBar>
+										<!-- Horizontal -->
+										<ScrollBar
+											x:Name="PART_HorizontalScrollBar"
+											Height="6"
+											Margin="0,0,8,2"
+											VerticalAlignment="Bottom"
+											Orientation="Horizontal"
+											Maximum="{TemplateBinding ScrollableWidth}"
+											ViewportSize="{TemplateBinding ViewportWidth}"
+											Value="{TemplateBinding HorizontalOffset}"
+											Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+											Opacity="0">
+											<ScrollBar.Triggers>
+												<EventTrigger RoutedEvent="Mouse.MouseDown">
+													<BeginStoryboard>
+														<Storyboard>
+															<DoubleAnimation
+																Storyboard.TargetName="PART_HorizontalScrollBar"
+																Storyboard.TargetProperty="Opacity"
+																To="1"
+																Duration="0:0:0"/>
+														</Storyboard>
+													</BeginStoryboard>
+												</EventTrigger>
+												<EventTrigger RoutedEvent="Mouse.MouseUp">
+													<BeginStoryboard>
+														<Storyboard>
+															<DoubleAnimation
+																Storyboard.TargetName="PART_HorizontalScrollBar"
+																Storyboard.TargetProperty="Opacity"
+																To="0.8"
+																Duration="0:0:0"/>
+														</Storyboard>
+													</BeginStoryboard>
+												</EventTrigger>
+											</ScrollBar.Triggers>
+										</ScrollBar>
+									</Grid>
+									<ControlTemplate.Triggers>
+										<Trigger Property="IsMouseOver" Value="True">
+											<Trigger.EnterActions>
+												<BeginStoryboard>
+													<Storyboard>
+														<DoubleAnimation
+															Storyboard.TargetName="PART_VerticalScrollBar"
+															Storyboard.TargetProperty="Opacity"
+															To="0.8"
+															Duration="0:0:0.2"/>
+														<DoubleAnimation
+															Storyboard.TargetName="PART_HorizontalScrollBar"
+															Storyboard.TargetProperty="Opacity"
+															To="0.8"
+															Duration="0:0:0.2"/>
+													</Storyboard>
+												</BeginStoryboard>
+											</Trigger.EnterActions>
+											<Trigger.ExitActions>
+												<BeginStoryboard>
+													<Storyboard>
+														<DoubleAnimation
+															Storyboard.TargetName="PART_VerticalScrollBar"
+															Storyboard.TargetProperty="Opacity"
+															To="0"
+															Duration="0:0:0.5"/>
+														<DoubleAnimation
+															Storyboard.TargetName="PART_HorizontalScrollBar"
+															Storyboard.TargetProperty="Opacity"
+															To="0"
+															Duration="0:0:0.5"/>
+													</Storyboard>
+												</BeginStoryboard>
+											</Trigger.ExitActions>
+										</Trigger>
+									</ControlTemplate.Triggers>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
 				</ResourceDictionary>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>

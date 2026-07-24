@@ -15,7 +15,68 @@
         xmlns:local="clr-namespace:Sidebar"
 		xmlns:wgif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d" Loaded="Window_Loaded" Unloaded="Window_Unloaded"
-        Title="Sidebar Gadget Store" Height="424.429" Width="719.606">
+        Title="Sidebar Gadget Store" Height="450" Width="720">
+	<Window.Resources>
+		<local:TextEmptyToVisibilityConverter x:Key="TextEmptyToVisibility"/>
+		<Style x:Key="VistaToolbarButtonStyle" TargetType="Button">
+			<Setter Property="Width" Value="28"/>
+			<Setter Property="Height" Value="28"/>
+			<Setter Property="Margin" Value="1,0"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="3"
+                        SnapsToDevicePixels="True">
+							<!-- 内容居中，这里用来放 Image -->
+							<ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Width="20"
+                                      Height="20"
+                                      Margin="2"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<!-- 悬停：淡蓝色边框 + 轻微渐变背景 -->
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="border" Property="Background">
+									<Setter.Value>
+										<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+											<GradientStop Color="#F1F4F9" Offset="0"/>
+											<GradientStop Color="#DCE6F4" Offset="1"/>
+										</LinearGradientBrush>
+									</Setter.Value>
+								</Setter>
+								<Setter TargetName="border" Property="BorderBrush" Value="#7DA2CE"/>
+							</Trigger>
+							<!-- 按下：背景更深，模拟按钮被按下 -->
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="border" Property="Background">
+									<Setter.Value>
+										<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+											<GradientStop Color="#C2D1E7" Offset="0"/>
+											<GradientStop Color="#AEC3DE" Offset="1"/>
+										</LinearGradientBrush>
+									</Setter.Value>
+								</Setter>
+								<Setter TargetName="border" Property="BorderBrush" Value="#6183B2"/>
+							</Trigger>
+							<!-- 禁用状态：半透明 -->
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Opacity" Value="0.4"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Window.Resources>
 	<Grid>
 		<DockPanel Name="MainPanel" >
 			<DockPanel DockPanel.Dock="Top">
@@ -70,11 +131,66 @@
 								</Rectangle.Stroke>
 							</Rectangle>
 							<Rectangle Margin="2" Stroke="#FFFFFFFF"/>
-							<TextBox Margin="3" Name="SearchField" Text="Search..."  Opacity="0.7" FontStyle="Italic" Foreground="#FF696969" BorderThickness="0" VerticalContentAlignment="Center"/>
-							<Image Name="SearchIcon" Source="Images\SearchButtonIcon.ico" Margin="0,0,5,0" HorizontalAlignment="Right" Width="15" Height="16"/>
+							<TextBox Margin="3" Name="SearchField" Tag="Search..."  Opacity="0.7" BorderThickness="0" VerticalContentAlignment="Center">
+								<TextBox.Template>
+									<ControlTemplate TargetType="{x:Type TextBox}">
+										<Border x:Name="border"
+											Background="{TemplateBinding Background}"
+											BorderBrush="{TemplateBinding BorderBrush}"
+											BorderThickness="{TemplateBinding BorderThickness}">
+											<Grid>
+												<!-- 占位文字 -->
+												<TextBlock x:Name="Placeholder"
+														   Margin="2,2,0,0"
+											   Text="{TemplateBinding Tag}"
+											   FontStyle="Italic" Foreground="#FF696969"
+											   IsHitTestVisible="False"
+											   Visibility="{Binding Text,
+												RelativeSource={RelativeSource TemplatedParent},
+												Converter={StaticResource TextEmptyToVisibility}}"/>
+												<!-- 实际输入区域 -->
+												<ScrollViewer x:Name="PART_ContentHost"
+												 Margin="{TemplateBinding Padding}"/>
+											</Grid>
+										</Border>
+										<ControlTemplate.Triggers>
+											<Trigger Property="Text" Value="">
+												<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+											</Trigger>
+											<Trigger Property="Text" Value="{x:Null}">
+												<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+											</Trigger>
+											<DataTrigger Binding="{Binding Text.Length, RelativeSource={RelativeSource Self}}" Value="0">
+												<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+											</DataTrigger>
+											<Trigger Property="IsFocused" Value="True">
+												<Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+											</Trigger>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter TargetName="border" Property="Background" Value="#7BFFFFFF"/>
+											</Trigger>
+											<Trigger Property="IsFocused" Value="True">
+												<Setter TargetName="border" Property="Background" Value="White"/>
+												<Setter Property="Foreground" Value="Black"/>
+												<Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+											</Trigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</TextBox.Template>
+							</TextBox>
+							<Image Name="SearchIcon" Margin="0,0,5,0" HorizontalAlignment="Right" Width="15" Height="16" RenderOptions.BitmapScalingMode="HighQuality"/>
 						</Grid>
 						<StackPanel Name="ToolBar" Orientation="Horizontal" VerticalAlignment="Top" Margin="5,5,0,0">
 							<!--<LB:ToolButton x:Name="DownloadButton" Visibility="Collapsed"/>-->
+							<Button Name="ButtonRefresh" Margin="5,0" Style="{DynamicResource VistaToolbarButtonStyle}" Click="ButtonRefresh_Click">
+								<Image Name="RefreshImage" Width="20" />
+							</Button>
+							<Button Name="ButtonDownload" Margin="5,0" Style="{DynamicResource VistaToolbarButtonStyle}" Click="ButtonDownload_Click">
+								<Image Name="DownloadImage" Width="20" />
+							</Button>
+							<Button Name="ButtonSettings" Margin="5,0" Style="{DynamicResource VistaToolbarButtonStyle}" Click="ButtonSettings_Click">
+								<Image Name="SettingsImage" Width="20" />
+							</Button>
 						</StackPanel>
 					</DockPanel>
 				</Grid>
@@ -97,47 +213,49 @@
 					</Rectangle.Fill>
 				</Rectangle>
 				<DockPanel>
-					<Image Name="CurrentItemIcon" DockPanel.Dock="Left" Margin="10" Source="Images\Items.png" RenderOptions.BitmapScalingMode="HighQuality"/>
-					<TextBlock Name="ItemsCount" Text="Elements: 0" FontSize="13" Margin="0,10,0,0"/>
-					<DockPanel Name="WrapPanel1" Margin="0,10,0,0" Visibility="Collapsed" Width="260">
-						<TextBlock DockPanel.Dock="Top"  Name="CurrentItemTitle" Text="Tile Title" FontSize="16"/>
-						<TextBlock Name="CurrentItemDescription" Text="Tile Description" FontSize="12" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" />
+					<Image Name="CurrentItemIcon" DockPanel.Dock="Left" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
+					<TextBlock Name="ItemsCount" Text="Elements: 0" FontSize="13" Margin="0,10,0,0" FontFamily="{DynamicResource GlobalFontFamily}"/>
+					<DockPanel Name="WrapPanel1" Margin="0,10,10,0" Visibility="Collapsed" MaxWidth="240">
+						<TextBlock DockPanel.Dock="Top"  Name="CurrentItemTitle" Text="Tile Title" FontSize="16" FontFamily="{DynamicResource GlobalFontFamily}" Margin="0,0,0,5"/>
+						<TextBlock Name="CurrentItemDescription" Text="Tile Description" FontSize="10" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontFamily="{DynamicResource GlobalFontFamily}" />
 					</DockPanel>
 					<WrapPanel Name="WrapPanel2" Orientation="Vertical" Margin="10" Visibility="Collapsed" >
 						<DockPanel Margin="0,0,10,0">
-							<TextBlock Text="{DynamicResource TileDeveloper}" Foreground="Gray" FontSize="12"/>
-							<TextBlock Name="CurrentItemAuthor" Text="Stealth" FontSize="12" Margin="3,0,0,0"/>
+							<TextBlock Name="LabelAuthor" Foreground="Gray" FontSize="12" FontFamily="{DynamicResource GlobalFontFamily}"/>
+							<TextBlock Name="CurrentItemAuthor" Text="Stealth" FontSize="12" Margin="3,0,0,0" FontFamily="{DynamicResource GlobalFontFamily}"/>
 						</DockPanel >
 						<DockPanel Margin="0,0,10,0">
-							<TextBlock Text="{DynamicResource TileVersion}" Foreground="Gray" FontSize="12"/>
+							<TextBlock Name="LabelVersion" Foreground="Gray" FontSize="12"/>
 							<TextBlock Name="CurrentItemVersion" Text="2.0.0.0" FontSize="12" Margin="3,0,0,0"/>
 						</DockPanel>
 					</WrapPanel>
 				</DockPanel>
 			</Grid>
-			<StackPanel Name="Panel" Background="White">
-				<DockPanel Name="DownTiles" Margin="10,0,0,0" Visibility="Visible">
-					<DockPanel DockPanel.Dock="Top">
-						<TextBlock Name="DownTilesCaption" DockPanel.Dock="Left" Text="Downloadable Tiles (0)" Foreground="Gray"/>
-						<Line Margin="5,0,10,0" X1="0" X2="200" Stroke="Gray"  StrokeThickness="1" Stretch="UniformToFill" Opacity="0.7"/>
+			<ScrollViewer Margin="0,-11,0,0" Background="White" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{DynamicResource AutoHideScrollViewer}">
+				<StackPanel Name="Panel" Background="White" HorizontalAlignment="Stretch">
+					<DockPanel Name="DownTiles" Margin="10,11,0,0" Visibility="Visible">
+						<DockPanel DockPanel.Dock="Top">
+							<TextBlock Name="DownTilesCaption" DockPanel.Dock="Left" Text="Downloadable Tiles (0)" Foreground="Gray" FontFamily="{DynamicResource GlobalFontFamily}"/>
+							<Line Margin="5,0,10,0" X1="0" X2="200" Stroke="Gray"  StrokeThickness="1" Stretch="UniformToFill" Opacity="0.7"/>
+						</DockPanel>
+						<Grid Background="White">
+							<!-- <Image Source="Images\ItemMulti.ico" Height="150" Margin="0,0,15,0" Opacity="0.2" VerticalAlignment="Bottom" HorizontalAlignment="Right"/> -->
+							<ScrollViewer Name="DownTilesPanelScrollViewer" VerticalScrollBarVisibility="Auto">
+								<WrapPanel Name="DownTilesPanel" Orientation="Horizontal"/>
+							</ScrollViewer>
+						</Grid>
 					</DockPanel>
-					<Grid Background="White">
-						<!-- <Image Source="Images\ItemMulti.ico" Height="150" Margin="0,0,15,0" Opacity="0.2" VerticalAlignment="Bottom" HorizontalAlignment="Right"/> -->
-						<ScrollViewer Name="DownTilesPanelScrollViewer" VerticalScrollBarVisibility="Auto">
-							<WrapPanel Name="DownTilesPanel" Orientation="Horizontal"/>
-						</ScrollViewer>
-					</Grid>
-				</DockPanel>
-				<DockPanel Name="SearchTiles" Margin="10,0,10,0" Visibility="Collapsed">
-					<DockPanel DockPanel.Dock="Top">
-						<TextBlock Name="SearchTilesCaption" DockPanel.Dock="Left" Text="Found: 0" Foreground="Gray"/>
-						<Line Margin="5,0,0,0" X1="0" X2="200" Stroke="Gray"  StrokeThickness="1" Stretch="UniformToFill" Opacity="0.7"/>
+					<DockPanel Name="SearchTiles" Margin="10,0,10,0" Visibility="Collapsed">
+						<DockPanel DockPanel.Dock="Top">
+							<TextBlock Name="SearchTilesCaption" DockPanel.Dock="Left" Text="Found: 0" Foreground="Gray"/>
+							<Line Margin="5,0,0,0" X1="0" X2="200" Stroke="Gray"  StrokeThickness="1" Stretch="UniformToFill" Opacity="0.7"/>
+						</DockPanel>
+						<WrapPanel Name="SearchTilesPanel" Orientation="Horizontal"/>
 					</DockPanel>
-					<WrapPanel Name="SearchTilesPanel" Orientation="Horizontal"/>
-				</DockPanel>
-			</StackPanel>
+				</StackPanel>
+			</ScrollViewer>
 		</DockPanel>
-		<Grid Panel.ZIndex="9999" Background="#80FFFFFF" Name="LoadingFlyout" Opacity="0">
+		<Grid Panel.ZIndex="9999" Background="#80FFFFFF" Name="LoadingStatusGrid" Opacity="0" Visibility="Collapsed">
 			<Border Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="6">
 				<Border.Effect>
 					<DropShadowEffect BlurRadius="18" ShadowDepth="1" Opacity="0.35" />
@@ -146,14 +264,50 @@
 					<Border CornerRadius="6" Background="#90FFFFFF" BorderBrush="#90A8BED4" BorderThickness="1" />
 					<Border Margin="1" CornerRadius="5" Background="#30FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" />
 					<Grid Margin="20,10">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="20"/>
-							<ColumnDefinition Width="10"/>
-							<ColumnDefinition Width="*"/>
-						</Grid.ColumnDefinitions>
-						<Image Width="20" Height="20" VerticalAlignment="Center" Stretch="Fill" wgif:ImageBehavior.AnimatedSource="Images/Ring.gif"/>
-						<TextBlock Grid.Column="2" VerticalAlignment="Center" FontFamily="{DynamicResource GlobalFontFamily}" FontSize="14" Foreground="#203A56" Text="请稍候..." TextWrapping="Wrap"/>
-					</Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="20"/>
+								<ColumnDefinition Width="10"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+						<Image Name="LoadingImage" Width="20" Height="20" VerticalAlignment="Center" Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" />
+							<TextBlock Name="LabelLoadingText" Grid.Column="2" VerticalAlignment="Center" FontFamily="{DynamicResource GlobalFontFamily}" FontSize="14" Foreground="#203A56" Text="请稍候..." TextWrapping="Wrap"/>
+						</Grid>
+				</Grid>
+			</Border>
+		</Grid>
+		<Grid Panel.ZIndex="9999" Background="#80FFFFFF" Name="ErrorStatus" Opacity="0" Visibility="Collapsed">
+			<Border Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="6">
+				<Border.Effect>
+					<DropShadowEffect BlurRadius="18" ShadowDepth="1" Opacity="0.35" />
+				</Border.Effect>
+				<Grid>
+					<Border CornerRadius="6" Background="#90FFFFFF" BorderBrush="#90A8BED4" BorderThickness="1" />
+					<Border Margin="1" CornerRadius="5" Background="#30FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" />
+					<StackPanel Margin="20,10" MaxWidth="300" MaxHeight="300">
+						<TextBlock Name="LabelErrorTitle" TextWrapping="Wrap" FontSize="20" Margin="0,0,0,5" FontFamily="{DynamicResource GlobalFontFamily}">Error</TextBlock>
+						<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0,5">
+							<TextBlock Name="LabelReasonText" TextWrapping="Wrap" FontSize="12" FontFamily="{DynamicResource GlobalFontFamily}">Some problems...</TextBlock>
+						</ScrollViewer>
+						<Button HorizontalAlignment="Right" Width="Auto" Height="Auto" Margin="0,5" Padding="20,3" Name="ErrorStatusCancelButton" Click="ErrorStatusCancelButton_Click" FontFamily="{DynamicResource GlobalFontFamily}">Cancel</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</Grid>
+		<Grid Panel.ZIndex="9999" Background="#80FFFFFF" Name="DownloadStatus" Opacity="0" Visibility="Collapsed">
+			<Border Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="6">
+				<Border.Effect>
+					<DropShadowEffect BlurRadius="18" ShadowDepth="1" Opacity="0.35" />
+				</Border.Effect>
+				<Grid>
+					<Border CornerRadius="6" Background="#90FFFFFF" BorderBrush="#90A8BED4" BorderThickness="1" />
+					<Border Margin="1" CornerRadius="5" Background="#30FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" />
+					<StackPanel Margin="20,10" MaxWidth="400" MaxHeight="300">
+						<TextBlock Name="LabelDowloadTitle" FontSize="20" Margin="0,0,0,5" FontFamily="{DynamicResource GlobalFontFamily}">Downloading</TextBlock>
+						<TextBlock Name="LabelDownloadItem" FontSize="12" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}" TextTrimming="CharacterEllipsis">File:</TextBlock>
+						<TextBlock Name="LabelDownloadProgress" FontSize="12" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}" TextTrimming="CharacterEllipsis">Progress</TextBlock>
+						<ProgressBar Name="DownloadProgressBar" Margin="0,5" MinWidth="200" HorizontalAlignment="Stretch" Height="20"></ProgressBar>
+						<Button HorizontalAlignment="Right" Width="Auto" Height="Auto" Margin="0,5" Padding="20,3" Name="ProgressStatusCancelButton" Click="ProgressStatusCancelButton_Click"  FontFamily="{DynamicResource GlobalFontFamily}">Cancel</Button>
+					</StackPanel>
 				</Grid>
 			</Border>
 		</Grid>

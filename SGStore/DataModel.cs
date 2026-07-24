@@ -69,8 +69,10 @@ namespace Sidebar
 		public string LogoFileName { get; set; }
 		[JsonProperty ("pkgFile")]
 		public string PackageFileName { get; set; }
-		[JsonProperty ("Version")]
+		[JsonProperty ("version")]
 		public string Version { get; set; }
+		[JsonProperty ("hash")]
+		public string Digest { get; set; }
 		[JsonProperty ("supportOs")]
 		public TileSupport Support { get; set; } = new TileSupport ();
 	}
@@ -180,6 +182,71 @@ namespace Sidebar
 					return new Uri ($"https://raw.githubusercontent.com/modernw/SidebarGadgetsStore/main/{BaseDirectory}/{i.BaseDirectory}/{i.LogoFileName}");
 				}
 				return new Uri (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "Images\\Gadget.png"), UriKind.RelativeOrAbsolute);
+			}
+		}
+		[JsonIgnore]
+		public Uri SupportedNewestFileUri
+		{
+			get
+			{
+				foreach (var i in SupportedItems)
+				{
+					if (string.IsNullOrWhiteSpace (i.PackageFileName)) continue;
+					return new Uri ($"https://raw.githubusercontent.com/modernw/SidebarGadgetsStore/main/{BaseDirectory}/{i.BaseDirectory}/{i.PackageFileName}");
+				}
+				return new Uri (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "Images\\Gadget.png"), UriKind.RelativeOrAbsolute);
+			}
+		}
+		[JsonIgnore]
+		public string SupportedNewestFileName
+		{
+			get
+			{
+				foreach (var i in SupportedItems)
+				{
+					if (string.IsNullOrWhiteSpace (i.PackageFileName)) continue;
+					return i.PackageFileName;
+				}
+				return null;
+			}
+		}
+		[JsonIgnore]
+		public string SupportedNewestFileNameWithoutExtension
+		{
+			get
+			{
+				foreach (var i in SupportedItems)
+				{
+					if (string.IsNullOrWhiteSpace (i.PackageFileName)) continue;
+					return Path.GetFileNameWithoutExtension (i.PackageFileName);
+				}
+				return null;
+			}
+		}
+		[JsonIgnore]
+		public string SupportedNewestFileExtension
+		{
+			get
+			{
+				foreach (var i in SupportedItems)
+				{
+					if (string.IsNullOrWhiteSpace (i.PackageFileName)) continue;
+					return Path.GetExtension (i.PackageFileName);
+				}
+				return null;
+			}
+		}
+		[JsonIgnore]
+		public string SupportedNewestFileDigest
+		{
+			get
+			{
+				foreach (var i in SupportedItems)
+				{
+					if (string.IsNullOrWhiteSpace (i.Digest)) continue;
+					return i.Digest;
+				}
+				return null;
 			}
 		}
 	}

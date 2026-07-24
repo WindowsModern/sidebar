@@ -302,4 +302,103 @@ Error message:
     <lang name="zh-CN">小工具安装程序</lang>
     <lang name="en-US">Sidebar Gadget Installer</lang>
   </resource>
+  <resource id="STORE_APPTITLE">
+    <lang name="zh-CN">小工具商店</lang>
+    <lang name="en-US">Sidebar Gadget Store</lang>
+  </resource>
+  <resource id="STORE_SEARCHPLACEHOLDER">
+    <lang name="zh-CN">搜索...</lang>
+    <lang name="en-US">Search...</lang>
+  </resource>
+  <resource id="STORE_DOWNLOADABLETILES">
+    <lang name="zh-CN">可下载的磁贴 ({0})</lang>
+    <lang name="en-US">Downloadable Tiles ({0})</lang>
+  </resource>
+  <resource id="STORE_ITEMSCOUNT">
+    <lang name="zh-CN">{0} 个项目</lang>
+    <lang name="en-US">{0} items.</lang>
+  </resource>
+  <resource id="STORE_PLEASEWAIT">
+    <lang name="zh-CN">请稍候...</lang>
+    <lang name="en-US">Please wait...</lang>
+  </resource>
+  <resource id="STORE_ERRORTITLE">
+    <lang name="zh-CN">出现了错误</lang>
+    <lang name="en-US">Something went wrong</lang>
+  </resource>
+  <resource id="STORE_DWINGTITLE">
+    <lang name="zh-CN">正在下载</lang>
+    <lang name="en-US">Downloading</lang>
+  </resource>
+  <resource id="STORE_CANCEL">
+    <lang name="zh-CN">关闭</lang>
+    <lang name="en-US">Cancel</lang>
+  </resource>
+  <resource id="STORE_PUBLISHER">
+    <lang name="zh-CN">发布者: </lang>
+    <lang name="en-US">Publisher: </lang>
+  </resource>
+  <resource id="STORE_VERSION">
+    <lang name="zh-CN">版本: </lang>
+    <lang name="en-US">Version: </lang>
+  </resource>
+  <resource id="STORE_EMPTYSELECT">
+    <lang name="zh-CN">没有选择任何项。</lang>
+    <lang name="en-US">No items selected.</lang>
+  </resource>
+  <resource id="STORE_DOWNLOADITEM">
+    <lang name="zh-CN">{0}, 版本 {1}</lang>
+    <lang name="en-US">{0}, Version {1}</lang>
+  </resource>
+  <resource id="STORE_PROGRESS">
+    <lang name="zh-CN">进度: {0}% {1}</lang>
+    <lang name="en-US">Progress: {0}% {1}</lang>
+  </resource>
+  <resource id="STORE_CHECKING">
+    <lang name="zh-CN">正在校验文件完整性...</lang>
+    <lang name="en-US">Verifying file integrity...</lang>
+  </resource>
+  <resource id="STORE_VERIFYFAILED">
+    <lang name="zh-CN">错误：验证文件完整性失败。</lang>
+    <lang name="en-US">Error: Failed to verify file integrity.</lang>
+  </resource>
+  <resource id="STORE_TASKCANCELED">
+    <lang name="zh-CN">任务被关闭。</lang>
+    <lang name="en-US">Task canceled.</lang>
+  </resource>
+  <resource id="STORE_ABOUT">
+    <lang name="zh-CN">关于</lang>
+    <lang name="en-US">About</lang>
+  </resource>
+  <resource id="STORE_CLEAR">
+    <lang name="zh-CN">清理已下载的包</lang>
+    <lang name="en-US">Clean downloaded packages</lang>
+  </resource>
+  <resource id="STORE_CURRCACHE">
+    <lang name="zh-CN">当前缓存:</lang>
+    <lang name="en-US">Current cache size: </lang>
+  </resource>
+  <resource id="STORE_GENERAL">
+    <lang name="zh-CN">常规</lang>
+    <lang name="en-US">General</lang>
+  </resource>
+  <resource id="STORE_INFO_TITLE">
+    <lang name="en-US">Sidebar Gadget Store</lang>
+  </resource>
+  <resource id="STORE_INFO_VERSION">
+    <lang name="zh-CN">版本 {0}</lang>
+    <lang name="en-US">Version {0}</lang>
+  </resource>
+  <resource id="STORE_INFO_INTRO">
+    <lang name="zh-CN">{0} 是方便您去获取边栏小工具的程序。</lang>
+    <lang name="en-US">{0} is a program that makes it easy for you to get sidebar gadgets.</lang>
+  </resource>
+  <resource id="STORE_INFO_DISCLAIMER">
+    <lang name="zh-CN">声明：本商店仅为收录平台，用于收录由第三方开发者自愿提交并发布的小工具。本商店不对任何小工具的安全性、准确性、可靠性、合法性或特定用途的适用性作任何明示或暗示的保证。所有小工具均按“原样”提供，用户下载及使用前应自行进行审慎评估，并承担由此产生的全部风险。本商店不承担因使用或无法使用任何小工具而导致的任何直接、间接、偶然、特殊或后果性损失或损害。所有小工具的版权、商标及其他知识产权均归其各自的发布者所有，本商店不主张任何所有权或相关权益。</lang>
+    <lang name="en-US">Disclaimer: This store serves solely as a cataloging platform for gadgets that are voluntarily submitted and published by third‑party developers. The store makes no warranties, express or implied, concerning the security, accuracy, reliability, legality, or fitness for a particular purpose of any gadget. All gadgets are provided “as is”, and users are solely responsible for conducting their own due diligence prior to downloading or using any gadget, and for assuming all associated risks. The store shall not be liable for any direct, indirect, incidental, special, or consequential damages or losses arising out of or in connection with the use or inability to use any gadget. All copyrights, trademarks, and other intellectual property rights in the gadgets remain with their respective publishers, and the store does not claim any ownership or interest therein.</lang>
+  </resource>
+  <resource id="STORE_INFO_COPYRIGHT">
+    <lang name="zh-CN">版权所有 © 2026 Windows Modern。保留所有权利。</lang>
+    <lang name="en-US">Copyright © 2026 Windows Modern. All rights reserved.</lang>
+  </resource>
 </resources>

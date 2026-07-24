@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Windows;
 
 namespace Sidebar
@@ -13,11 +14,36 @@ namespace Sidebar
 	/// </summary>
 	public partial class App: Application
 	{
+		public static ProgramFolder AppRoot { get; private set; }
+		public static ProgramFolder AppData { get; private set; }
 		private void Application_Startup (object sender, StartupEventArgs e)
 		{
-			ServicePointManager.SecurityProtocol |= (SecurityProtocolType)192 |   // TLS 1.0
-				(SecurityProtocolType)768 |   // TLS 1.1
-				(SecurityProtocolType)3072;   // TLS 1.2
+			AppRoot = ProgramFolder.GlobalFolder;
+			AppData = ProgramFolder.CurrentUserFolder;
+			try
+			{
+				ServicePointManager.SecurityProtocol |= (SecurityProtocolType)192;   // TLS 1.0
+				ServicePointManager.SecurityProtocol |= (SecurityProtocolType)768;   // TLS 1.1
+				ServicePointManager.SecurityProtocol |= (SecurityProtocolType)3072;  // TLS 1.2
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show (ex.Message, AppRoot.StringResources.SuitableResource ("STORE_ERRORTITLE"), MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+			SetTheme ("aero", "normalcolor");
+		}
+		private static void SetTheme (string themeName, string themeColor)
+		{
+			const BindingFlags staticNonPublic = BindingFlags.Static | BindingFlags.NonPublic;
+			var presentationFrameworkAsm = Assembly.GetAssembly (typeof (Window));
+			var themeWrapper = presentationFrameworkAsm?.GetType ("MS.Win32.UxThemeWrapper");
+			if (themeWrapper == null) return;
+			var isActiveField = themeWrapper.GetField ("_isActive", staticNonPublic);
+			var themeColorField = themeWrapper.GetField ("_themeColor", staticNonPublic);
+			var themeNameField = themeWrapper.GetField ("_themeName", staticNonPublic);
+			isActiveField?.SetValue (null, true);
+			themeColorField?.SetValue (null, themeColor);
+			themeNameField?.SetValue (null, themeName);
 		}
 	}
 }

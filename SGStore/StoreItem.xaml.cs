@@ -22,7 +22,7 @@ namespace Sidebar
 		public StoreItem ()
 		{
 			InitializeComponent ();
-			Source = new Uri ("Images\\Gadget.ico", UriKind.RelativeOrAbsolute);
+			Source = new Uri (System.IO.Path.Combine (App.AppRoot.FolderPath, "Images\\Gadget.ico"));
 		}
 		public static readonly DependencyProperty SourceProperty =
 		   DependencyProperty.Register ("Source", typeof (Uri), typeof (StoreItem),
@@ -56,5 +56,49 @@ namespace Sidebar
 			get { return (string)GetValue (PublisherProperty); }
 			set { SetValue (PublisherProperty, value); }
 		}
+		public static readonly RoutedEvent ClickEvent =
+			EventManager.RegisterRoutedEvent ("Click",
+				RoutingStrategy.Bubble,
+				typeof (RoutedEventHandler),
+				typeof (StoreItem));
+		public event RoutedEventHandler Click
+		{
+			add { AddHandler (ClickEvent, value); }
+			remove { RemoveHandler (ClickEvent, value); }
+		}
+		public static readonly DependencyProperty CommandProperty =
+			DependencyProperty.Register ("Command", typeof (ICommand), typeof (StoreItem),
+				new PropertyMetadata (null));
+		public static readonly DependencyProperty CommandParameterProperty =
+			DependencyProperty.Register ("CommandParameter", typeof (object), typeof (StoreItem),
+				new PropertyMetadata (null));
+		public ICommand Command
+		{
+			get { return (ICommand)GetValue (CommandProperty); }
+			set { SetValue (CommandProperty, value); }
+		}
+		public object CommandParameter
+		{
+			get { return GetValue (CommandParameterProperty); }
+			set { SetValue (CommandParameterProperty, value); }
+		}
+		private void InternalButton_Click (object sender, RoutedEventArgs e)
+		{
+			RaiseEvent (new RoutedEventArgs (ClickEvent, this));
+		}
+		private TilePackageItem item = null;
+		public TilePackageItem ItemData
+		{
+			get { return item; }
+			set
+			{
+				item = value;
+				Source = item?.SupportedVersionLogo;
+				Title = item?.DisplayName;
+				Version = item?.SupportedNewestVersion;
+				Publisher = item?.Publisher;
+			}
+		}
+		public ImageSource Image => StoreLogo?.Source;
 	}
 }
