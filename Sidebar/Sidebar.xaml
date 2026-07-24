@@ -37,6 +37,7 @@
 			<MenuItem Name="ItemMinSidebar" Click="MinimizeSidebar_Click"/>
 			<MenuItem Name="ItemProperties" Click="Properties_Click"/>
 			<MenuItem Name="ItemAddTile" Click="AddTile_Click"/>
+			<MenuItem Name="ItemGetTiles" Click="GetTiles_Click"/>
 			<MenuItem Name="ItemManageTile" SubmenuOpened="ItemManageTile_SubmenuOpened">
 				<MenuItem.Items>
 					<MenuItem Header="Test"></MenuItem>

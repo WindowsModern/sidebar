@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Sidebar.SettingsWnd"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Sidebar Settings"
+        Title="Sidebar Gadget Store Settings"
         Width="420"
         Height="320"
         WindowStartupLocation="CenterOwner"

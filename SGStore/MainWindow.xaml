@@ -131,7 +131,7 @@
 								</Rectangle.Stroke>
 							</Rectangle>
 							<Rectangle Margin="2" Stroke="#FFFFFFFF"/>
-							<TextBox Margin="3" Name="SearchField" Tag="Search..."  Opacity="0.7" BorderThickness="0" VerticalContentAlignment="Center">
+							<TextBox Margin="3" Name="SearchField" Tag="Search..."  Opacity="0.7" BorderThickness="0" VerticalContentAlignment="Center" TextChanged="SearchField_TextChanged">
 								<TextBox.Template>
 									<ControlTemplate TargetType="{x:Type TextBox}">
 										<Border x:Name="border"
@@ -240,12 +240,10 @@
 						</DockPanel>
 						<Grid Background="White">
 							<!-- <Image Source="Images\ItemMulti.ico" Height="150" Margin="0,0,15,0" Opacity="0.2" VerticalAlignment="Bottom" HorizontalAlignment="Right"/> -->
-							<ScrollViewer Name="DownTilesPanelScrollViewer" VerticalScrollBarVisibility="Auto">
-								<WrapPanel Name="DownTilesPanel" Orientation="Horizontal"/>
-							</ScrollViewer>
+							<WrapPanel Name="DownTilesPanel" Orientation="Horizontal"/>
 						</Grid>
 					</DockPanel>
-					<DockPanel Name="SearchTiles" Margin="10,0,10,0" Visibility="Collapsed">
+					<DockPanel Name="SearchTiles" Margin="10,11,10,0" Visibility="Collapsed">
 						<DockPanel DockPanel.Dock="Top">
 							<TextBlock Name="SearchTilesCaption" DockPanel.Dock="Left" Text="Found: 0" Foreground="Gray"/>
 							<Line Margin="5,0,0,0" X1="0" X2="200" Stroke="Gray"  StrokeThickness="1" Stretch="UniformToFill" Opacity="0.7"/>

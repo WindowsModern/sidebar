@@ -39,6 +39,7 @@ namespace Sidebar
 			LabelIntroduction.Text = String.Format (sr.SuitableResource ("STORE_INFO_INTRO"), sr.SuitableResource ("STORE_INFO_TITLE"));
 			LabelDisclaimer.Text = sr.SuitableResource ("STORE_INFO_DISCLAIMER");
 			LabelCopyright.Text = sr.SuitableResource ("STORE_INFO_COPYRIGHT");
+			Title = sr.SuitableResource ("STORE_SETTINGS");
 		}
 		private void ButtonClear_Click (object sender, RoutedEventArgs e)
 		{

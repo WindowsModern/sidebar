@@ -28,6 +28,10 @@
     <lang name="zh-CN">显示 边栏</lang>
     <lang name="en-US">Show Sidebar</lang>
   </resource>
+  <resource id="SIDEBAR_CONTEXTMENU_STORE">
+    <lang name="zh-CN">获取更多磁贴</lang>
+    <lang name="en-US">Get more tiles</lang>
+  </resource>
   <resource id="TILEMGR_WINTITLE">
     <lang name="zh-CN">磁贴管理器</lang>
     <lang name="en-US">Tiles Manager</lang>
@@ -400,5 +404,49 @@ Error message:
   <resource id="STORE_INFO_COPYRIGHT">
     <lang name="zh-CN">版权所有 © 2026 Windows Modern。保留所有权利。</lang>
     <lang name="en-US">Copyright © 2026 Windows Modern. All rights reserved.</lang>
+  </resource>
+  <resource id="STORE_BTN_REFRESH">
+    <lang name="zh-CN">刷新</lang>
+    <lang name="en-US">Refresh</lang>
+  </resource>
+  <resource id="STORE_BTN_DOWNLOAD">
+    <lang name="zh-CN">下载</lang>
+    <lang name="en-US">Download</lang>
+  </resource>
+  <resource id="STORE_BTN_SETTINGS">
+    <lang name="zh-CN">设置</lang>
+    <lang name="en-US">Settings</lang>
+  </resource>
+  <resource id="STORE_SETTINGS">
+    <lang name="zh-CN">设置</lang>
+    <lang name="en-US">Settings</lang>
+  </resource>
+  <resource id="STORE_FIND">
+    <lang name="zh-CN">找到的磁贴 ({0})</lang>
+    <lang name="en-US">Found Tiles ({0})</lang>
+  </resource>
+  <resource id="SIDEBAR_ABOUT_TITLE">
+    <lang name="zh-CN">Sidebar</lang>
+    <lang name="en-US">Sidebar</lang>
+  </resource>
+  <resource id="SIDEBAR_ABOUT_VERSION">
+    <lang name="zh-CN">版本 {0}</lang>
+    <lang name="en-US">Version {0}</lang>
+  </resource>
+  <resource id="SIDEBAR_ABOUT_COPYRIGHT">
+    <lang name="zh-CN">版权所有 © 2026 Windows Modern。保留所有权利。</lang>
+    <lang name="en-US">Copyright © 2026 Windows Modern. All rights reserved.</lang>
+  </resource>
+  <resource id="SIDEBAR_ABOUT_INTRODUCTION">
+    <lang name="zh-CN">{0} 是基于磁贴的侧边栏，受 Windows Longhorn 的侧边栏启发。并借鉴 LongBar 开发的 WPF 程序。</lang>
+    <lang name="en-US">{0} is a tile‑based sidebar. It is inspired by the Windows Longhorn sidebar. It is a WPF application developed with reference to LongBar.</lang>
+  </resource>
+  <resource id="SIDEBAR_ABOUT_PROJECT">
+    <lang name="zh-CN">项目主页</lang>
+    <lang name="en-US">Project Page</lang>
+  </resource>
+  <resource id="SIDEBAR_ABOUT_LICENSE">
+    <lang name="zh-CN">许可说明</lang>
+    <lang name="en-US">License</lang>
   </resource>
 </resources>

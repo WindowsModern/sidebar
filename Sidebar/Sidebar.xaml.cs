@@ -18,6 +18,7 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
+using System.Diagnostics;
 
 namespace Sidebar
 {
@@ -391,6 +392,9 @@ namespace Sidebar
 						break;
 					case "ItemManageTile":
 						item.Header = lc.SuitableResource ("SIDEBAR_CONTEXTMENU_ADDTILE", "Add a tile...");
+						break;
+					case "ItemGetTiles":
+						item.Header = lc.SuitableResource ("SIDEBAR_CONTEXTMENU_STORE", "Get more tiles");
 						break;
 				}
 			}
@@ -1261,6 +1265,10 @@ namespace Sidebar
 			{
 				contextMenu.IsOpen = true;
 			}
+		}
+		private void GetTiles_Click (object sender, RoutedEventArgs e)
+		{
+			Process.Start (System.IO.Path.Combine (App.ProgramFolder.FolderPath, "SGStore.exe"));
 		}
 	}
 }

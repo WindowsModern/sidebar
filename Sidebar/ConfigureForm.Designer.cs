@@ -62,6 +62,14 @@
 			this.selectWidth = new System.Windows.Forms.ComboBox();
 			this.inputCustomWidth = new System.Windows.Forms.NumericUpDown();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+			this.labelAppTitle = new System.Windows.Forms.Label();
+			this.labelVersion = new System.Windows.Forms.Label();
+			this.labelIntroduction = new System.Windows.Forms.Label();
+			this.labelCopyright = new System.Windows.Forms.Label();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.buttonLicense = new System.Windows.Forms.Button();
+			this.buttonProjectPage = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -79,10 +87,14 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			this.tableLayoutPanel6.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.inputCustomWidth)).BeginInit();
+			this.tabPage2.SuspendLayout();
+			this.tableLayoutPanel7.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// panel1
 			// 
+			this.panel1.BackColor = System.Drawing.Color.White;
 			this.panel1.Controls.Add(this.tabControl1);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -354,7 +366,7 @@
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 88F));
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 88F));
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 261F));
+			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 282F));
 			this.tableLayoutPanel3.Controls.Add(this.inputLeftLoc, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.inputRightLoc, 2, 0);
 			this.tableLayoutPanel3.Controls.Add(this.pictureBox1, 0, 1);
@@ -507,6 +519,10 @@
 			// 
 			// tabPage2
 			// 
+			this.tabPage2.AutoScroll = true;
+			this.tabPage2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage2.BackgroundImage")));
+			this.tabPage2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.tabPage2.Controls.Add(this.tableLayoutPanel7);
 			this.tabPage2.Location = new System.Drawing.Point(4, 25);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -514,6 +530,120 @@
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "About";
 			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanel7
+			// 
+			this.tableLayoutPanel7.ColumnCount = 1;
+			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel7.Controls.Add(this.labelAppTitle, 0, 0);
+			this.tableLayoutPanel7.Controls.Add(this.labelVersion, 0, 2);
+			this.tableLayoutPanel7.Controls.Add(this.labelIntroduction, 0, 4);
+			this.tableLayoutPanel7.Controls.Add(this.labelCopyright, 0, 6);
+			this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel1, 0, 8);
+			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+			this.tableLayoutPanel7.Padding = new System.Windows.Forms.Padding(40);
+			this.tableLayoutPanel7.RowCount = 10;
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 48F));
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 134F));
+			this.tableLayoutPanel7.Size = new System.Drawing.Size(494, 320);
+			this.tableLayoutPanel7.TabIndex = 0;
+			// 
+			// labelAppTitle
+			// 
+			this.labelAppTitle.AutoSize = true;
+			this.labelAppTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.labelAppTitle.Font = new System.Drawing.Font("微软雅黑", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.labelAppTitle.Location = new System.Drawing.Point(40, 40);
+			this.labelAppTitle.Margin = new System.Windows.Forms.Padding(0);
+			this.labelAppTitle.Name = "labelAppTitle";
+			this.labelAppTitle.Size = new System.Drawing.Size(414, 36);
+			this.labelAppTitle.TabIndex = 0;
+			this.labelAppTitle.Text = "Sidebar";
+			// 
+			// labelVersion
+			// 
+			this.labelVersion.AutoSize = true;
+			this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.labelVersion.Location = new System.Drawing.Point(40, 96);
+			this.labelVersion.Margin = new System.Windows.Forms.Padding(0);
+			this.labelVersion.Name = "labelVersion";
+			this.labelVersion.Size = new System.Drawing.Size(414, 15);
+			this.labelVersion.TabIndex = 1;
+			this.labelVersion.Text = "Version 1.0.0.0";
+			this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelIntroduction
+			// 
+			this.labelIntroduction.AutoSize = true;
+			this.labelIntroduction.Location = new System.Drawing.Point(40, 121);
+			this.labelIntroduction.Margin = new System.Windows.Forms.Padding(0);
+			this.labelIntroduction.Name = "labelIntroduction";
+			this.labelIntroduction.Size = new System.Drawing.Size(410, 45);
+			this.labelIntroduction.TabIndex = 2;
+			this.labelIntroduction.Text = "{0} is a tile‑based sidebar. It is inspired by the Windows Longhorn sidebar. It i" +
+    "s a WPF application developed with reference to LongBar.";
+			this.labelIntroduction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelCopyright
+			// 
+			this.labelCopyright.AutoSize = true;
+			this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.labelCopyright.Location = new System.Drawing.Point(40, 186);
+			this.labelCopyright.Margin = new System.Windows.Forms.Padding(0);
+			this.labelCopyright.Name = "labelCopyright";
+			this.labelCopyright.Size = new System.Drawing.Size(414, 30);
+			this.labelCopyright.TabIndex = 3;
+			this.labelCopyright.Text = "Copyright © 2026 Windows Modern. All rights reserved.";
+			// 
+			// flowLayoutPanel1
+			// 
+			this.flowLayoutPanel1.AutoScroll = true;
+			this.flowLayoutPanel1.Controls.Add(this.buttonLicense);
+			this.flowLayoutPanel1.Controls.Add(this.buttonProjectPage);
+			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(40, 261);
+			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(414, 48);
+			this.flowLayoutPanel1.TabIndex = 4;
+			// 
+			// buttonLicense
+			// 
+			this.buttonLicense.AutoSize = true;
+			this.buttonLicense.Location = new System.Drawing.Point(321, 5);
+			this.buttonLicense.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
+			this.buttonLicense.Name = "buttonLicense";
+			this.buttonLicense.Padding = new System.Windows.Forms.Padding(10, 3, 10, 3);
+			this.buttonLicense.Size = new System.Drawing.Size(93, 31);
+			this.buttonLicense.TabIndex = 0;
+			this.buttonLicense.Text = "button2";
+			this.buttonLicense.UseVisualStyleBackColor = true;
+			this.buttonLicense.Click += new System.EventHandler(this.buttonLicense_Click);
+			// 
+			// buttonProjectPage
+			// 
+			this.buttonProjectPage.AutoSize = true;
+			this.buttonProjectPage.Location = new System.Drawing.Point(218, 5);
+			this.buttonProjectPage.Margin = new System.Windows.Forms.Padding(5);
+			this.buttonProjectPage.Name = "buttonProjectPage";
+			this.buttonProjectPage.Padding = new System.Windows.Forms.Padding(10, 3, 10, 3);
+			this.buttonProjectPage.Size = new System.Drawing.Size(93, 31);
+			this.buttonProjectPage.TabIndex = 1;
+			this.buttonProjectPage.Text = "button3";
+			this.buttonProjectPage.UseVisualStyleBackColor = true;
+			this.buttonProjectPage.Click += new System.EventHandler(this.buttonProjectPage_Click);
 			// 
 			// ConfigureForm
 			// 
@@ -547,6 +677,11 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			this.tableLayoutPanel6.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.inputCustomWidth)).EndInit();
+			this.tabPage2.ResumeLayout(false);
+			this.tableLayoutPanel7.ResumeLayout(false);
+			this.tableLayoutPanel7.PerformLayout();
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.flowLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -586,5 +721,13 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
 		private System.Windows.Forms.ComboBox selectWidth;
 		private System.Windows.Forms.NumericUpDown inputCustomWidth;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+		private System.Windows.Forms.Label labelAppTitle;
+		private System.Windows.Forms.Label labelVersion;
+		private System.Windows.Forms.Label labelIntroduction;
+		private System.Windows.Forms.Label labelCopyright;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.Button buttonLicense;
+		private System.Windows.Forms.Button buttonProjectPage;
 	}
 }

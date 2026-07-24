@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -23,6 +25,7 @@ namespace Sidebar
 			InitializeComponent ();
 			InitLocalizationStrings ();
 			this.Font = FontHelper.GetFirstAvailableFont (FontHelper.preferredFonts);
+			labelAppTitle.Font = FontHelper.GetFirstAvailableFont (FontHelper.preferredFonts, 18);
 			InitConfigValues ();
 			InitConfigControlEvents ();
 		}
@@ -46,6 +49,13 @@ namespace Sidebar
 			groupBox1.Text = sres.SuitableResource ("CONFIG_GENERAL");
 			groupBox2.Text = sres.SuitableResource ("CONFIG_APPEARANCE");
 			label4.Text = sres.SuitableResource ("CONFIG_WIDTH");
+			labelAppTitle.Text = sres.SuitableResource ("SIDEBAR_ABOUT_TITLE");
+			var version = Assembly.GetExecutingAssembly ().GetName ().Version;
+			labelVersion.Text = String.Format (sres.SuitableResource ("SIDEBAR_ABOUT_VERSION"), version.ToString ());
+			labelIntroduction.Text = String.Format (sres.SuitableResource ("SIDEBAR_ABOUT_INTRODUCTION"), sres.SuitableResource ("SIDEBAR_ABOUT_TITLE"));
+			labelCopyright.Text = sres.SuitableResource ("SIDEBAR_ABOUT_COPYRIGHT");
+			buttonProjectPage.Text = sres.SuitableResource ("SIDEBAR_ABOUT_PROJECT");
+			buttonLicense.Text = sres.SuitableResource ("SIDEBAR_ABOUT_LICENSE");
 		}
 		public void InitConfigValues ()
 		{
@@ -220,6 +230,14 @@ namespace Sidebar
 			{
 				cc.Width = (double)inputCustomWidth.Value;
 			}
+		}
+		private void buttonProjectPage_Click (object sender, EventArgs e)
+		{
+			Process.Start ("https://github.com/modernw/Sidebar");
+		}
+		private void buttonLicense_Click (object sender, EventArgs e)
+		{
+
 		}
 	}
 }

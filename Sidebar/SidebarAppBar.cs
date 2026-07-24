@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Forms;
 using Sidebar.Win32;
 namespace Sidebar
 {
@@ -61,7 +62,7 @@ namespace Sidebar
 		{
 			var cc = App.CurrentUserConfig;
 			if (Direction != cc.Direction) Direction = cc.Direction;
-			var screen = cc.CurrentScreen;
+			var screen = cc.CurrentScreen ?? Screen.PrimaryScreen;
 			var t = cc.OverlapTaskbar ? screen.Bounds.Top : screen.WorkingArea.Top;
 			var h = cc.OverlapTaskbar ? screen.Bounds.Height : screen.WorkingArea.Height;
 			int l = screen.WorkingArea.Left;

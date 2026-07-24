@@ -27,11 +27,23 @@ namespace Sidebar
 	public partial class MainWindow: Window
 	{
 		private ImageSource itemImage = null;
+		private List<TilePackageItem> _allItems;               // 缓存所有项
+		private System.Windows.Threading.DispatcherTimer _searchDebounceTimer; // 防抖定时器
+		private bool _isSearching = false;                     // 标记是否正在搜索状态
 		public MainWindow ()
 		{
 			InitializeComponent ();
 			InitStrings ();
 			InitImages ();
+			_searchDebounceTimer = new System.Windows.Threading.DispatcherTimer ();
+			_searchDebounceTimer.Interval = TimeSpan.FromMilliseconds (300);
+			_searchDebounceTimer.Tick += SearchDebounceTimer_Tick;
+			_searchDebounceTimer.Stop ();
+		}
+		private void SearchDebounceTimer_Tick (object sender, EventArgs e)
+		{
+			_searchDebounceTimer.Stop ();
+			ApplyFilter ();
 		}
 		private void InitImages ()
 		{
@@ -99,6 +111,9 @@ namespace Sidebar
 			ErrorStatusCancelButton.Content = sr.SuitableResource ("STORE_CANCEL");
 			LabelAuthor.Text = sr.SuitableResource ("STORE_PUBLISHER");
 			LabelVersion.Text = sr.SuitableResource ("STORE_VERSION");
+			ButtonRefresh.ToolTip = sr.SuitableResource ("STORE_BTN_REFRESH");
+			ButtonDownload.ToolTip = sr.SuitableResource ("STORE_BTN_DOWNLOAD");
+			ButtonSettings.ToolTip = sr.SuitableResource ("STORE_BTN_SETTINGS");
 		}
 		/// <summary>
 		/// 淡入显示元素，并支持完成回调
@@ -187,6 +202,7 @@ namespace Sidebar
 								return;
 							}
 							var result = task.Result; // TileList
+							_allItems = result?.List ?? new List<TilePackageItem> ();
 							if (result?.List == null)
 							{
 								HideElement (LoadingStatusGrid);
@@ -454,6 +470,55 @@ namespace Sidebar
 				HideElement (DownloadStatus);
 			}
 		}
+		private void SearchField_TextChanged (object sender, TextChangedEventArgs e)
+		{
+			_searchDebounceTimer.Stop ();
+			_searchDebounceTimer.Start ();
+		}
+		/// <summary>
+		/// 根据搜索框内容过滤并刷新面板（支持多关键词 AND 匹配）
+		/// </summary>
+		private void ApplyFilter ()
+		{
+			if (_allItems == null || _allItems.Count == 0)
+				return;
+			string searchText = SearchField.Text?.Trim () ?? "";
+			bool hasSearch = !string.IsNullOrWhiteSpace (searchText);
+			var sr = App.AppRoot.StringResources;
+			if (hasSearch)
+			{
+				string [] keywords = searchText.Split (new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+				var filtered = _allItems.Where (item =>
+					 keywords.All (kw =>
+						  (item.DisplayName?.IndexOf (kw, StringComparison.OrdinalIgnoreCase) >= 0) ||
+						  (item.Publisher?.IndexOf (kw, StringComparison.OrdinalIgnoreCase) >= 0)
+					 )
+				).ToList ();
+				DownTiles.Visibility = Visibility.Collapsed;
+				SearchTiles.Visibility = Visibility.Visible;
+				SearchTilesCaption.Text = string.Format (
+					sr.SuitableResource ("STORE_FIND") ?? "Found: {0}",
+					filtered.Count
+				);
+				SearchTilesPanel.Children.Clear ();
+				foreach (var item in filtered)
+				{
+					var storeItem = new StoreItem { ItemData = item };
+					storeItem.Click += StoreItem_Click;
+					storeItem.MouseDoubleClick += StoreItem_MouseDoubleClick;
+					SearchTilesPanel.Children.Add (storeItem);
+				}
+			}
+			else
+			{
+				DownTiles.Visibility = Visibility.Visible;
+				SearchTiles.Visibility = Visibility.Collapsed;
+				SearchTilesPanel.Children.Clear (); 
+				DownTilesCaption.Text = string.Format (
+					sr.SuitableResource ("STORE_DOWNLOADABLETILES") ?? "Downloadable Tiles ({0})",
+					_allItems.Count
+				);
+			}
+		}
 	}
-
 }
