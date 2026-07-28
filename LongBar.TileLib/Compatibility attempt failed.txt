@@ -1,0 +1,5 @@
+Compatibility attempt failed
+
+I had intended to achieve compatibility with LongBar and Karl's Sidebar tiles by rewriting the SDK. However, this failed due to version compatibility issues. Using the LongBar and Karl's Sidebar SDKs directly would increase code complexity and does not align with the tile storage design in my Sidebar. Therefore, compatibility with these two SDKs will not be supported in the future.
+
+					July 28, 2026

@@ -256,6 +256,8 @@ namespace Sidebar
 				catch { }
 			}
 		}
+		internal string GetDisplayName () => TileDisplayName?.Text;
+		internal ImageSource GetIcon () => TileIcon?.Source;
 		private double CalcHeightForAnime (double ?contentHeight = null)
 		{
 			return TileHeader.ActualHeight + (contentHeight ?? TileContent.ActualHeight) + Splitter.ActualHeight;

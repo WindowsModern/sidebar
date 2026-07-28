@@ -133,6 +133,7 @@
     <Compile Include="Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TileCompatibility.cs" />
     <Compile Include="TileInstance.cs" />
     <Compile Include="TileItemControl.cs">
       <SubType>UserControl</SubType>

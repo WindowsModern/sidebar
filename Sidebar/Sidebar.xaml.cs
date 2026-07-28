@@ -1030,6 +1030,66 @@ namespace Sidebar
 						}
 					}
 				}
+				else if (request.RequestName.NEquals ("GetTitle"))
+				{
+					foreach (var t in tileCache)
+					{
+						if (t.Key.NEquals (request.RequestSource))
+						{
+							var tile = t.Value;
+							if (tile != null)
+							{
+								Response (new TileResponse (request) {
+									ResponseName = "ReturnGetTitle",
+									ResponseData = tile.TileDisplayName.Text
+								});
+							}
+							return true;
+						}
+					}
+				}
+				else if (request.RequestName.NEquals ("SetTitle"))
+				{
+					foreach (var t in tileCache)
+					{
+						if (t.Key.NEquals (request.RequestSource))
+						{
+							var tile = t.Value;
+							tile.TileDisplayName.Text = request.RequestDatas as string;
+							return true;
+						}
+					}
+				}
+				else if (request.RequestName.NEquals ("GetIcon"))
+				{
+					foreach (var t in tileCache)
+					{
+						if (t.Key.NEquals (request.RequestSource))
+						{
+							var tile = t.Value;
+							if (tile != null)
+							{
+								Response (new TileResponse (request) {
+									ResponseName = "ReturnGetIcon",
+									ResponseData = tile.TileIcon.Source
+								});
+							}
+							return true;
+						}
+					}
+				}
+				else if (request.RequestName.NEquals ("SetIcon"))
+				{
+					foreach (var t in tileCache)
+					{
+						if (t.Key.NEquals (request.RequestSource))
+						{
+							var tile = t.Value;
+							tile.TileIcon.Source = request.RequestDatas as ImageSource;
+							return true;
+						}
+					}
+				}
 				return false;
 			}
 			else

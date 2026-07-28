@@ -16,7 +16,7 @@ namespace Sidebar
 	/// <summary>
 	/// TileProperties.xaml 的交互逻辑
 	/// </summary>
-	public partial class TilePropertiesForm: Window
+	public partial class TilePropertiesForm: Window, IPropertiesToolMembers
 	{
 		public TilePropertiesForm ()
 		{
@@ -25,5 +25,7 @@ namespace Sidebar
 			TilePropertiesOkButton.Content = App.ProgramFolder.StringResources.SuitableResource ("TILEPROPERTIES_OK");
 			TilePropertiesCancelButton.Content = App.ProgramFolder.StringResources.SuitableResource ("TILEPROPERTIES_CANCEL");
 		}
+		public Button CancelButton => TilePropertiesCancelButton;
+		public Button OKButton => TilePropertiesOkButton;
 	}
 }

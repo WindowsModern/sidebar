@@ -20,7 +20,7 @@ namespace Sidebar
 	/// Compact version type that encodes 4 x 16-bit parts into a 64-bit value:
 	/// bits 48..63 = major, 32..47 = minor, 16..31 = build, 0..15 = revision.
 	/// </summary>
-	internal static class PublisherIdHelper
+	public static class PublisherIdHelper
 	{
 		// Base32 编码表 (Crockford 变体，去掉 I L O U 避免混淆)
 		private const string Base32Chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";

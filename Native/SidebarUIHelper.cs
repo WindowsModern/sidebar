@@ -16,4 +16,9 @@ namespace Sidebar
 		Task TransToNewHeight (FrameworkElement component, double elderHeight, double? newHeight = null, TimeSpan? timeout = null);
 		ContextMenu FlyoutContextMenu { get; set; }
 	}
+	public interface IPropertiesToolMembers
+	{
+		Button OKButton { get; }
+		Button CancelButton { get; }
+	}
 }
