@@ -15,11 +15,14 @@ namespace WindowsModern.TrayTile
 		{
 			TileFolder = this.Region;
 			SidebarFeatures = this.Features;
+			Region?.StringResources?.CleanRedundantValues ();
+			UserRegion?.StringResources?.CleanRedundantValues ();
 			tilePanel = tilePanel ?? new TilePanel ();
 			var tuip = TileUI as Panel;
 			tuip.Children.Add (tilePanel);
 			FlyoutInit += Tile_FlyoutInit;
 			FlyoutClosed += Tile_FlyoutClosed;
+			Utilities.ReleaseLargeResourcesAsync ();
 		}
 		private void Tile_FlyoutClosed (object sender, EventArgs e)
 		{

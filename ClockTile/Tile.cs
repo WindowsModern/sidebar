@@ -21,6 +21,8 @@ namespace ClockTile
 		private OptionsPanel optionsPanel = null;
 		public override void OnInitialize ()
 		{
+			Region?.StringResources?.CleanRedundantValues ();
+			UserRegion?.StringResources?.CleanRedundantValues ();
 			TileInstance = this;
 			TileFolder = this.Region;
 			TileManifest = this.Manifest;
@@ -37,7 +39,8 @@ namespace ClockTile
 			Options.PropertyChanged += Options_PropertyChanged;
 			StartAlarmTimer ();
 			oneTimeAlarmTriggered = false;
-			lastDailyAlarmDate = DateTime.UtcNow.Date.AddDays (-1); 										// 如果一次性闹钟时间已过且未触发，但 EnableAlarm 仍为 true，可立即触发（可选）
+			lastDailyAlarmDate = DateTime.UtcNow.Date.AddDays (-1);                                         // 如果一次性闹钟时间已过且未触发，但 EnableAlarm 仍为 true，可立即触发（可选）
+			Utilities.ReleaseLargeResourcesAsync ();
 		}
 		private void Options_PropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{

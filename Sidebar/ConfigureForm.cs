@@ -239,5 +239,9 @@ namespace Sidebar
 		{
 
 		}
+		private void ConfigureForm_FormClosed (object sender, FormClosedEventArgs e)
+		{
+			App.ReleaseLargeResourcesAsync ();
+		}
 	}
 }

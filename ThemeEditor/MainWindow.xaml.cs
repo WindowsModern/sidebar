@@ -146,6 +146,10 @@ namespace ThemeEditor
 			{
 				XamlDisplay.Text = $"<!-- Failed to create instance: {ex.Message} -->";
 			}
+			finally
+			{
+				Utilities.ReleaseLargeResourcesAsync ();
+			}
 		}
 		private string FormatXaml (string xaml)
 		{
@@ -273,6 +277,7 @@ namespace ThemeEditor
 					previewWnd.Closed -= closeHandle;
 					previewWnd = null;
 					PreviewButton.Content = "Preview";
+					Utilities.ReleaseLargeResourcesAsync ();
 				};
 				previewWnd.Closed += closeHandle;
 				previewWnd.Title = selected.GetType ().ToString ();
@@ -588,6 +593,10 @@ namespace ThemeEditor
 			{
 				MessageBox.Show (ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
+			finally
+			{
+				Utilities.ReleaseLargeResourcesAsync ();
+			}
 		}
 		private void SaveButton_Click (object sender, RoutedEventArgs e)
 		{
@@ -651,6 +660,10 @@ namespace ThemeEditor
 			catch (Exception ex)
 			{
 				MessageBox.Show ($"Failed to save file:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+			finally
+			{
+				Utilities.ReleaseLargeResourcesAsync ();
 			}
 		}
 		private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e)

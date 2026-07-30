@@ -47,6 +47,23 @@ namespace Sidebar
 		{
 			try { return SuitableValue (); } catch { return ""; }
 		}
+		public void CleanRedundantValues (int dpiScale = -1)
+		{
+			if (Count <= 2) return;
+			var list = PathResources.RecommendRemainScales;
+			if (dpiScale > 0 && !list.Contains (dpiScale))
+			{
+				var newer = new List<int> (list);
+				newer.Add (dpiScale);
+				list = newer;
+			}
+			foreach (var i in list)
+			{
+				string _ = null;
+				if (!ContainsKey (i)) this.TryRemove (i, out _);
+				if (Count <= 2) return;
+			}
+		}
 	}
 	public class PathResources: ConcurrentDictionary<string, IPathResource>, IPathResources
 	{
@@ -89,6 +106,28 @@ namespace Sidebar
 			var doc = new XmlDocument ();
 			doc.Load (filename);
 			return CreateFromXml (doc);
+		}
+		public void CleanRedundantValues (int dpiScale = -1)
+		{
+			foreach (var kv in this)
+			{
+				kv.Value?.CleanRedundantValues (dpiScale);
+			}
+		}
+		private static List<int> rrs = null;
+		internal static IEnumerable <int> RecommendRemainScales
+		{
+			get
+			{
+				if (rrs == null)
+				{
+					rrs = new List<int> ();
+					var curr = UITheme.GetDPI ();
+					if (curr != 100 && curr > 0) rrs.Add (curr);
+					rrs.Add (100);
+				}
+				return rrs;
+			}
 		}
 	}
 }

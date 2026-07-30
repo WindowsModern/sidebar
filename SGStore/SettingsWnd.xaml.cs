@@ -144,5 +144,9 @@ namespace Sidebar
 		{
 			UpdateCacheDisplay ();
 		}
+		private void Window_Unloaded (object sender, RoutedEventArgs e)
+		{
+			App.ReleaseLargeResourcesAsync ();
+		}
 	}
 }

@@ -20,6 +20,8 @@ namespace WindowsModern.PowerTile
 			TileInstance = this;
 			TileFolder = Region;
 			SidebarFeatures = Features;
+			Region?.StringResources?.CleanRedundantValues ();
+			UserRegion?.StringResources?.CleanRedundantValues ();
 			TileOptions = new Options (Config.Ini);
 			tilePanel = new TilePanel ();
 			var panel = TileUI as Panel;
@@ -27,6 +29,7 @@ namespace WindowsModern.PowerTile
 			router = new TileEventRouter (this);
 			TileOptions.PropertyChanged += TileOptions_PropertyChanged;
 			SystemPowerHelper.SetScreenKeepAwake (TileOptions.KeepScreen);
+			Utilities.ReleaseLargeResourcesAsync ();
 		}
 		private void TileOptions_PropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{

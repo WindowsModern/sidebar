@@ -6,7 +6,7 @@
         Height="320"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-		SizeToContent="Height" Loaded="Window_Loaded"
+		SizeToContent="Height" Loaded="Window_Loaded" Unloaded="Window_Unloaded"
         Background="#FFF7F7F7">
 	<Window.Resources>
 		<Style x:Key="SectionTitle" TargetType="TextBlock">

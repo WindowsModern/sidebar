@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WindowsModern.FeedTile
 {
@@ -19,6 +20,7 @@ namespace WindowsModern.FeedTile
 	/// </summary>
 	public partial class PropertiesPanel: UserControl
 	{
+		private DispatcherTimer _refreshStatusTimer;
 		public PropertiesPanel ()
 		{
 			InitializeComponent ();
@@ -39,6 +41,8 @@ namespace WindowsModern.FeedTile
 			LabelShowItemsWhenAutoSize.Text = sr.SuitableResource ("OPTIONS_TITLELIMIT");
 			ListFeedSources.ItemsSource = Tile.Feeds;
 			ListFeedSources.SelectionMode = SelectionMode.Extended;
+			RefreshButton.Content = sr.SuitableResource ("OPTIONS_REFRESH");
+			UpdateButton.Content = sr.SuitableResource ("OPTIONS_NETREFRESH");
 		}
 		private void InitValues ()
 		{
@@ -101,10 +105,41 @@ namespace WindowsModern.FeedTile
 		private void UserControl_Loaded (object sender, RoutedEventArgs e)
 		{
 			InitValues ();
+			if (_refreshStatusTimer == null)
+			{
+				_refreshStatusTimer = new DispatcherTimer {
+					Interval = TimeSpan.FromSeconds (1)
+				};
+				_refreshStatusTimer.Tick += RefreshStatusTimer_Tick;
+			}
+			_refreshStatusTimer.Start ();
+			UpdateRefreshButtonState ();
 		}
 		private void UserControl_Unloaded (object sender, RoutedEventArgs e)
 		{
-
+			_refreshStatusTimer?.Stop ();
+			_refreshStatusTimer = null;
+		}
+		private void RefreshStatusTimer_Tick (object sender, EventArgs e)
+		{
+			UpdateRefreshButtonState ();
+		}
+		private void UpdateRefreshButtonState ()
+		{
+			bool disabled = Tile.IsUpdating || Tile.IsRefreshing;
+			RefreshButton.IsEnabled = !disabled;
+			UpdateButton.IsEnabled = !disabled;
+		}
+		private void RefreshButton_Click (object sender, RoutedEventArgs e)
+		{
+			UpdateRefreshButtonState ();
+			var tile = Tile.TileInstance as Tile;
+			tile?.RefreshFeeds ();
+		}
+		private void UpdateButton_Click (object sender, RoutedEventArgs e)
+		{
+			UpdateRefreshButtonState ();
+			Tile.UpdateFeedsAsync ();
 		}
 	}
 }

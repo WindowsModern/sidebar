@@ -352,11 +352,16 @@ namespace WindowsModern.FeedTile
 			if (_timer != null)
 				_timer.Stop ();
 		}
-
+		private int count = 0;
 		private void OnTimerTick (object sender, EventArgs e)
 		{
 			if (_isAnimating) return;
 			GoToNextPage ();
+			if ((count++) % 10 == 10)
+			{
+				count = 0;
+				Utilities.ReleaseLargeResourcesAsync ();
+			}
 		}
 
 		private void GoToNextPage ()

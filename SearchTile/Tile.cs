@@ -17,11 +17,14 @@ namespace WindowsModern.SearchTile
 			TileFolder = Region;
 			SidebarFeatures = this.Features;
 			TileOptions = new Options (this.Config.Ini);
+			Region?.StringResources?.CleanRedundantValues ();
+			UserRegion?.StringResources?.CleanRedundantValues ();
 			var panel = TileUI as Panel;
 			tilePanel = tilePanel ?? new TilePanel ();
 			panel.Children.Add (tilePanel);
 			FlyoutInit += Tile_FlyoutInit;
 			FlyoutClosed += Tile_FlyoutClosed;
+			Utilities.ReleaseLargeResourcesAsync ();
 		}
 		private void Tile_FlyoutClosed (object sender, EventArgs e)
 		{

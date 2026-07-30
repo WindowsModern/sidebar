@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using Sidebar;
 
 namespace WindowsModern.SlideshowTile
 {
@@ -16,8 +17,6 @@ namespace WindowsModern.SlideshowTile
 		{
 			InitializeComponent ();
 			InitStrings ();
-			this.Loaded += FlyoutPanel_Loaded;
-			this.Unloaded += FlyoutPanel_Unloaded;
 		}
 
 		private void FlyoutPanel_Loaded (object sender, RoutedEventArgs e)
@@ -90,8 +89,21 @@ namespace WindowsModern.SlideshowTile
 				var bitmap = new BitmapImage ();
 				bitmap.BeginInit ();
 				bitmap.UriSource = new Uri (_currentFile, UriKind.Absolute);
-				bitmap.CacheOption = BitmapCacheOption.OnLoad;
+				bitmap.CacheOption = BitmapCacheOption.None;
 				bitmap.EndInit ();
+				var whratio = bitmap.Width / bitmap.Height;
+				var flyoutWidth = Tile.TileInstance.Manifest.VisualElements.RailStyle.FlyoutWidth;
+				var flyoutHeight = Tile.TileInstance.Manifest.VisualElements.RailStyle.FlyoutHeight;
+				if (whratio > 1)
+				{
+					if (bitmap.Width > flyoutWidth)
+						bitmap.DecodePixelWidth = (int)(flyoutWidth * UITheme.DPIDouble);
+				}
+				else if (whratio <= 1)
+				{
+					if (bitmap.Height > flyoutHeight)
+						bitmap.DecodePixelWidth = (int)(flyoutHeight * UITheme.DPIDouble);
+				}
 				bitmap.Freeze ();
 				Image.Source = bitmap;
 			}

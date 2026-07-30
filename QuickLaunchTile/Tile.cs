@@ -19,6 +19,8 @@ namespace WindowsModern.QuickLaunchTile
 			TileInstance = this;
 			TileFolder = Region;
 			SidebarFeatures = Features;
+			Region?.StringResources?.CleanRedundantValues ();
+			UserRegion?.StringResources?.CleanRedundantValues ();
 			var panel = TileUI as Panel;
 			tilePanel = tilePanel ?? new TilePanel ();
 			(tilePanel.Parent as Panel)?.Children?.Clear ();
@@ -27,6 +29,7 @@ namespace WindowsModern.QuickLaunchTile
 			FlyoutInit += Tile_FlyoutInit;
 			FlyoutClosed += Tile_FlyoutClosed;
 			FlyoutShow += Tile_FlyoutShow;
+			Utilities.ReleaseLargeResourcesAsync ();
 		}
 		private void Tile_FlyoutShow (object sender, FlyoutAboutEventArgs e)
 		{

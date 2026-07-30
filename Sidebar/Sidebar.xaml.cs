@@ -237,6 +237,7 @@ namespace Sidebar
 				ArrangeRegion (PinnedTilesRegion, desiredList, true);
 				ArrangeRegion (TilesRegion, desiredList, false);
 				OnTileHeightChanged (null, null);
+				App.ReleaseLargeResourcesAsync ();
 			}, TaskScheduler.FromCurrentSynchronizationContext ()); // 确保在 UI 线程执行
 			PinnedTopTiles?.Refresh ();
 			PinnedBottomTiles?.Refresh ();

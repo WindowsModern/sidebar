@@ -247,6 +247,7 @@ namespace Sidebar
 						}
 						finally
 						{
+							App.ReleaseLargeResourcesAsync ();
 						}
 					}));
 				});
@@ -350,6 +351,7 @@ namespace Sidebar
 				}
 			);
 			downloadTask.ContinueWith (downloadT => {
+				App.ReleaseLargeResourcesAsync ();
 				if (downloadT.IsCanceled)
 				{
 					ShowError (sr.SuitableResource ("STORE_TASKCANCELED"));

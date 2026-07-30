@@ -30,6 +30,7 @@ namespace WindowsModern.FeedTile
 		private Thread _activeRefreshThread;
 		private bool _refreshPending = false;
 		private bool _isRefreshing = false;
+		private bool _isUpdating = false;
 		private readonly object _refreshControlLock = new object ();
 
 		private const string CACHE_FILENAME = "FeedCache.json";
@@ -53,6 +54,44 @@ namespace WindowsModern.FeedTile
 				}
 				return false;
 			}
+			private set
+			{
+				Tile tile = TileInstance as Tile;
+				if (tile != null)
+				{
+					lock (tile._refreshControlLock)
+					{
+						tile._isRefreshing = value;
+					}
+				}
+			}
+		}
+
+		public static bool IsUpdating
+		{
+			get
+			{
+				Tile tile = TileInstance as Tile;
+				if (tile != null)
+				{
+					lock (tile._refreshControlLock)
+					{
+						return tile._isUpdating;
+					}
+				}
+				return false;
+			}
+			private set
+			{
+				Tile tile = TileInstance as Tile;
+				if (tile != null)
+				{
+					lock (tile._refreshControlLock)
+					{
+						tile._isUpdating = value;
+					}
+				}
+			}
 		}
 
 		public override void OnInitialize ()
@@ -60,6 +99,9 @@ namespace WindowsModern.FeedTile
 			TileInstance = this;
 			TileFolder = Region;
 			SidebarFeatures = Features;
+			Region?.StringResources?.CleanRedundantValues ();
+			UserRegion?.StringResources?.CleanRedundantValues ();
+			Utilities.ReleaseLargeResourcesAsync ();
 			Options = new TileOptions (Config);
 			router = new TileEventRouter (this);
 			var panel = TileUI as Panel;
@@ -70,11 +112,7 @@ namespace WindowsModern.FeedTile
 				FeedMgr = (IFeedsManager)Activator.CreateInstance (feedMgrType);
 			LoadCacheAndDisplay ();
 			Options.PropertyChanged += Options_PropertyChanged;
-
-			// 立即启动首次刷新（不 debounce）
 			RequestRefresh (debounceDelayMs: 0);
-
-			// 启动定时器，每 30 分钟触发一次刷新请求
 			_refreshTimer = new Timer (_ => RequestRefresh (), null, TimeSpan.FromMinutes (30), TimeSpan.FromMinutes (30));
 		}
 
@@ -452,6 +490,7 @@ namespace WindowsModern.FeedTile
 								cts.Dispose ();
 							}
 						}
+						Utilities.ReleaseLargeResourcesAsync ();
 					}
 				});
 
@@ -696,6 +735,52 @@ namespace WindowsModern.FeedTile
 		{
 			if (obj != null && Marshal.IsComObject (obj))
 				Marshal.ReleaseComObject (obj);
+		}
+
+		// 静态字段
+		private static readonly object _updateLock = new object ();
+		private static Timer _updateDebounceTimer;
+
+		/// <summary>
+		/// 异步触发系统订阅源更新（使用 AsyncSyncAll），带防抖和单任务保证
+		/// </summary>
+		public static void UpdateFeedsAsync ()
+		{
+			lock (_updateLock)
+			{
+				// 取消之前的防抖定时器
+				_updateDebounceTimer?.Dispose ();
+
+				// 启动新的防抖定时器（延迟 300ms）
+				_updateDebounceTimer = new Timer (_ =>
+				{
+					lock (_updateLock)
+					{
+						_updateDebounceTimer?.Dispose ();
+						_updateDebounceTimer = null;
+
+						// 实际执行更新
+						if (FeedMgr == null) return;
+
+						// 触发后台更新（AsyncSyncAll 立即返回，在后台执行）
+						FeedMgr.AsyncSyncAll ();
+
+						// 注意：AsyncSyncAll 是异步且不提供完成通知，
+						// 因此 IsRefreshing 无法准确跟踪完成状态。
+						// 这里我们临时设置为 true 并稍后重置（仅作为视觉反馈示例）
+						IsUpdating = true;
+						IsRefreshing = true;
+						// 启动一个 10 秒后重置的定时器（实际完成时间可能更短或更长）
+						Timer resetTimer = null;
+						resetTimer = new Timer (task =>
+						{
+							IsRefreshing = false;
+							IsUpdating = false;
+							resetTimer?.Dispose ();
+						}, null, 10000, Timeout.Infinite);
+					}
+				}, null, 300, Timeout.Infinite);
+			}
 		}
 	}
 }

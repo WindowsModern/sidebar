@@ -225,6 +225,7 @@ namespace SGInstall
 				buttonCancel.Enabled = p.CanCancel;
 				buttonCancel.Text = p.CancelButtonTitle;
 			}
+			Program.ReleaseLargeResourcesAsync ();
 		}
 		private void buttonBack_Click (object sender, EventArgs e)
 		{

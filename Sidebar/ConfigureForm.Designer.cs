@@ -656,6 +656,7 @@
 			this.Name = "ConfigureForm";
 			this.ShowIcon = false;
 			this.Text = "ConfigureForm";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConfigureForm_FormClosed);
 			this.Load += new System.EventHandler(this.ConfigureForm_Load);
 			this.panel1.ResumeLayout(false);
 			this.tabControl1.ResumeLayout(false);

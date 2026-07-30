@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
-
+using Sidebar;
 namespace ThemeEditor
 {
 	/// <summary>
@@ -16,6 +16,7 @@ namespace ThemeEditor
 		{
 			Resources.Add ("GlobalConfig", SidebarConfig.Global);
 			Resources.Add ("CurrentUserConfig", SidebarConfig.Global);
+			Utilities.ReleaseLargeResourcesAsync ();
 		}
 	}
 }

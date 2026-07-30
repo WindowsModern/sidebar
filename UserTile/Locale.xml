@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<resource id="TILE_PROP_DISPNAME">
+		<lang name="zh-CN">用户</lang>
+		<lang name="en-US">User</lang>
+	</resource>
+	<resource id="TILE_PROP_DESC">
+		<lang name="zh-CN">显示当前用户</lang>
+	</resource>
+</resources>

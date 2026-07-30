@@ -48,5 +48,9 @@ namespace Sidebar
 			}
 			DWMAPI.EnableBlur (ref hwnd, IntPtr.Zero);
 		}
+		private void Window_Closed (object sender, EventArgs e)
+		{
+			App.ReleaseLargeResourcesAsync ();
+		}
 	}
 }

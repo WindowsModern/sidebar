@@ -622,6 +622,7 @@ namespace Sidebar
 					(this.Parent as Panel)?.Children.Remove (this);
 					Instance?.Instance.OnUnload ();
 					Dispose ();
+					App.ReleaseLargeResourcesAsync ();
 				}));
 			});
 		}
@@ -799,6 +800,7 @@ namespace Sidebar
 				ContextMenuService.SetContextMenu (this, this.TileContextMenu);
 				if (flyoutWnd?.HeaderOptions != null)
 					flyoutWnd.HeaderOptions.ContextMenu = null;
+				App.ReleaseLargeResourcesAsync ();
 			};
 			flyoutWnd.Loaded += loadedHandler;
 			flyoutWnd.SizeChanged += sizeChangedHandler;
@@ -895,6 +897,7 @@ namespace Sidebar
 				Context.PropertiesWindow = null;
 				Context.PropertiesContent = null;
 				Instance.Instance.OnHostChanged (TileHostEvent.PropertiesClosed, Context, sender);
+				App.ReleaseLargeResourcesAsync ();
 			};
 			okClickHandler = (sender, e) =>
 			{

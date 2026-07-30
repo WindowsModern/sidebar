@@ -283,11 +283,9 @@ namespace WindowsModern.SlideshowTile
 			{
 				if ((_gcCurrentCount++) % _gcTotalCount == 0)
 				{
-					System.Diagnostics.Debug.WriteLine (
-						$"Triggering GC: Current Count={_gcCurrentCount}, Total Count={_gcTotalCount}");
+					// System.Diagnostics.Debug.WriteLine ($"Triggering GC: Current Count={_gcCurrentCount}, Total Count={_gcTotalCount}");
 
-					GC.Collect (GC.MaxGeneration, GCCollectionMode.Optimized);
-					GC.WaitForPendingFinalizers ();
+					Utilities.ReleaseLargeResourcesAsync ();
 				}
 			}
 		}
@@ -438,8 +436,10 @@ namespace WindowsModern.SlideshowTile
 				var bitmap = new BitmapImage ();
 				bitmap.BeginInit ();
 				bitmap.UriSource = new Uri (file, UriKind.Absolute);
-				bitmap.CacheOption = BitmapCacheOption.OnLoad;
+				bitmap.CacheOption = BitmapCacheOption.None;
 				bitmap.EndInit ();
+				var sidebarWidth = Tile.TileInstance.Features.Config.Width;
+				if (bitmap.Width > sidebarWidth) bitmap.DecodePixelWidth = (int)(sidebarWidth * UITheme.DPIDouble);
 				bitmap.Freeze ();
 				return bitmap;
 			}

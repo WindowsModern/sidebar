@@ -93,6 +93,7 @@
     <Compile Include="TileManifest.cs" />
     <Compile Include="TileProp.cs" />
     <Compile Include="UI.cs" />
+    <Compile Include="Utilities.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="View.cs" />
     <Compile Include="Window.cs" />

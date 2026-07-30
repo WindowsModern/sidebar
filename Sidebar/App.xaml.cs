@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -40,6 +41,12 @@ namespace Sidebar
 				System.Windows.Forms.Application.SetCompatibleTextRenderingDefault (false);
 			}
 			catch { }
+			OnlyRemainProgramResources (ProgramFolder?.StringResources);
+			OnlyRemainProgramResources (CurrentUserFolder?.StringResources);
+			ProgramFolder?.StringResources?.CleanRedundantValues ();
+			ProgramFolder?.FileResources?.CleanRedundantValues ();
+			CurrentUserFolder?.StringResources?.CleanRedundantValues ();
+			CurrentUserFolder?.FileResources?.CleanRedundantValues ();
 			Resources.Add ("GlobalConfig", GlobalConfig);
 			Resources.Add ("CurrentUserConfig", CurrentUserConfig);
 			//BrowserEmulation.SetWebBrowserEmulation ();
@@ -49,6 +56,7 @@ namespace Sidebar
 			this.MainWindow = mainwnd;
 			mainwnd.Show ();
 			SidebarPipe.StartServer ();
+			ReleaseLargeResourcesAsync ();
 		}
 		private void Application_Exit (object sender, ExitEventArgs e)
 		{
@@ -56,5 +64,22 @@ namespace Sidebar
 			SidebarPipe.Message = null;
 			SidebarPipe.Mail = null;
 		}
+		private static void OnlyRemainProgramResources (ILocaleResources lr)
+		{
+			if (lr == null) return;
+			var deletekeys = new List<string> ();
+			foreach (var kv in lr)
+			{
+				var nord = kv.Key.Trim ().ToUpperInvariant ();
+				if (nord.StartsWith ("SIDEBAR_") || nord.StartsWith ("TILE") || nord.StartsWith ("CONFIG_") || nord.StartsWith ("ABOUT_")) continue;
+				else deletekeys.Add (kv.Key);
+			}
+			foreach (var i in deletekeys)
+			{
+				lr?.Remove (i);
+			}
+		}
+		internal static void ReleaseLargeResourcesAsync () => Utilities.ReleaseLargeResourcesAsync ();
+		private static void ReleaseLargeResources () => Utilities.ReleaseLargeResources ();
 	}
 }

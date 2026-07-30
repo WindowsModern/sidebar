@@ -428,6 +428,7 @@ namespace Sidebar
 			var observable = tileManager.ValidTilesObservable;
 			if (observable != null)
 				observable.CollectionChanged -= OnTileCollectionChanged;
+			App.ReleaseLargeResourcesAsync ();
 		}
 
 		private void removeTileButton_Click (object sender, EventArgs e)

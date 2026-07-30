@@ -32,6 +32,8 @@ namespace WindowsModern.SlideshowTile
 		public override void OnInitialize ()
 		{
 			TileInstance = this;
+			Region?.StringResources?.CleanRedundantValues ();
+			UserRegion?.StringResources?.CleanRedundantValues ();
 			TileOptions = new Config (Config);
 			tilePanel = new TilePanel ();
 			var panel = TileUI as Panel;

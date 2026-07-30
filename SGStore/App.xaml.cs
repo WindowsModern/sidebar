@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Sidebar
@@ -23,6 +24,12 @@ namespace Sidebar
 		{
 			AppRoot = ProgramFolder.GlobalFolder;
 			AppData = ProgramFolder.CurrentUserFolder;
+			OnlyRemainProgramResources (AppRoot?.StringResources);
+			OnlyRemainProgramResources (AppData?.StringResources);
+			AppRoot?.StringResources?.CleanRedundantValues ();
+			AppRoot?.FileResources?.CleanRedundantValues ();
+			AppData?.StringResources?.CleanRedundantValues ();
+			AppData?.FileResources?.CleanRedundantValues ();
 			try
 			{
 				ServicePointManager.SecurityProtocol |= (SecurityProtocolType)192;   // TLS 1.0
@@ -41,6 +48,7 @@ namespace Sidebar
 				Shutdown ();
 				return;
 			}
+			ReleaseLargeResourcesAsync ();
 		}
 		private static void SetTheme (string themeName, string themeColor)
 		{
@@ -55,5 +63,22 @@ namespace Sidebar
 			themeColorField?.SetValue (null, themeColor);
 			themeNameField?.SetValue (null, themeName);
 		}
+		private static void OnlyRemainProgramResources (ILocaleResources lr)
+		{
+			if (lr == null) return;
+			var deletekeys = new List<string> ();
+			foreach (var kv in lr)
+			{
+				var nord = kv.Key.Trim ().ToUpperInvariant ();
+				if (nord.StartsWith ("STORE_")) continue;
+				else deletekeys.Add (kv.Key);
+			}
+			foreach (var i in deletekeys)
+			{
+				lr?.Remove (i);
+			}
+		}
+		internal static void ReleaseLargeResourcesAsync () => Utilities.ReleaseLargeResourcesAsync ();
+		private static void ReleaseLargeResources () => Utilities.ReleaseLargeResources ();
 	}
 }
