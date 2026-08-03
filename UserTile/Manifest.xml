@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Manifest>
-  <Identity Name="WindowsModern.UserTile" Publisher="CN=Windows Modern" Version="1.0.0.1" ProcessorArchitecture="Neutral" />
+  <Identity Name="WindowsModern.UserTile" Publisher="CN=Windows Modern" Version="1.0.0.0" ProcessorArchitecture="Neutral" />
   <Properties>
     <DisplayName>TILE_PROP_DISPNAME</DisplayName>
     <PublisherDisplayName>Windows Modern</PublisherDisplayName>
@@ -19,10 +19,10 @@
       <DefaultHeight>32</DefaultHeight>
       <CanPinBottom>true</CanPinBottom>
       <TileHasFlyout>true</TileHasFlyout>
-      <FlyoutWidth>155</FlyoutWidth>
-      <FlyoutHeight>100</FlyoutHeight>
+      <FlyoutWidth>300</FlyoutWidth>
+      <FlyoutHeight>200</FlyoutHeight>
       <FlyoutCanResize>true</FlyoutCanResize>
-      <Overflow>Scroll</Overflow>
+      <Overflow>Auto</Overflow>
       <DisplayName>TILE_PROP_DISPNAME</DisplayName>
       <TileHasProperties>false</TileHasProperties>
       <Logo>Logo.ico</Logo>

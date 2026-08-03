@@ -5,7 +5,7 @@
     <DisplayName>TILE_PROP_DISPNAME</DisplayName>
     <PublisherDisplayName>Windows Modern</PublisherDisplayName>
     <Description>TILE_PROP_DESC</Description>
-    <Logo>Logo.png</Logo>
+    <Logo>Launch.png</Logo>
     <Type>Content</Type>
   </Properties>
   <Prerequisites>

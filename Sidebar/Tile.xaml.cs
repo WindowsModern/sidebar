@@ -327,6 +327,7 @@ namespace Sidebar
 		private DoubleAnimation _currentHeightAnimation = null;
 		private bool _isHeightAnimating = false;
 		private int _heightAnimationVersion = 0;
+		private double _lastTargetHeight = double.NaN;
 		private Task TransToNewHeight (FrameworkElement component, double elderHeight, double? newHeight = null, TimeSpan? timeout = null)
 		{
 			var tcs = new TaskCompletionSource<bool> ();
@@ -357,7 +358,13 @@ namespace Sidebar
 				return tcs.Task;
 			}
 			int version = ++_heightAnimationVersion;
+			if (_isHeightAnimating)
+			{
+				component.Height = _lastTargetHeight;
+				component.UpdateLayout ();
+			}
 			double originalHeight = component.Height;
+			_lastTargetHeight = targetHeight;
 			component.BeginAnimation (
 				FrameworkElement.HeightProperty,
 				null);

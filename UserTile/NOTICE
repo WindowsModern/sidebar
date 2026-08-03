@@ -1,0 +1,5 @@
+Acknowledgments
+
+We would like to extend our sincere thanks to the developers and maintainers of the Cauldron project, particularly Capgemini.
+Our software utilizes the Capgemini.Cauldron.Win32.UserInformation library, which is part of the Cauldron C# Toolkit. This library has greatly simplified the process of retrieving user information in our application.
+The Cauldron project is made available under the permissive MIT License, and we appreciate the team's dedication to creating and sharing such a valuable resource with the open-source community.

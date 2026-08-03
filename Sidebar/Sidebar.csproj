@@ -328,6 +328,12 @@
     <Content Include="Images\Slideshow\next_normal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\User\Border.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\User\Button.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Locale.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

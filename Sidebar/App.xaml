@@ -1555,7 +1555,142 @@
 						<Setter Property="FontSize" Value="12"></Setter>
 						<Setter Property="Margin" Value="5,3,5,7"></Setter>
 					</Style>
-					
+					<!-- User -->
+					<!-- Tile -->
+					<Style x:Key="TileUserWelcomeUserImage" TargetType="Image">
+						<Setter Property="Width" Value="45"></Setter>
+						<Setter Property="Height" Value="45"></Setter>
+						<Setter Property="Stretch" Value="UniformToFill"></Setter>
+						<Setter Property="Margin" Value="0,0,5,0"></Setter>
+						<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"></Setter>
+						<Setter Property="Effect">
+							<Setter.Value>
+								<DropShadowEffect Color="Gray" 
+                          BlurRadius="15" 
+                          ShadowDepth="5" 
+                          Opacity="0.7" 
+                          Direction="315"/>
+							</Setter.Value>
+						</Setter>
+					</Style>
+					<Style x:Key="TileUserWelcomeUserWelcomeText" TargetType="TextBlock">
+						<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+						<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+						<Setter Property="FontSize" Value="16" />
+						<Setter Property="TextWrapping" Value="Wrap"></Setter>
+					</Style>
+					<Style x:Key="TileUserWelcomeUserUserText" TargetType="TextBlock">
+						<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+						<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+						<Setter Property="FontSize" Value="12" />
+					</Style>
+					<Style x:Key="TileUserCommonUserImage" TargetType="Image">
+						<Setter Property="Width" Value="27"></Setter>
+						<Setter Property="Height" Value="27"></Setter>
+						<Setter Property="Stretch" Value="UniformToFill"></Setter>
+						<Setter Property="Margin" Value="0,0,5,0"></Setter>
+						<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"></Setter>
+					</Style>
+					<Style x:Key="TileUserCommonUserText" TargetType="TextBlock">
+						<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+						<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+						<Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
+						<Setter Property="Margin" Value="0,2,0,0"></Setter>
+					</Style>
+					<!-- Flyout -->
+					<Style x:Key="TileUserFlyoutUserImageView" TargetType="Viewbox">
+						<Setter Property="Width" Value="80"></Setter>
+						<Setter Property="Height" Value="80"></Setter>
+					</Style>
+					<Style x:Key="TileUserFlyoutUserImageBorder" TargetType="Image">
+						<Setter Property="Width" Value="84"></Setter>
+						<Setter Property="Height" Value="84"></Setter>
+						<Setter Property="Source" Value="/Images/User/Border.png"></Setter>
+						<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"></Setter>
+					</Style>
+					<Style x:Key="TileUserFlyoutUserImage" TargetType="Image">
+						<Setter Property="Width" Value="58"></Setter>
+						<Setter Property="Height" Value="58"></Setter>
+						<Setter Property="Margin" Value="3,0,0,4"></Setter>
+						<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"></Setter>
+					</Style>
+					<Style x:Key="TileUserFlyoutUserName" TargetType="TextBlock">
+						<Setter Property="FontSize" Value="20"></Setter>
+						<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+						<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+						<Setter Property="Margin" Value="0,10,0,0"></Setter>
+					</Style>
+					<Style x:Key="TileUserFlyoutButtonStyle" TargetType="Button">
+						<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}"/>
+						<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+						<Setter Property="Background" Value="Transparent"/>
+						<Setter Property="BorderThickness" Value="0"/>
+						<Setter Property="Padding" Value="12,6"/>
+						<Setter Property="HorizontalAlignment" Value="Left"></Setter>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="Button">
+									<Grid>
+										<Ellipse x:Name="Glow" Opacity="0">
+											<Ellipse.Fill>
+												<RadialGradientBrush>
+													<GradientStop Color="#66FFFFFF" Offset="0"/>
+													<GradientStop Color="#33FFFFFF" Offset="0.35"/>
+													<GradientStop Color="#00FFFFFF" Offset="1"/>
+												</RadialGradientBrush>
+											</Ellipse.Fill>
+											<Ellipse.Effect>
+												<BlurEffect Radius="16"/>
+											</Ellipse.Effect>
+										</Ellipse>
+										<Rectangle x:Name="Highlight" Opacity="0">
+											<Rectangle.Fill>
+												<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+													<GradientStop Color="#44FFFFFF" Offset="0"/>
+													<GradientStop Color="#00FFFFFF" Offset="0.5"/>
+												</LinearGradientBrush>
+											</Rectangle.Fill>
+										</Rectangle>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+											<Image Width="20" Height="20" Margin="0,0,0,0" Source="/Images/User/Button.png"/>
+											<ContentPresenter VerticalAlignment="Top" Margin="5,0,0,2" />
+										</StackPanel>
+										<VisualStateManager.VisualStateGroups>
+											<VisualStateGroup x:Name="CommonStates">
+												<VisualState x:Name="Normal"/>
+												<VisualState x:Name="MouseOver">
+													<Storyboard>
+														<DoubleAnimation Storyboard.TargetName="Glow" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25"/>
+														<DoubleAnimation Storyboard.TargetName="Highlight" Storyboard.TargetProperty="Opacity" To="0.55" Duration="0:0:0.25"/>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="Pressed">
+													<Storyboard>
+														<DoubleAnimation Storyboard.TargetName="Glow" Storyboard.TargetProperty="Opacity" To="0.4" Duration="0:0:0.1"/>
+														<DoubleAnimation Storyboard.TargetName="Highlight" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1"/>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="Disabled">
+													<Storyboard>
+														<DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.4" Duration="0:0:0.2"/>
+													</Storyboard>
+												</VisualState>
+											</VisualStateGroup>
+											<VisualStateGroup x:Name="FocusStates">
+												<VisualState x:Name="Focused">
+													<Storyboard>
+														<DoubleAnimation Storyboard.TargetName="Glow" Storyboard.TargetProperty="Opacity" To="0.65" Duration="0:0:0.2"/>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="Unfocused"/>
+											</VisualStateGroup>
+										</VisualStateManager.VisualStateGroups>
+									</Grid>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+
 					<!-- Material -->
 					<!-- Notification -->
 					<ImageSource x:Key="TileNotificationRingNormalImage">Images\Notification\Notification.png</ImageSource>
