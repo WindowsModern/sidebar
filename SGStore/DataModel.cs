@@ -118,7 +118,7 @@ namespace Sidebar
 				foreach (var i in Items)
 				{
 					if (string.IsNullOrWhiteSpace (i.LogoFileName)) continue;
-					return new Uri ($"https://raw.githubusercontent.com/modernw/SidebarGadgetsStore/main/{BaseDirectory}/{i.BaseDirectory}/{i.LogoFileName}");
+					return new Uri ($"{WebAPI.BaseUri}/{BaseDirectory}/{i.BaseDirectory}/{i.LogoFileName}");
 				}
 				return new Uri (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "Images\\Gadget.png"), UriKind.RelativeOrAbsolute);
 			}
@@ -179,7 +179,7 @@ namespace Sidebar
 				foreach (var i in SupportedItems)
 				{
 					if (string.IsNullOrWhiteSpace (i.LogoFileName)) continue;
-					return new Uri ($"https://raw.githubusercontent.com/modernw/SidebarGadgetsStore/main/{BaseDirectory}/{i.BaseDirectory}/{i.LogoFileName}");
+					return new Uri ($"{WebAPI.BaseUri}/{BaseDirectory}/{i.BaseDirectory}/{i.LogoFileName}");
 				}
 				return new Uri (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "Images\\Gadget.png"), UriKind.RelativeOrAbsolute);
 			}
@@ -192,7 +192,7 @@ namespace Sidebar
 				foreach (var i in SupportedItems)
 				{
 					if (string.IsNullOrWhiteSpace (i.PackageFileName)) continue;
-					return new Uri ($"https://raw.githubusercontent.com/modernw/SidebarGadgetsStore/main/{BaseDirectory}/{i.BaseDirectory}/{i.PackageFileName}");
+					return new Uri ($"{WebAPI.BaseUri}/{BaseDirectory}/{i.BaseDirectory}/{i.PackageFileName}");
 				}
 				return new Uri (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "Images\\Gadget.png"), UriKind.RelativeOrAbsolute);
 			}

@@ -10,9 +10,11 @@ namespace Sidebar
 {
 	public static class WebAPI
 	{
+		const string baseUri = "http://127.0.0.1:5500";
+		public static string BaseUri => baseUri;
 		public static TileList GetList ()
 		{
-			const string url = "https://raw.githubusercontent.com/modernw/SidebarGadgetsStore/main/list.json";
+			var url = $"{baseUri}/list.json";
 			using (var client = new WebClient ())
 			{
 				var data = client.DownloadData (url);

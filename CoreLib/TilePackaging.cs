@@ -659,12 +659,12 @@ namespace Sidebar
 					zipOutputStream.CloseEntry ();
 				}
 				var blockMapEntry = new ZipEntry ("BlockMap.xml");
-				blockMapEntry.DateTime = DateTime.Now;
+				blockMapEntry.DateTime = DateTime.UtcNow;
 				zipOutputStream.PutNextEntry (blockMapEntry);
 				zipOutputStream.Write (blockMapBytes, 0, blockMapBytes.Length);
 				zipOutputStream.CloseEntry ();
 				var sigEntry = new ZipEntry ("Signature.bin");
-				sigEntry.DateTime = DateTime.Now;
+				sigEntry.DateTime = DateTime.UtcNow;
 				zipOutputStream.PutNextEntry (sigEntry);
 				zipOutputStream.Write (signature, 0, signature.Length);
 				zipOutputStream.CloseEntry ();

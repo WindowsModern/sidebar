@@ -314,9 +314,7 @@ namespace Sidebar
 				items.Remove (itemToRemove);
 			}
 
-			GC.Collect ();
-			GC.WaitForPendingFinalizers ();
-			GC.Collect ();
+			Utilities.ReleaseLargeResources ();
 			// 尝试移动文件夹到回收站
 			try
 			{
