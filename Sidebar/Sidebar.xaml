@@ -94,6 +94,9 @@
 				<Rectangle Name="SplitterLineBottomFill" IsHitTestVisible="False" Style="{DynamicResource TileSplitterBottomBlankFill}"></Rectangle>
 			</StackPanel>
 			<DockPanel Name="MainPanel" Style="{DynamicResource MainPanel}">
+				<ScrollViewer Name="PinnedTilesScrollRegion" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" Style="{DynamicResource AutoHideScrollViewer}">
+					
+				</ScrollViewer>
 				<StackPanel Name="PinnedTilesRegion" Style="{DynamicResource PinnedTilesRegion}"></StackPanel>
 				<Grid Name="OverflowTilesRegion" Height="0" DockPanel.Dock="Bottom">
 					<StackPanel Name="OverflowTilesRegionContent">
@@ -120,6 +123,9 @@
 						</Rectangle.RenderTransform>
 					</Rectangle>
 				</Grid>
+				<ScrollViewer Name="TilesScrollRegion" DockPanel.Dock="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" Style="{DynamicResource AutoHideScrollViewer}">
+					
+				</ScrollViewer>
 				<StackPanel Name="TilesRegion" Style="{DynamicResource TilesRegion}"></StackPanel>
 			</DockPanel>
 			<Grid RenderTransformOrigin="0.5, 0.5" IsHitTestVisible="False">

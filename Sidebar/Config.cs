@@ -34,6 +34,7 @@ namespace Sidebar
 		private bool _topmost;
 		private bool _occupyWorkingArea;
 		private bool _autorun;
+		private bool _canScroll;
 		/// <summary>
 		///	边栏位置
 		/// </summary>
@@ -170,6 +171,16 @@ namespace Sidebar
 				OnPropertyChanged ("AutoRun");
 			}
 		}
+		public bool CanScroll
+		{
+			get { return _canScroll; }
+			set
+			{
+				_canScroll = value;
+				initConfig ["Settings"] ["CanScroll"] = value;
+				OnPropertyChanged (nameof (CanScroll));
+			}
+		}
 		private void LoadPinnedTiles ()
 		{
 			if (xmlConfig?.Global != null)
@@ -211,6 +222,7 @@ namespace Sidebar
 			_topmost = initConfig? ["Settings"]?.GetKey ("Topmost").ReadBool (false) ?? false;
 			_occupyWorkingArea = initConfig? ["Settings"]?.GetKey ("OccupyWorkingArea").ReadBool (false) ?? false;
 			_autorun = initConfig? ["Settings"]?.GetKey ("AutoRun").ReadBool (false) ?? false;
+			_canScroll = initConfig? ["Settings"]?.GetKey ("CanScroll").ReadBool (false) ?? false;
 		}
 		public SidebarConfig (InitConfig ini, XmlConfig xml)
 		{

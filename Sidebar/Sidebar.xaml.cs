@@ -119,6 +119,7 @@ namespace Sidebar
 			ApplySetting ("Screen");
 			ApplySetting ("OccupyWorkingArea");
 			ApplySetting ("OverlapTaskbar");
+			ApplySetting (nameof (App.CurrentUserConfig.CanScroll));
 		}
 		private void ApplySetting (string propertyName)
 		{
@@ -160,6 +161,20 @@ namespace Sidebar
 				case "OverlapTaskbar":
 					if (cc.OverlapTaskbar) tboHelper.Register ();
 					else tboHelper.Unregister ();
+					break;
+				case nameof (cc.CanScroll):
+					SwitchScrollMode (cc.CanScroll);
+					DispatcherTimer timer = new DispatcherTimer ();
+					timer.Interval = TimeSpan.FromMilliseconds (500);
+					EventHandler eh = null;
+					eh = (sender, e) => {
+						timer.Stop ();
+						OnTileHeightChanged (this, null);
+						if (timer != null) timer.Tick -= eh;
+					};
+					timer.Tick -= eh;
+					timer.Tick += eh;
+					timer.Start ();
 					break;
 			}
 			switch (propertyName)
@@ -737,23 +752,23 @@ namespace Sidebar
 			isClosed = true;
 			SidebarPipe.Mail -= Pipe_OnMail;
 			DwmThemeProvider.Instance?.StopListening ();
-			try { if (_configForm != null && _configForm.IsHandleCreated) _configForm?.Close (); } catch { }
+			try { if (_configWnd != null) _configWnd?.Close (); } catch { }
 			ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
 			App.CurrentUserConfig.PropertyChanged -= CurrentUserConfig_PropertyChanged;
 			if (appbar.IsRegistered) appbar?.Unregister ();
 			if (tboHelper.IsRegistered) tboHelper?.Unregister ();
 		}
-		public ConfigureForm _configForm = null;
+		public ConfigWindow _configWnd = null;
 		private void OpenConfigWindow ()
 		{
-			if (_configForm != null && _configForm.IsHandleCreated) _configForm.Activate ();
+			if (_configWnd != null) _configWnd.Activate ();
 			else
 			{
-				_configForm = new ConfigureForm ();
-				_configForm.FormClosed += (object sender, System.Windows.Forms.FormClosedEventArgs e) => {
-					_configForm = null;
+				_configWnd = new ConfigWindow ();
+				_configWnd.Closed += (s, e) => {
+					_configWnd = null;
 				};
-				_configForm.ShowDialog (new WinFormWrapper (Handle));
+				_configWnd.ShowDialog ();
 			}
 		}
 		private void Window_MouseMove (object sender, MouseEventArgs e)
@@ -1207,6 +1222,36 @@ namespace Sidebar
 		{
 			if (isTileHeightChanging) return;
 			isTileHeightChanging = true;
+			if (App.CurrentUserConfig.CanScroll)
+			{
+				try
+				{
+					if (OverflowTiles.Count > 0)
+					{
+						foreach (var ot in OverflowTiles)
+						{
+							var t = ot.TileElement as Tile;
+							if (t.IsPinned)
+							{
+								if (t.Parent == null)
+									PinnedTilesRegion.Children.Insert (0, t);
+							}
+							else
+							{
+								if (t.Parent == null)
+									TilesRegion.Children.Add (t);
+							}
+						}
+						OverflowTiles.Clear ();
+					}
+				}
+				catch { }
+				finally
+				{
+					isTileHeightChanging = false;
+				}
+				return;
+			}
 			try
 			{
 				var removeTileCollection = new List<Tile> ();
@@ -1330,6 +1375,42 @@ namespace Sidebar
 		private void GetTiles_Click (object sender, RoutedEventArgs e)
 		{
 			Process.Start (System.IO.Path.Combine (App.ProgramFolder.FolderPath, "SGStore.exe"));
+		}
+		private void SwitchScrollMode (bool canscroll)
+		{
+			if (canscroll)
+			{
+				if (PinnedTilesScrollRegion.Content != PinnedTilesRegion)
+				{
+					var parent = PinnedTilesScrollRegion.Parent as Panel;
+					parent.Children.Remove (PinnedTilesRegion);
+					PinnedTilesScrollRegion.Content = PinnedTilesRegion;
+				}
+				if (TilesScrollRegion.Content != TilesRegion)
+				{
+					var parent = TilesRegion.Parent as Panel;
+					parent.Children.Remove (TilesRegion);
+					TilesScrollRegion.Content = TilesRegion;
+				}
+				PinnedTilesScrollRegion.Visibility = TilesScrollRegion.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				PinnedTilesScrollRegion.Visibility = TilesScrollRegion.Visibility = Visibility.Collapsed;
+				UpdateLayout ();
+				if (PinnedTilesScrollRegion.Content == PinnedTilesRegion)
+				{
+					PinnedTilesScrollRegion.Content = null;
+					var parent = PinnedTilesScrollRegion.Parent as DockPanel;
+					parent.Children.Insert (parent.Children.IndexOf (PinnedTilesScrollRegion), PinnedTilesRegion);
+				}
+				if (TilesScrollRegion.Content == TilesRegion)
+				{
+					TilesScrollRegion.Content = null;
+					var parent = TilesScrollRegion.Parent as DockPanel;
+					parent.Children.Insert (parent.Children.IndexOf (TilesScrollRegion), TilesRegion);
+				}
+			}
 		}
 	}
 }

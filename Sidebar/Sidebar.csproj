@@ -101,11 +101,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
-    <Compile Include="ConfigureForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConfigureForm.Designer.cs">
-      <DependentUpon>ConfigureForm.cs</DependentUpon>
+    <Compile Include="ConfigWindow.xaml.cs">
+      <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DebugIOForm.cs">
       <SubType>Form</SubType>
@@ -154,6 +151,10 @@
     <Compile Include="WinForm.cs" />
     <None Include="packages.config" />
     <None Include="Signature.pfx" />
+    <Page Include="ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DragPlaceholder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -337,6 +338,8 @@
     <Content Include="Locale.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Left.png" />
+    <Resource Include="Resources\Right.png" />
     <Content Include="Themes\Aero\Images\ClockFace.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -490,9 +493,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="ConfigureForm.resx">
-      <DependentUpon>ConfigureForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="DebugIOForm.resx">
       <DependentUpon>DebugIOForm.cs</DependentUpon>
     </EmbeddedResource>
