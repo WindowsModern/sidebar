@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Manifest>
-  <Identity Name="WindowsModern.UserTile" Publisher="CN=Windows Modern" Version="1.0.0.0" ProcessorArchitecture="Neutral" />
+  <Identity Name="WindowsModern.UserTile" Publisher="CN=Windows Modern" Version="1.0.0.1" ProcessorArchitecture="Neutral" />
   <Properties>
     <DisplayName>TILE_PROP_DISPNAME</DisplayName>
     <PublisherDisplayName>Windows Modern</PublisherDisplayName>
@@ -25,7 +25,7 @@
       <Overflow>Auto</Overflow>
       <DisplayName>TILE_PROP_DISPNAME</DisplayName>
       <TileHasProperties>false</TileHasProperties>
-      <Logo>Logo.ico</Logo>
+      <Logo>SmallLogoGreen.ico</Logo>
     </RailStyle>
     <GridStyle>
       <Badge>Assets\Badge.png</Badge>

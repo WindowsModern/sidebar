@@ -80,6 +80,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SmallLogoBlue.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SmallLogoGreen.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="LICENSE - Cauldron">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
