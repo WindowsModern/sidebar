@@ -13,18 +13,24 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.Management;
+using System.Windows.Threading;
 
 namespace WindowsModern.PowerTile
 {
 	/// <summary>
 	/// TilePanel.xaml 的交互逻辑
 	/// </summary>
-	public partial class TilePanel: System.Windows.Controls.UserControl
+	public partial class TilePanel: System.Windows.Controls.UserControl, IDisposable
 	{
+		private DispatcherTimer powerUpdateTimer = null;
+		private Random random = new Random ();
 		public TilePanel ()
 		{
 			InitializeComponent ();
 			ACDisplay.Text = Tile.TileFolder.StringResources.SuitableResource ("STATUS_ACPOWER");
+			powerUpdateTimer = new DispatcherTimer ();
+			powerUpdateTimer.Interval = TimeSpan.FromSeconds (random.Next (100, 500) * 0.01);
 		}
 		private void InitPanel ()
 		{
@@ -105,10 +111,42 @@ namespace WindowsModern.PowerTile
 			InitPanel ();
 			SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
 			SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+			//Tile.PowerHost.PowerChanged -= PowerHost_PowerChanged;
+			//Tile.PowerHost.PowerChanged += PowerHost_PowerChanged;
+			powerUpdateTimer.Tick -= PowerUpdateTimer_Tick;
+			powerUpdateTimer.Tick += PowerUpdateTimer_Tick;
+			powerUpdateTimer?.Start ();
+		}
+		private float lastPowerPercent = -1;
+		private void PowerUpdateTimer_Tick (object sender, EventArgs e)
+		{
+			powerUpdateTimer.Interval = TimeSpan.FromSeconds (random.Next (100, 500) * 0.01);
+			var nowPercent = SystemInformation.PowerStatus.BatteryLifePercent;
+			if (lastPowerPercent != nowPercent)
+			{
+				lastPowerPercent = nowPercent;
+				UpdateCurrentVolume ();
+			}
+		}
+		private void Watcher_EventArrived (object sender, EventArrivedEventArgs e)
+		{
+			Dispatcher.BeginInvoke (new Action (() =>
+			{
+				UpdateCurrentVolume ();
+			}));
+		}
+		private void PowerHost_PowerChanged (object sender, EventArgs e)
+		{
+			UpdateStatusIcon ();
+			UpdateCurrentVolume ();
+			UpdateStatusText ();
 		}
 		private void UserControl_Unloaded (object sender, RoutedEventArgs e)
 		{
 			SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+			//Tile.PowerHost.PowerChanged -= PowerHost_PowerChanged;
+			powerUpdateTimer.Tick -= PowerUpdateTimer_Tick;
+			powerUpdateTimer?.Stop ();
 		}
 		private void UserControl_SizeChanged (object sender, SizeChangedEventArgs e)
 		{
@@ -117,6 +155,10 @@ namespace WindowsModern.PowerTile
 			double availableWidth = this.ActualWidth - fixedWidth;
 			if (availableWidth > 0) TextPart.MaxWidth = availableWidth;
 			else TextPart.MaxWidth = 0;
+		}
+		public void Dispose ()
+		{
+			powerUpdateTimer?.Stop ();
 		}
 	}
 }

@@ -299,6 +299,8 @@ namespace WindowsModern.PowerTile
 			SystemPowerHelper.StartBrightnessWatcher ();
 			SystemPowerHelper.StartPerformanceModeWatcher ();
 			AddEventHandlers ();
+			if (TilePanelContainer.Children.Count == 0)
+				TilePanelContainer.Children.Add (new TilePanel ());
 		}
 		private void SystemPowerHelper_PerformanceModeChanged (SystemPowerHelper.PowerMode obj)
 		{
@@ -333,6 +335,13 @@ namespace WindowsModern.PowerTile
 		}
 		private void UserControl_Unloaded (object sender, RoutedEventArgs e)
 		{
+			if (TilePanelContainer.Children.Count != 0)
+			{
+				var tilePanel = TilePanelContainer.Children [0] as TilePanel;
+				(tilePanel?.Parent as Panel)?.Children?.Clear ();
+				tilePanel?.Dispose ();
+				TilePanelContainer.Children.Clear ();
+			}
 			SystemPowerHelper.StopBrightnessWatcher ();
 			SystemPowerHelper.StopPerformanceModeWatcher ();
 			SystemPowerHelper.BrightnessChanged -= SystemPowerHelper_BrightnessChanged;

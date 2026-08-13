@@ -33,7 +33,9 @@
 		<StackPanel>
 			<StackPanel>
 				<TextBlock Name="TitlePowerStatus" Style="{DynamicResource TilePowerFlyoutTitle1}">Power Status</TextBlock>
-				<local:TilePanel Margin="0,16,0,0"></local:TilePanel>
+				<StackPanel Name="TilePanelContainer" Margin="0,16,0,0">
+
+				</StackPanel>
 			</StackPanel>
 			<Line Margin="0,25,0,15" X1="0" Y1="0" X2="400" Y2="0" Style="{DynamicResource TilePowerFlyoutSpillter}"></Line>
 			<StackPanel>

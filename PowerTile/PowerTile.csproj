@@ -34,6 +34,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -51,6 +52,12 @@
     </Compile>
     <Compile Include="Options.cs" />
     <Compile Include="PowerHelper.cs" />
+    <Compile Include="PowerHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PowerHostForm.Designer.cs">
+      <DependentUpon>PowerHostForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TilePanel.xaml.cs">
@@ -108,6 +115,11 @@
     <Content Include="Manifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PowerHostForm.resx">
+      <DependentUpon>PowerHostForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
