@@ -9,7 +9,7 @@
 
 ## SDK
 
-Download: https://github.com/modernw/Sidebar/releases/tag/sdk2026.6.20
+Download: https://github.com/WindowsModern/sidebar/releases/tag/sdk2026.8.14
 
 ## Acknowledgements
 
