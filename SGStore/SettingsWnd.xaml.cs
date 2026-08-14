@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -40,6 +41,7 @@ namespace Sidebar
 			LabelDisclaimer.Text = sr.SuitableResource ("STORE_INFO_DISCLAIMER");
 			LabelCopyright.Text = sr.SuitableResource ("STORE_INFO_COPYRIGHT");
 			Title = sr.SuitableResource ("STORE_SETTINGS");
+			LabelOpenWebStore.Text = sr.SuitableResource ("STORE_WEBSTORE");
 		}
 		private void ButtonClear_Click (object sender, RoutedEventArgs e)
 		{
@@ -147,6 +149,10 @@ namespace Sidebar
 		private void Window_Unloaded (object sender, RoutedEventArgs e)
 		{
 			App.ReleaseLargeResourcesAsync ();
+		}
+		private void LinkOpenWebStore_Click (object sender, RoutedEventArgs e)
+		{
+			Process.Start (WebAPI.WebpageUri);
 		}
 	}
 }

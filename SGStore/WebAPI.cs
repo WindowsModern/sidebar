@@ -10,7 +10,7 @@ namespace Sidebar
 {
 	public static class WebAPI
 	{
-		const string baseUri = "http://127.0.0.1:5500";
+		const string baseUri = "https://localhost";
 		public static string BaseUri => baseUri;
 		public static TileList GetList ()
 		{
@@ -26,5 +26,6 @@ namespace Sidebar
 		{
 			return Task.Factory.StartNew (() => GetList ());
 		}
+		public static string WebpageUri => $"{BaseUri}/index_elder.html";
 	}
 }

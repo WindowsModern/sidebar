@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -282,6 +283,14 @@ namespace Sidebar
 		private void TabControl_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
 			Utilities.ReleaseLargeResourcesAsync ();
+		}
+		private void LinkProject_Click (object sender, RoutedEventArgs e)
+		{
+			Process.Start ("https://github.com/windowsmodern/sidebar");
+		}
+		private void LinkLicense_Click (object sender, RoutedEventArgs e)
+		{
+			Process.Start (System.IO.Path.Combine (App.ProgramFolder.FolderPath, "Licenses\\License.rtf"));
 		}
 	}
 }

@@ -734,7 +734,11 @@ namespace Sidebar
 		public void Dispose ()
 		{
 			Instance.Config.PropertyChanged -= Config_PropertyChanged;
-			Instance?.Instance.OnDestroy ();
+			try
+			{
+				Instance?.Instance?.OnDestroy ();
+			}
+			catch { }
 			Instance = null;
 			if (TileIcon.Source is BitmapImage)
 			{

@@ -19,6 +19,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Diagnostics;
+using System.Collections;
 
 namespace Sidebar
 {
@@ -346,6 +347,8 @@ namespace Sidebar
 		private void Window_Loaded (object sender, RoutedEventArgs e)
 		{
 			ApplyAllSettings ();
+			overflowTilesContainer = new HideTilesContainWindow (this);
+			overflowTilesContainer.Show ();
 		}
 		private void LoadAnimation_Completed (object sender, EventArgs e)
 		{
@@ -424,8 +427,18 @@ namespace Sidebar
 			OpenConfigWindow ();
 		}
 		private System.Windows.Forms.Form mgrform = null;
+		private ManagerWindow mgrWindow;
 		private void AddTile_Click (object sender, RoutedEventArgs e)
 		{
+			if (mgrWindow != null)
+			{
+				mgrWindow?.Activate ();
+				return;
+			}
+			mgrWindow = new ManagerWindow ();
+			mgrWindow.Closed += MgrWindow_Closed;
+			mgrWindow.ShowDialog ();
+			return;
 			if (mgrform != null)
 			{
 				mgrform.Activate ();
@@ -435,6 +448,11 @@ namespace Sidebar
 			mgrform.FormClosed += Mgrform_FormClosed;
 			mgrform.Show (new WinFormWrapper (_source.Handle));
 			return;
+		}
+		private void MgrWindow_Closed (object sender, EventArgs e)
+		{
+			mgrWindow.Closed -= MgrWindow_Closed;
+			mgrWindow = null;
 		}
 		private void Mgrform_FormClosed (object sender, System.Windows.Forms.FormClosedEventArgs e)
 		{
@@ -757,6 +775,7 @@ namespace Sidebar
 			App.CurrentUserConfig.PropertyChanged -= CurrentUserConfig_PropertyChanged;
 			if (appbar.IsRegistered) appbar?.Unregister ();
 			if (tboHelper.IsRegistered) tboHelper?.Unregister ();
+			overflowTilesContainer?.Close ();
 		}
 		public ConfigWindow _configWnd = null;
 		private void OpenConfigWindow ()
@@ -1218,6 +1237,7 @@ namespace Sidebar
 		}
 		public ObservableCollection<TileVisualInfo> OverflowTiles = new UniqueObservableCollection<TileVisualInfo> (o => o);
 		private bool isTileHeightChanging = false;
+		private HideTilesContainWindow overflowTilesContainer = null;
 		public void OnTileHeightChanged (object sender, EventArgs e)
 		{
 			if (isTileHeightChanging) return;
@@ -1231,6 +1251,7 @@ namespace Sidebar
 						foreach (var ot in OverflowTiles)
 						{
 							var t = ot.TileElement as Tile;
+							if (t != null) (t?.Parent as Panel)?.Children?.Remove (t);
 							if (t.IsPinned)
 							{
 								if (t.Parent == null)
@@ -1276,9 +1297,13 @@ namespace Sidebar
 				foreach (var t in removeTileCollection)
 				{
 					(t?.Parent as Panel)?.Children?.Remove (t);
+					overflowTilesContainer.OverflowTilesRegion.Children.Add (t);
+					t.Width = App.CurrentUserConfig.Width;
 					OverflowTiles.Add (t.TileVisual);
 				}
 				if (OverflowTiles.Count <= 0) return;
+				ListCollectionView view = new ListCollectionView (OverflowTiles);
+				view.CustomSort = new TileVisualInfoComparer ();
 				Point pinnedTileRegionTopLeft = PinnedTilesRegion.TransformToAncestor (MainPanel).Transform (new Point (0, 0));
 				var tth = pinnedTileRegionTopLeft.Y - OverflowTilesRegion.ActualHeight;
 				var remain = tth;
@@ -1287,15 +1312,17 @@ namespace Sidebar
 					remain -= t.ActualHeight;
 				}
 				var willremove = new List<TileVisualInfo> ();
-				foreach (TileVisualInfo tvi in OverflowTiles.Reverse ())
+				foreach (TileVisualInfo tvi in view)
 				{
 					var t = tvi.TileElement as Tile;
-					if (remain - t.ActualHeight < 0) break;
+					if (remain - t.ActualHeight <= 0) break;
 					willremove.Add (tvi);
 				}
 				foreach (var tvi in willremove)
 				{
 					var t = tvi.TileElement as Tile;
+					t.ClearValue (WidthProperty);
+					if (t != null) (t?.Parent as Panel)?.Children?.Remove (t);
 					OverflowTiles.Remove (tvi);
 					if (t.Parent == null)
 						(t.IsPinned ? PinnedTilesRegion : TilesRegion).Children.Add (t);
@@ -1411,6 +1438,29 @@ namespace Sidebar
 					parent.Children.Insert (parent.Children.IndexOf (TilesScrollRegion), TilesRegion);
 				}
 			}
+		}
+	}
+	public class TileVisualInfoComparer: IComparer<TileVisualInfo>, IComparer
+	{
+		public int Compare (object x, object y)
+		{
+			return Compare (x as TileVisualInfo, y as TileVisualInfo);
+		}
+		public int Compare (TileVisualInfo x, TileVisualInfo y)
+		{
+			if (x == null && y == null) return 0;
+			if (x == null) return 1; 
+			if (y == null) return -1;
+			var tile_x = x?.TileElement as Tile;
+			var tile_y = y?.TileElement as Tile;
+			var fn_x = tile_x.TileInstance?.Manifest?.Identity?.FamilyName;
+			var fn_y = tile_y.TileInstance?.Manifest?.Identity?.FamilyName;
+			var tilepinned = App.CurrentUserConfig.PinnedTiles;
+			var index_x = tilepinned.IndexOf (fn_x);
+			var index_y = tilepinned.IndexOf (fn_y);
+			if (index_x < 0) index_x = int.MaxValue;
+			if (index_y < 0) index_y = int.MaxValue;
+			return index_y - index_x;
 		}
 	}
 }

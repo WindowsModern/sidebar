@@ -239,12 +239,12 @@
 								<Separator Margin="5,10"></Separator>
 								<TextBlock Name="LabelCopyright" Margin="0,5">Copyright © 2026 Windows Modern. All rights reserved.</TextBlock>
 								<TextBlock Margin="0,40,0,0" HorizontalAlignment="Right">
-									<Hyperlink Name="LinkProject">
+									<Hyperlink Name="LinkProject" Click="LinkProject_Click">
 										<Run Name="LabelProject">Github Project Website</Run>
 									</Hyperlink>
 								</TextBlock>
 								<TextBlock HorizontalAlignment="Right" Margin="0,5">
-									<Hyperlink Name="LinkLicense">
+									<Hyperlink Name="LinkLicense" Click="LinkLicense_Click">
 										<Run Name="LabelLicense">License</Run>
 									</Hyperlink>
 								</TextBlock>

@@ -104,12 +104,6 @@
     <Compile Include="ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DebugIOForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DebugIOForm.Designer.cs">
-      <DependentUpon>DebugIOForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="DragPlaceholder.xaml.cs">
       <DependentUpon>DragPlaceholder.xaml</DependentUpon>
     </Compile>
@@ -123,7 +117,13 @@
       <DependentUpon>FlyoutTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Font.cs" />
+    <Compile Include="HideTilesContainWindow.xaml.cs">
+      <DependentUpon>HideTilesContainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IEHelper.cs" />
+    <Compile Include="ManagerWindow.xaml.cs">
+      <DependentUpon>ManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Observable.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="SidebarAppBar.cs" />
@@ -168,6 +168,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FlyoutTile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HideTilesContainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -493,9 +501,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="DebugIOForm.resx">
-      <DependentUpon>DebugIOForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

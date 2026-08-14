@@ -43,53 +43,60 @@
 				<GradientStop Color="#D6E6F5" Offset="1"/>
 			</LinearGradientBrush>
 		</Grid.Background>
-		<TabControl Margin="12"
+		<DockPanel>
+			<TextBlock DockPanel.Dock="Bottom" Margin="12,5,12,12">
+				<Hyperlink Name="LinkOpenWebStore" Click="LinkOpenWebStore_Click">
+					<Run x:Name="LabelOpenWebStore">Open Web Store</Run>
+				</Hyperlink>
+			</TextBlock>
+			<TabControl DockPanel.Dock="Top" Margin="12,12,12,5"
                     Background="Transparent"
 					SelectionChanged="TabControl_SelectionChanged"
                     BorderThickness="0">
-			<TabItem Name="TabGeneral" Header="General">
-				<Grid Background="#80FFFFFF">
-					<StackPanel Margin="18">
-						<TextBlock Name="LabelCurrCache" Text="Current cache:"
+				<TabItem Name="TabGeneral" Header="General">
+					<Grid Background="#80FFFFFF">
+						<StackPanel Margin="18">
+							<TextBlock Name="LabelCurrCache" Text="Current cache:"
                                    Foreground="#555"/>
-						<TextBlock Name="CurrCacheDisplay"
+							<TextBlock Name="CurrCacheDisplay"
                                    Text="0 KB"
                                    Margin="0,3,0,15"
                                    Foreground="#777"/>
-						<Button Name="ButtonClear"
+							<Button Name="ButtonClear"
                                 Content="Clean Cache"
                                 Style="{StaticResource AeroButton}"
                                 HorizontalAlignment="Left"
                                 Click="ButtonClear_Click"/>
-					</StackPanel>
-				</Grid>
-			</TabItem>
-			<TabItem Name="TabAbout" Header="About">
-				<Grid x:Name="AboutContent"
+						</StackPanel>
+					</Grid>
+				</TabItem>
+				<TabItem Name="TabAbout" Header="About">
+					<Grid x:Name="AboutContent"
           Background="#80FFFFFF">
-					<StackPanel Margin="25,30,25,20">
-						<TextBlock Name="LabelAppTitle" Text="Sidebar Gadget Store"
+						<StackPanel Margin="25,30,25,20">
+							<TextBlock Name="LabelAppTitle" Text="Sidebar Gadget Store"
                        FontSize="24"
                        Foreground="#333"/>
-						<TextBlock Name="LabelVersion" Text="Version 1.0"
+							<TextBlock Name="LabelVersion" Text="Version 1.0"
                        FontSize="12"
                        Foreground="#666"
                        Margin="0,6,0,18"/>
-						<TextBlock Name="LabelIntroduction" Text="A Longhorn inspired Sidebar platform"
+							<TextBlock Name="LabelIntroduction" Text="A Longhorn inspired Sidebar platform"
                        FontSize="13"
                        Foreground="#555"
                        TextWrapping="Wrap"/>
-						<Separator Margin="0,25,0,12"/>
-						<TextBlock Name="LabelDisclaimer" Text="Provides a modern gadget experience for Windows."
+							<Separator Margin="0,25,0,12"/>
+							<TextBlock Name="LabelDisclaimer" Text="Provides a modern gadget experience for Windows."
                        FontSize="11"
                        Foreground="#555"
                        TextWrapping="Wrap"
                        Margin="0,8,0,0"/>
-						<TextBlock Name="LabelCopyright" Text="Copyright © 2026"
+							<TextBlock Name="LabelCopyright" Text="Copyright © 2026"
                        Foreground="#777" Margin="0,10"/>
-					</StackPanel>
-				</Grid>
-			</TabItem>
-		</TabControl>
+						</StackPanel>
+					</Grid>
+				</TabItem>
+			</TabControl>
+		</DockPanel>
 	</Grid>
 </Window>

@@ -271,4 +271,40 @@ namespace Sidebar
 			return null;
 		}
 	}
+	public class ObjectToVisibilityConverter: IValueConverter
+	{
+		public object Convert (object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			bool visible = value != null;
+			string param = parameter as string;
+			if (param == "CollapsedWhenNull")
+				return visible ? Visibility.Visible : Visibility.Collapsed;
+			return visible ? Visibility.Visible : Visibility.Collapsed;
+		}
+		public object ConvertBack (object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			return Binding.DoNothing;
+		}
+	}
+	public class StringResourceConverter: IValueConverter
+	{
+		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value == null) return null;
+			string key = value.ToString ();
+			try
+			{
+				if (string.IsNullOrEmpty (key)) return null;
+				return App.ProgramFolder.StringResources?.SuitableResource (key, key) ?? key;
+			}
+			catch
+			{
+				return key;
+			}
+		}
+		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return Binding.DoNothing;
+		}
+	}
 }
