@@ -38,7 +38,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Project1.ico</ApplicationIcon>
+    <ApplicationIcon>Project2.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -348,6 +348,8 @@
     </Content>
     <Resource Include="Resources\Left.png" />
     <Resource Include="Resources\Right.png" />
+    <Resource Include="Project2.ico" />
+    <Resource Include="Resources\Project1_2.ico" />
     <Content Include="Themes\Aero\Images\ClockFace.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -476,7 +478,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Project1.ico" />
-    <None Include="Resources\Project1_2.ico" />
     <!--<Content Include="Themes\Slate\Theme.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>-->
