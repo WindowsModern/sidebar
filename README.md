@@ -7,6 +7,12 @@
 * Information regarding third-party code and attribution can be found in the `NOTICE` file. The original LongBar license text is included in the `LICENSE - LongBar` file.
 * This project utilizes AI assistance in some aspects of development.
 
+## Release
+
+Download the latest release from the Releases section.
+
+<a href="https://github.com/WindowsModern/sidebar/releases" target="_blank"><img src="https://img.shields.io/github/v/release/WindowsModern/sidebar"></a>
+
 ## SDK
 
 Download: https://github.com/WindowsModern/sidebar/releases/tag/sdk2026.8.21
