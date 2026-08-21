@@ -64,8 +64,11 @@
 			</StackPanel>
 			<Grid Name="TileContent" Style="{DynamicResource TileContent}" SizeChanged="TileContent_SizeChanged" MinHeight="0">
 				<Grid.Resources>
-					<Style TargetType="TextBlock"
-               BasedOn="{StaticResource GlobalTextBlockTextDisplay}" />
+					<Style TargetType="TextBlock">
+						<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+						<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+						<Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
+					</Style>
 				</Grid.Resources>
 
 			</Grid>

@@ -29,7 +29,14 @@
 			<Rectangle Name="FlyoutBackgroundHighlight1" Style="{DynamicResource FlyoutBackgroundHighlight1}"></Rectangle>
 		</Grid>
 		<Grid Name="ForegroundPart">
-			<Grid Name="FlyoutContent" Style="{DynamicResource FlyoutContent}" SizeChanged="FlyoutContent_SizeChanged"></Grid>
+			<Grid Name="FlyoutContent" Style="{DynamicResource FlyoutContent}" SizeChanged="FlyoutContent_SizeChanged">
+				<Grid.Resources>
+					<Style TargetType="TextBlock">
+						<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+						<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+					</Style>
+				</Grid.Resources>
+			</Grid>
 			<local:TopOptions x:Name="FlyoutHeader" Style="{DynamicResource FlyoutHeaderOptionsBar}" VerticalAlignment="Top" IconStyle="{DynamicResource FlyoutHeaderOptionsIcon}">
 			</local:TopOptions>
 		</Grid>

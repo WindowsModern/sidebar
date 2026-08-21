@@ -6,25 +6,25 @@
              xmlns:local="clr-namespace:Sidebar"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-	<Grid  SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor">
+	<Grid SnapsToDevicePixels="True" UseLayoutRounding="True">
 		<Grid.RowDefinitions>
-			<RowDefinition Name="SliceTop" Height="0"/>
+			<RowDefinition Name="SliceTop" Height="{Binding SliceThickness.Top, RelativeSource={RelativeSource AncestorType=local:Slice9Image}}"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Name="SliceBottom" Height="0"/>
+			<RowDefinition Name="SliceBottom" Height="{Binding SliceThickness.Bottom, RelativeSource={RelativeSource AncestorType=local:Slice9Image}}"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Name="SliceLeft" Width="0"/>
+			<ColumnDefinition Name="SliceLeft" Width="{Binding SliceThickness.Left, RelativeSource={RelativeSource AncestorType=local:Slice9Image}}"/>
 			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Name="SliceRight" Width="0"/>
+			<ColumnDefinition Name="SliceRight" Width="{Binding SliceThickness.Right, RelativeSource={RelativeSource AncestorType=local:Slice9Image}}"/>
 		</Grid.ColumnDefinitions>
-		<Image Name="ImageTopLeft" Grid.Row="0" Grid.Column="0" Stretch="None"/>
+		<Image Name="ImageTopLeft" Grid.Row="0" Grid.Column="0" Stretch="Fill"/>
 		<Image Name="ImageTop" Grid.Row="0" Grid.Column="1" Stretch="Fill"/>
-		<Image Name="ImageTopRight" Grid.Row="0" Grid.Column="2" Stretch="None"/>
+		<Image Name="ImageTopRight" Grid.Row="0" Grid.Column="2" Stretch="Fill"/>
 		<Image Name="ImageLeft" Grid.Row="1" Grid.Column="0" Stretch="Fill"/>
 		<Image Name="ImageCenter" Grid.Row="1" Grid.Column="1" Stretch="Fill"/>
 		<Image Name="ImageRight" Grid.Row="1" Grid.Column="2" Stretch="Fill"/>
-		<Image Name="ImageBottomLeft" Grid.Row="2" Grid.Column="0" Stretch="None"/>
+		<Image Name="ImageBottomLeft" Grid.Row="2" Grid.Column="0" Stretch="Fill"/>
 		<Image Name="ImageBottom" Grid.Row="2" Grid.Column="1" Stretch="Fill"/>
-		<Image Name="ImageBottomRight" Grid.Row="2" Grid.Column="2" Stretch="None"/>
+		<Image Name="ImageBottomRight" Grid.Row="2" Grid.Column="2" Stretch="Fill"/>
 	</Grid>
 </UserControl>

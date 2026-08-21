@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sidebar" Loaded="Window_Loaded" Closed="Window_Closed"
         mc:Ignorable="d" SizeChanged="Window_SizeChanged" ResizeMode="NoResize"
-		WindowStyle="None" Visibility="Hidden" ShowInTaskbar="False"
+		WindowStyle="None" Visibility="Hidden" ShowInTaskbar="False" Background="Black"
         Title="HideTilesContainWindow" Height="0" Width="300">
 	<Window.Resources>
 		<Style TargetType="Control">

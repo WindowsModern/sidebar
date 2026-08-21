@@ -10,7 +10,7 @@ namespace Sidebar
 {
 	public static class WebAPI
 	{
-		const string baseUri = "https://localhost";
+		const string baseUri = "http://127.0.0.1:5500";
 		public static string BaseUri => baseUri;
 		public static TileList GetList ()
 		{

@@ -16,8 +16,8 @@
 		</Style>
 	</Window.Resources>
 	<Grid>
-		<TabControl Margin="10" SelectionChanged="TabControl_SelectionChanged">
-			<TabItem Name="HeaderSettings" Header="Settings">
+		<TabControl Margin="10" SelectionChanged="TabControl_SelectionChanged" FontFamily="{DynamicResource GlobalFontFamily}">
+			<TabItem Name="HeaderSettings" Header="Settings" FontFamily="{DynamicResource GlobalFontFamily}">
 				<ScrollViewer Style="{DynamicResource AutoHideScrollViewer}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" Padding="10">
 					<StackPanel VerticalAlignment="Stretch">
 						<StackPanel.Resources>
@@ -31,65 +31,65 @@
 								<Setter Property="Margin" Value="0,2"></Setter>
 							</Style>
 						</StackPanel.Resources>
-						<GroupBox Name="GroupGeneral" Header="General">
+						<GroupBox Name="GroupGeneral" Header="General" FontFamily="{DynamicResource GlobalFontFamily}">
 							<WrapPanel Margin="10,5" Orientation="Vertical" VerticalAlignment="Stretch">
 								<CheckBox Name="InputAutoRun">
-									<TextBlock Name="LabelAutoRun" TextWrapping="Wrap">Auto Run</TextBlock>
+									<TextBlock Name="LabelAutoRun" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}">Auto Run</TextBlock>
 								</CheckBox>
 								<CheckBox Name="InputTopmost">
-									<TextBlock Name="LabelTopmost" TextWrapping="Wrap">Topmost</TextBlock>
+									<TextBlock Name="LabelTopmost" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}">Topmost</TextBlock>
 								</CheckBox>
 								<CheckBox Name="InputAppBar">
-									<TextBlock Name="LabelAppBar" TextWrapping="Wrap">App Bar</TextBlock>
+									<TextBlock Name="LabelAppBar" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}">App Bar</TextBlock>
 								</CheckBox>
 								<CheckBox Name="InputOverlap">
-									<TextBlock Name="LabelOverlap" TextWrapping="Wrap">Overlap Taskbar</TextBlock>
+									<TextBlock Name="LabelOverlap" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}">Overlap Taskbar</TextBlock>
 								</CheckBox>
-								<TextBlock Name="LabelScreen" Margin="0,5">Current Screen:</TextBlock>
-								<ComboBox Name="SelectScreen" HorizontalAlignment="Stretch"></ComboBox>
+								<TextBlock Name="LabelScreen" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Current Screen:</TextBlock>
+								<ComboBox Name="SelectScreen" HorizontalAlignment="Stretch" Padding="10,2" FontFamily="{DynamicResource GlobalFontFamily}"></ComboBox>
 							</WrapPanel>
 						</GroupBox>
-						<GroupBox Name="GroupDisplay" Header="Display" Padding="10,5" Margin="0,5">
+						<GroupBox Name="GroupDisplay" Header="Display" Padding="10,5" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">
 							<WrapPanel Orientation="Vertical" VerticalAlignment="Stretch">
 								<CheckBox Name="InputLock">
-									<TextBlock Name="LabelLock" TextWrapping="Wrap">Lock</TextBlock>
+									<TextBlock Name="LabelLock" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}">Lock</TextBlock>
 								</CheckBox>
 								<CheckBox Name="InputCanScroll">
-									<TextBlock Name="LabelCanScroll" TextWrapping="Wrap">Can Scroll</TextBlock>
+									<TextBlock Name="LabelCanScroll" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}">Can Scroll</TextBlock>
 								</CheckBox>
-								<TextBlock Name="LabelWidth" Margin="0,5">Width: </TextBlock>
+								<TextBlock Name="LabelWidth" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Width: </TextBlock>
 								<StackPanel Orientation="Horizontal">
-									<ComboBox Name="SelectWidth"></ComboBox>
-									<WindowsFormsHost HorizontalAlignment="Stretch" MinWidth="80" Background="Transparent" Margin="5,0">
+									<ComboBox Name="SelectWidth" Padding="10,2" FontFamily="{DynamicResource GlobalFontFamily}"></ComboBox>
+									<WindowsFormsHost HorizontalAlignment="Stretch" MinWidth="80" Background="Transparent" Margin="5,0" FontFamily="{DynamicResource GlobalFontFamily}">
 										<winform:NumericUpDown x:Name="InputWidth" Minimum="50" Maximum="1000" TextAlign="Center" DecimalPlaces="2" AutoSize="True"></winform:NumericUpDown>
 									</WindowsFormsHost>
 								</StackPanel>
-								<TextBlock Name="LabelLocation" Margin="0,5">Location in the screen:</TextBlock>
+								<TextBlock Name="LabelLocation" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Location in the screen:</TextBlock>
 								<StackPanel Orientation="Horizontal">
 									<RadioButton Name="InputLeft">
 										<StackPanel>
-											<TextBlock Name="LabelLocationLeft">Left</TextBlock>
+											<TextBlock Name="LabelLocationLeft" FontFamily="{DynamicResource GlobalFontFamily}">Left</TextBlock>
 											<Image Name="ImageLocationLeft" Source="Resources\Left.png"></Image>
 										</StackPanel>
 									</RadioButton>
 									<RadioButton Name="InputRight" Margin="10,0">
 										<StackPanel>
-											<TextBlock Name="LabelLocationRight">Right</TextBlock>
+											<TextBlock Name="LabelLocationRight" FontFamily="{DynamicResource GlobalFontFamily}">Right</TextBlock>
 											<Image Name="ImageLocationRight" Source="Resources\Right.png"></Image>
 										</StackPanel>
 									</RadioButton>
 								</StackPanel>
-								<TextBlock Name="LabelTheme" Margin="0,5">Current Theme:</TextBlock>
+								<TextBlock Name="LabelTheme" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Current Theme:</TextBlock>
 								<StackPanel Orientation="Horizontal">
-									<ComboBox Name="SelectTheme" HorizontalAlignment="Stretch"></ComboBox>
-									<Button Name="ButtonRefreshTheme" Width="Auto" Padding="10,2" Margin="5,0,0,0" Click="ButtonRefreshTheme_Click">Refresh</Button>
+									<ComboBox Name="SelectTheme" HorizontalAlignment="Stretch" Padding="10,2" FontFamily="{DynamicResource GlobalFontFamily}"></ComboBox>
+									<Button Name="ButtonRefreshTheme" Width="Auto" Padding="10,2" Margin="5,0,0,0" Click="ButtonRefreshTheme_Click" FontFamily="{DynamicResource GlobalFontFamily}">Refresh</Button>
 								</StackPanel>
 							</WrapPanel>
 						</GroupBox>
 					</StackPanel>
 				</ScrollViewer>
 			</TabItem>
-			<TabItem Name="HeaderAbout" Header="About">
+			<TabItem Name="HeaderAbout" Header="About" FontFamily="{DynamicResource GlobalFontFamily}">
 				<Grid x:Name="RootGrid" ClipToBounds="True">
 					<Grid.Resources>
 						<Storyboard x:Key="ContinuousAnimation" RepeatBehavior="Forever">
@@ -232,18 +232,18 @@
 						</Grid.Resources>
 						<ScrollViewer Style="{DynamicResource AutoHideScrollViewer}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto">
 							<WrapPanel Margin="30,45,30,15" Orientation="Vertical">
-								<TextBlock Name="LabelAboutAppTitle" FontSize="18" Margin="0,0,0,5">Sidebar</TextBlock>
-								<TextBlock Name="LabelAboutVersion" Margin="0,5">Version 1.0.0.0</TextBlock>
+								<TextBlock Name="LabelAboutAppTitle" FontSize="18" Margin="0,0,0,5" FontFamily="{DynamicResource GlobalFontFamily}">Sidebar</TextBlock>
+								<TextBlock Name="LabelAboutVersion" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Version 1.0.0.0</TextBlock>
 								<Separator Margin="5,10"></Separator>
-								<TextBlock Name="LabelIntroduction" Margin="0,5">Sidebar is ...</TextBlock>
+								<TextBlock Name="LabelIntroduction" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Sidebar is ...</TextBlock>
 								<Separator Margin="5,10"></Separator>
-								<TextBlock Name="LabelCopyright" Margin="0,5">Copyright © 2026 Windows Modern. All rights reserved.</TextBlock>
-								<TextBlock Margin="0,40,0,0" HorizontalAlignment="Right">
+								<TextBlock Name="LabelCopyright" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Copyright © 2026 Windows Modern. All rights reserved.</TextBlock>
+								<TextBlock Margin="0,40,0,0" HorizontalAlignment="Right" FontFamily="{DynamicResource GlobalFontFamily}">
 									<Hyperlink Name="LinkProject" Click="LinkProject_Click">
 										<Run Name="LabelProject">Github Project Website</Run>
 									</Hyperlink>
 								</TextBlock>
-								<TextBlock HorizontalAlignment="Right" Margin="0,5">
+								<TextBlock HorizontalAlignment="Right" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">
 									<Hyperlink Name="LinkLicense" Click="LinkLicense_Click">
 										<Run Name="LabelLicense">License</Run>
 									</Hyperlink>

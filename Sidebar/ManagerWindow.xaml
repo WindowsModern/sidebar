@@ -349,7 +349,7 @@
                     Background="{DynamicResource AeroTitleBg}">
 				<DockPanel>
 					<StackPanel Orientation="Horizontal">
-						<TextBlock VerticalAlignment="Center">
+						<TextBlock VerticalAlignment="Center" FontFamily="{DynamicResource GlobalFontFamily}">
 						<Hyperlink Click="Hyperlink_Click">
 							<Run Text="{Binding Path=., Source='SIDEBAR_CONTEXTMENU_STORE', Converter={StaticResource StringResource}}" />
 						</Hyperlink>
