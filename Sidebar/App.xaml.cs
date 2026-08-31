@@ -62,6 +62,10 @@ namespace Sidebar
 			UpdateTheme ();
 			SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 			ReleaseLargeResourcesAsync ();
+			Notification.ShowNotification (new NotifyIconNotification {
+				Title = "测试用标题",
+				Content = "测试用内容",
+			}, null);
 		}
 		private void SystemEvents_UserPreferenceChanged (object sender, UserPreferenceChangedEventArgs e)
 		{
@@ -105,6 +109,57 @@ namespace Sidebar
 			isActiveField?.SetValue (null, true);
 			themeColorField?.SetValue (null, themeColor);
 			themeNameField?.SetValue (null, themeName);
+		}
+		private static void SetCurrentBaseTheme (WpfTheme wpfTheme, string color = "normalcolor", string themeUri = null)
+		{
+			var appResources = Application.Current.Resources;
+			var mergedDictionaries = appResources.MergedDictionaries;
+			if (mergedDictionaries.Count < 2)
+			{
+				if (mergedDictionaries.Count == 1) mergedDictionaries.Add (new ResourceDictionary ());
+			}
+			switch (wpfTheme)
+			{
+				default:
+				case WpfTheme.Default:
+					mergedDictionaries [1] = new ResourceDictionary ();
+					break;
+				case WpfTheme.Classic:
+					{
+						var rd = new ResourceDictionary ();
+						rd.Source = new Uri ("/PresentationFramework.Classic,Version=4.0.0.0,Culture=neutral,PublicKeyToken=31bf3856ad364e35;component/themes/classic.xaml", UriKind.RelativeOrAbsolute);
+						mergedDictionaries [1] = rd;
+					}
+					break;
+				case WpfTheme.Aero:
+				case WpfTheme.Luna:
+				case WpfTheme.Royale:
+					{
+						var themeStr = "Aero";
+						switch (wpfTheme)
+						{
+							case WpfTheme.Aero: themeStr = "Aero"; break;
+							case WpfTheme.Luna: themeStr = "Luna"; break;
+							case WpfTheme.Royale: themeStr = "Royale"; break;
+						}
+						var rd = new ResourceDictionary ();
+						rd.Source = new Uri ($"/PresentationFramework.{themeStr},Version=4.0.0.0,Culture=neutral,PublicKeyToken=31bf3856ad364e35;component/themes/{themeStr.ToLowerInvariant ()}.{color}.xaml", UriKind.RelativeOrAbsolute);
+						mergedDictionaries [1] = rd;
+					}
+					break;
+				case WpfTheme.Others:
+					try
+					{
+						var rd = new ResourceDictionary ();
+						rd.Source = new Uri (themeUri, UriKind.RelativeOrAbsolute);
+						mergedDictionaries [1] = rd;
+					}
+					catch
+					{
+						mergedDictionaries [1] = new ResourceDictionary ();
+					}
+					break;
+			}
 		}
 		private void UpdateTheme ()
 		{
@@ -155,19 +210,24 @@ namespace Sidebar
 				case WindowsXPVisualStyle.Plex:
 				case WindowsXPVisualStyle.Slate:
 				case WindowsXPVisualStyle.Watercolor:
+					SetCurrentBaseTheme (WpfTheme.Aero);
 					SetTheme ("Luna");
 					break;
 				case WindowsXPVisualStyle.Luna:
+					SetCurrentBaseTheme (WpfTheme.Luna, colorScheme);
 					SetTheme ("Luna", colorScheme);
 					break;
 				case WindowsXPVisualStyle.Royale:
+					SetCurrentBaseTheme (WpfTheme.Royale);
 					SetTheme ("Royale");
 					break;
 				case WindowsXPVisualStyle.Classic:
+					SetCurrentBaseTheme (WpfTheme.Default);
 					SetTheme ("Classic");
 					break;
 				case WindowsXPVisualStyle.Jade:
 				case WindowsXPVisualStyle.Aero:
+					SetCurrentBaseTheme (WpfTheme.Aero);
 					SetTheme ("Aero");
 					break;
 			}
@@ -185,6 +245,15 @@ namespace Sidebar
 			Slate, // 网友分享的个性化主题，主要模仿 Longhorn Slate 主题（灰色)
 			Jade, // 网友分享的个性化主题，主要模仿 Longhorn Jade 主题（白色)
 			Aero // 网友分享的个性化主题
+		}
+		enum WpfTheme
+		{
+			Default,
+			Luna,
+			Royale,
+			Classic,
+			Aero,
+			Others
 		}
 	}
 }

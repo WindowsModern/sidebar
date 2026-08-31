@@ -111,31 +111,57 @@ namespace Sidebar
 			int centerWidth = width - left - right;
 			int centerHeight = height - top - bottom;
 			ImageTopLeft.Source = CreateCroppedBitmap (0, 0, left, top);
-			ImageTop.Source = CreateCroppedBitmap (left, 0, centerWidth, top);
+			//ImageTop.Source = CreateCroppedBitmap (left, 0, centerWidth, top);
 			ImageTopRight.Source = CreateCroppedBitmap (left + centerWidth, 0, right, top);
-			ImageLeft.Source = CreateCroppedBitmap (0, top, left, centerHeight);
-			ImageCenter.Source = CreateCroppedBitmap (left, top, centerWidth, centerHeight);
-			ImageRight.Source = CreateCroppedBitmap (left + centerWidth, top, right, centerHeight);
+			//ImageLeft.Source = CreateCroppedBitmap (0, top, left, centerHeight);
+			//ImageCenter.Source = CreateCroppedBitmap (left, top, centerWidth, centerHeight);
+			//ImageRight.Source = CreateCroppedBitmap (left + centerWidth, top, right, centerHeight);
 			ImageBottomLeft.Source = CreateCroppedBitmap (0, top + centerHeight, left, bottom);
-			ImageBottom.Source = CreateCroppedBitmap (left, top + centerHeight, centerWidth, bottom);
+			//ImageBottom.Source = CreateCroppedBitmap (left, top + centerHeight, centerWidth, bottom);
 			ImageBottomRight.Source = CreateCroppedBitmap (left + centerWidth, top + centerHeight, right, bottom);
+			SetBorderBackground (BorderImageTop, CreateCroppedBitmap (left, 0, centerWidth, top));
+			SetBorderBackground (BorderImageLeft, CreateCroppedBitmap (0, top, left, centerHeight));
+			SetBorderBackground (BorderImageCenter, CreateCroppedBitmap (left, top, centerWidth, centerHeight));
+			SetBorderBackground (BorderImageRight, CreateCroppedBitmap (left + centerWidth, top, right, centerHeight));
+			SetBorderBackground (BorderImageBottom, CreateCroppedBitmap (left, top + centerHeight, centerWidth, bottom));
 		}
 		private CroppedBitmap CreateCroppedBitmap (int x, int y, int w, int h)
 		{
 			if (w <= 0 || h <= 0) return null;
 			return new CroppedBitmap (_bitmapSource, new Int32Rect (x, y, w, h));
 		}
+		private void SetBorderBackground (Border border, CroppedBitmap bitmap)
+		{
+			if (border == null) return;
+			if (bitmap == null)
+			{
+				border.Background = null;
+				return;
+			}
+			var brush = new ImageBrush (bitmap);
+			if (brush.CanFreeze) brush.Freeze ();
+			border.Background = brush;
+		}
 		private void ClearImages ()
 		{
 			ImageTopLeft.Source = null;
-			ImageTop.Source = null;
+			//ImageTop.Source = null;
 			ImageTopRight.Source = null;
-			ImageLeft.Source = null;
-			ImageCenter.Source = null;
-			ImageRight.Source = null;
+			//ImageLeft.Source = null;
+			//ImageCenter.Source = null;
+			//ImageRight.Source = null;
 			ImageBottomLeft.Source = null;
-			ImageBottom.Source = null;
+			//ImageBottom.Source = null;
 			ImageBottomRight.Source = null;
+			ClearBorderBackground (BorderImageTop);
+			ClearBorderBackground (BorderImageLeft);
+			ClearBorderBackground (BorderImageCenter);
+			ClearBorderBackground (BorderImageRight);
+			ClearBorderBackground (BorderImageBottom);
+		}
+		private void ClearBorderBackground (Border border)
+		{
+			if (border != null) border.Background = null;
 		}
 		private BitmapSource GetBitmapSource (ImageSource source)
 		{
@@ -158,9 +184,10 @@ namespace Sidebar
 		}
 		private void ApplyScalingMode ()
 		{
-			Image [] images = { ImageTopLeft, ImageTop, ImageTopRight, ImageLeft,
-							   ImageCenter, ImageRight, ImageBottomLeft, ImageBottom, ImageBottomRight };
-			foreach (Image img in images)
+			Image [] images = { ImageTopLeft, ImageTopRight, ImageBottomLeft,ImageBottomRight,
+				/* ImageTop, ImageLeft, ImageCenter, ImageRight, ImageBottom */};
+			
+			foreach (var img in images)
 			{
 				if (img != null)
 					RenderOptions.SetBitmapScalingMode (img, ScalingMode);

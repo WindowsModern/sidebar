@@ -395,4 +395,52 @@
 		<Setter Property="Height" Value="28"/>
 	</Style>
 	<Style x:Key="TileIconItemWithTextForQuickLaunchTile" TargetType="ToggleButton" BasedOn="{StaticResource TileIconItemWithTextButtonStyle}"></Style>
+
+	<!-- Materials -->
+	<!-- Buttons -->
+	<Style x:Key="TileButtonsUpButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<snt:ImageButton x:Name="PART_ImgBtn" 
+													 NormalSource="Images\TBUpNormal.png"
+													 HoverSource="Images\TBUpLight.png"
+									 ActiveSource="Images\TBUpPress.png"
+													 UseAnimation="True"
+													 ></snt:ImageButton>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileButtonsDownButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<snt:ImageButton x:Name="PART_ImgBtn" 
+													 NormalSource="Images\Buttons\TBDownNormal.png"
+													 HoverSource="Images\Buttons\TBDownLight.png"
+									 ActiveSource="Images\TBDownPress.png"
+													 UseAnimation="True"
+													 ></snt:ImageButton>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 </ResourceDictionary>

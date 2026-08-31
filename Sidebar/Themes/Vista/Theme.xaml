@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Sidebar"
+					xmlns:snt="clr-namespace:Sidebar;assembly=Native"
 					xmlns:s="clr-namespace:System;assembly=mscorlib">
 	<!-- Includes -->
 	<!-- Options -->
@@ -256,5 +257,118 @@
 				</BeginStoryboard>
 			</EventTrigger>
 		</Style.Triggers>
+	</Style>
+
+	<!-- Search -->
+	<!-- Search:Flyout -->
+	<Style x:Key="TileSearchFlyoutCustomNextButtonStyle" TargetType="Button">
+		<Setter Property="Width" Value="23"/>
+		<Setter Property="Height" Value="23"/>
+		<Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<snt:ImageButton UseAnimation="True"
+									 NormalSource="Images\SearchNextNormal.png"
+									 HoverSource="Images\SearchNextLight.png"
+									 ActiveSource="Images\SearchNextPress.png"
+									 DisabledSource="Images\SearchNextDisabled.png"
+									 Margin="-4,-2,-4,-4"
+									 ></snt:ImageButton>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- Image Buttons -->
+	<Style x:Key="TileButtonsLeftButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<snt:ImageButton x:Name="PART_ImgBtn" 
+													 NormalSource="Images\TBLeftNormal.png"
+													 HoverSource="Images\TBLeftLight.png"
+									 ActiveSource="Images\TBLeftPress.png"
+													 UseAnimation="True"
+													 ></snt:ImageButton>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileButtonsRightButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<snt:ImageButton x:Name="PART_ImgBtn" 
+													 NormalSource="Images\TBRightNormal.png"
+													 HoverSource="Images\TBRightLight.png"
+									  ActiveSource="Images\TBRightPress.png"
+													 UseAnimation="True"
+													 ></snt:ImageButton>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileButtonsUpButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<snt:ImageButton x:Name="PART_ImgBtn" 
+													 NormalSource="Images\TBUpNormal.png"
+													 HoverSource="Images\TBUpLight.png"
+									  ActiveSource="Images\TBUpPress.png"
+													 UseAnimation="True"
+													 ></snt:ImageButton>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileButtonsDownButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<snt:ImageButton x:Name="PART_ImgBtn" 
+													 NormalSource="Images\TBDownNormal.png"
+													 HoverSource="Images\TBDownLight.png"
+									  ActiveSource="Images\TBDownPress.png"
+													 UseAnimation="True"
+													 ></snt:ImageButton>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="PART_ImgBtn" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 </ResourceDictionary>

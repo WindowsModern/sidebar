@@ -127,6 +127,7 @@ namespace Sidebar
 				if (Application.Current.Resources.Contains ("EnableBlurForFlyout"))
 					enableBlur = (bool)Application.Current.Resources ["EnableBlurForFlyout"];
 			}
+			try { if (Environment.OSVersion.Version.Major > 6) WindowAccent.SetAccentPolicy (hwnd, enableBlur); } catch { }
 			if (!enableBlur || !DWMAPI.IsDwmAvailable ())
 			{
 				DWMAPI.DisableBlur (ref hwnd);

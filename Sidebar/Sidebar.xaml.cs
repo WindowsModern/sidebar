@@ -1173,6 +1173,7 @@ namespace Sidebar
 			{
 				DWMAPI.DisableBlur (ref hwnd);
 			}
+			try { if (Environment.OSVersion.Version.Major > 6) WindowAccent.SetAccentPolicy (hwnd, state); } catch { }
 		}
 		private void ItemManageTile_SubmenuOpened (object sender, RoutedEventArgs e)
 		{

@@ -63,7 +63,7 @@ namespace Sidebar
 			LoadTiles ();
 			_pinnedTiles.CollectionChanged += PinnedTiles_CollectionChanged;
 			//App.TileMgr.ValidTilesObservable.CollectionChanged += PinnedTiles_CollectionChanged;
-			_refreshTimer.Tick += RefreshList_Timer;
+			//_refreshTimer.Tick += RefreshList_Timer;
 		}
 
 		private void RefreshList_Timer (object sender, EventArgs e)

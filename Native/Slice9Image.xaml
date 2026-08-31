@@ -6,6 +6,12 @@
              xmlns:local="clr-namespace:Sidebar"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+	<UserControl.Resources>
+		<Style TargetType="Border">
+			<Setter Property="BorderBrush" Value="{x:Null}"></Setter>
+			<Setter Property="BorderThickness" Value="0"></Setter>
+		</Style>
+	</UserControl.Resources>
 	<Grid SnapsToDevicePixels="True" UseLayoutRounding="True">
 		<Grid.RowDefinitions>
 			<RowDefinition Name="SliceTop" Height="{Binding SliceThickness.Top, RelativeSource={RelativeSource AncestorType=local:Slice9Image}}"/>
@@ -18,13 +24,20 @@
 			<ColumnDefinition Name="SliceRight" Width="{Binding SliceThickness.Right, RelativeSource={RelativeSource AncestorType=local:Slice9Image}}"/>
 		</Grid.ColumnDefinitions>
 		<Image Name="ImageTopLeft" Grid.Row="0" Grid.Column="0" Stretch="Fill"/>
-		<Image Name="ImageTop" Grid.Row="0" Grid.Column="1" Stretch="Fill"/>
 		<Image Name="ImageTopRight" Grid.Row="0" Grid.Column="2" Stretch="Fill"/>
-		<Image Name="ImageLeft" Grid.Row="1" Grid.Column="0" Stretch="Fill"/>
-		<Image Name="ImageCenter" Grid.Row="1" Grid.Column="1" Stretch="Fill"/>
-		<Image Name="ImageRight" Grid.Row="1" Grid.Column="2" Stretch="Fill"/>
 		<Image Name="ImageBottomLeft" Grid.Row="2" Grid.Column="0" Stretch="Fill"/>
-		<Image Name="ImageBottom" Grid.Row="2" Grid.Column="1" Stretch="Fill"/>
 		<Image Name="ImageBottomRight" Grid.Row="2" Grid.Column="2" Stretch="Fill"/>
+		<!--
+		<Image Name="ImageTop" Grid.Row="0" Grid.Column="1" Stretch="Fill" Visibility="Collapsed"/>
+		<Image Name="ImageLeft" Grid.Row="1" Grid.Column="0" Stretch="Fill" Visibility="Collapsed"/>
+		<Image Name="ImageCenter" Grid.Row="1" Grid.Column="1" Stretch="Fill" Visibility="Collapsed"/>
+		<Image Name="ImageRight" Grid.Row="1" Grid.Column="2" Stretch="Fill" Visibility="Collapsed"/>
+		<Image Name="ImageBottom" Grid.Row="2" Grid.Column="1" Stretch="Fill" Visibility="Collapsed"/> 
+		-->
+		<Border Name="BorderImageTop" Grid.Row="0" Grid.Column="1"/>
+		<Border Name="BorderImageLeft" Grid.Row="1" Grid.Column="0"/>
+		<Border Name="BorderImageCenter" Grid.Row="1" Grid.Column="1"/>
+		<Border Name="BorderImageRight" Grid.Row="1" Grid.Column="2"/>
+		<Border Name="BorderImageBottom" Grid.Row="2" Grid.Column="1"/>
 	</Grid>
 </UserControl>

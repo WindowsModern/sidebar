@@ -288,6 +288,7 @@ namespace Sidebar
 	}
 	public class StringResourceConverter: IValueConverter
 	{
+		public static StringResourceConverter Instance { get; private set; } = new StringResourceConverter ();
 		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value == null) return null;
@@ -295,7 +296,7 @@ namespace Sidebar
 			try
 			{
 				if (string.IsNullOrEmpty (key)) return null;
-				return App.ProgramFolder.StringResources?.SuitableResource (key, key) ?? key;
+				return App.ProgramFolder.StringResources?.SuitableResource (key, key, /* culture != null ? culture.Name : */null) ?? key;
 			}
 			catch
 			{
@@ -306,5 +307,19 @@ namespace Sidebar
 		{
 			return Binding.DoNothing;
 		}
+	}
+	public static class GridHelper
+	{
+		public static readonly DependencyProperty MyOffsetProperty =
+			DependencyProperty.RegisterAttached (
+				"OffsetMargin",
+				typeof (Thickness),
+				typeof (GridHelper),
+				new FrameworkPropertyMetadata (0.0,
+					FrameworkPropertyMetadataOptions.AffectsRender));
+		public static void SetOffsetMargin (DependencyObject element, double value)
+			=> element.SetValue (MyOffsetProperty, value);
+		public static double GetOffsetMargin (DependencyObject element)
+			=> (double)element.GetValue (MyOffsetProperty);
 	}
 }

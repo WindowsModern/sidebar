@@ -57,12 +57,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accent.cs" />
     <Compile Include="Architecture.cs" />
     <Compile Include="ButtonStatus.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="DescRes.cs" />
     <Compile Include="DWinMgr.cs" />
     <Compile Include="HResult.cs" />
+    <Compile Include="ImageButton.xaml.cs">
+      <DependentUpon>ImageButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ini.cs" />
     <Compile Include="Localization.cs" />
     <Compile Include="Normalization.cs" />
@@ -114,6 +118,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ImageButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Slice9Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

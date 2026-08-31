@@ -45,6 +45,8 @@ namespace Sidebar
 				TileContent.MaxHeight = Instance?.Manifest.VisualElements.RailStyle.MaxHeight ?? 32767;
 			}
 			TileContent.MinHeight = Instance?.Manifest.VisualElements.RailStyle.MinHeight ?? 20;
+			flyoutOpenTimer.Tick -= FlyoutOpenTimer_Tick;
+			flyoutOpenTimer.Tick += FlyoutOpenTimer_Tick;
 			if (!hasPlayedLoadAnimation)
 			{
 				try
@@ -79,6 +81,11 @@ namespace Sidebar
 						TileContent.Height = double.NaN;
 				}
 			}
+		}
+		private void FlyoutOpenTimer_Tick (object sender, EventArgs e)
+		{
+			OpenFlyout ();
+			flyoutOpenTimer.Stop ();
 		}
 		private void UpdateMouseTrigger ()
 		{
@@ -550,6 +557,7 @@ namespace Sidebar
 			if (e.ClickCount == 2)
 			{
 				(Instance.Config as TileConfig).AutoSize = true;
+				e.Handled = true;
 			}
 			else if (e.ClickCount == 1)
 			{
@@ -733,6 +741,8 @@ namespace Sidebar
 		}
 		public void Dispose ()
 		{
+			Loaded -= Tile_Loaded;
+			flyoutOpenTimer.Tick -= FlyoutOpenTimer_Tick;
 			Instance.Config.PropertyChanged -= Config_PropertyChanged;
 			try
 			{
@@ -1232,6 +1242,36 @@ namespace Sidebar
 			else
 			{
 			}
+		}
+		private DispatcherTimer flyoutOpenTimer = new DispatcherTimer () {
+			Interval = TimeSpan.FromSeconds (0.1),
+		};
+		private void UserControl_MouseDoubleClick (object sender, MouseButtonEventArgs e)
+		{
+			if (ShouldIgnoreDoubleClick (e.OriginalSource as DependencyObject))
+				return;
+			flyoutOpenTimer?.Stop ();
+			flyoutOpenTimer?.Start ();
+		}
+		private void UserControl_PreviewMouseDoubleClick (object sender, MouseButtonEventArgs e)
+		{
+			
+		}
+		private bool ShouldIgnoreDoubleClick (DependencyObject source)
+		{
+			if (source == null) return false;
+			DependencyObject current = source;
+			while (current != null)
+			{
+				if (current == Splitter || current == SplitterLine1 || current == SplitterLine2)
+					return true;
+				if (IsGestureConsumer (current))
+					return true;
+				if (current == TileFlyoutIcon)
+					return true;
+				current = VisualTreeHelper.GetParent (current);
+			}
+			return false;
 		}
 	}
 }

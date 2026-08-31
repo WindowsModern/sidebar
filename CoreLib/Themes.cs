@@ -130,14 +130,13 @@ namespace Sidebar
 			try { OnThemeChanged (newTheme); } catch { }
 			var appResources = Application.Current.Resources;
 			var mergedDictionaries = appResources.MergedDictionaries;
-			if (newTheme == null)
+			if (mergedDictionaries.Count < 3)
 			{
-				if (mergedDictionaries.Count > 1)
-					mergedDictionaries.RemoveAt (1);
-				return;
+				if (mergedDictionaries.Count == 1) mergedDictionaries.Add (new ResourceDictionary ());
+				if (mergedDictionaries.Count == 2) mergedDictionaries.Add (new ResourceDictionary ());
 			}
-			if (mergedDictionaries.Count > 1) mergedDictionaries [1] = newTheme.ResourceDictionary;
-			else mergedDictionaries.Add (newTheme.ResourceDictionary);
+			mergedDictionaries [2] = newTheme?.ResourceDictionary ?? new ResourceDictionary ();
+			return;
 		}
 		public static event Action<Theme> ThemeChanged;
 		private static void OnThemeChanged (Theme t) { ThemeChanged?.Invoke (t); }
