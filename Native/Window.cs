@@ -931,6 +931,115 @@ namespace Sidebar
 			 RDW_ERASE = 0x0004,
 			 RDW_ALLCHILDREN = 0x0080
 		}
+		/// <summary>
+		/// 表示 Win32 COLORREF 结构体（用于颜色键透明等操作）。
+		/// 格式为 0x00BBGGRR：低位为红色，中位为绿色，高位为蓝色。
+		/// 对应 API：SetLayeredWindowAttributes 等。
+		/// </summary>
+		[StructLayout (LayoutKind.Sequential)]
+		public struct COLORREF
+		{
+			/// <summary>颜色的整数值（格式：AABBGGRR）</summary>
+			public uint Value;
+			public COLORREF (uint value)
+			{
+				Value = value;
+			}
+			/// <summary>Alpha 通道（0-255）</summary>
+			public byte Alpha
+			{
+				get { return (byte)((Value >> 24) & 0xFF); }
+				set { Value = (Value & 0x00FFFFFF) | ((uint)value << 24); }
+			}
+			/// <summary>红色通道（0-255）</summary>
+			public byte Red
+			{
+				get { return (byte)(Value & 0xFF); }
+				set { Value = (Value & 0xFFFFFF00) | value; }
+			}
+			/// <summary>绿色通道（0-255）</summary>
+			public byte Green
+			{
+				get { return (byte)((Value >> 8) & 0xFF); }
+				set { Value = (Value & 0xFFFF00FF) | ((uint)value << 8); }
+			}
+			/// <summary>蓝色通道（0-255）</summary>
+			public byte Blue
+			{
+				get { return (byte)((Value >> 16) & 0xFF); }
+				set { Value = (Value & 0xFF00FFFF) | ((uint)value << 16); }
+			}
+			/// <summary>根据 RGBA 值创建 COLORREF（便于构造）</summary>
+			public static COLORREF FromArgb (byte alpha, byte red, byte green, byte blue)
+			{
+				return new COLORREF (((uint)alpha << 24) | ((uint)blue << 16) | ((uint)green << 8) | red);
+			}
+			/// <summary>从 System.Drawing.Color 隐式转换为 COLORREF（格式：AABBGGRR）</summary>
+			public static implicit operator COLORREF (System.Drawing.Color color)
+			{
+				uint argb = (uint)color.ToArgb ();
+				uint a = (argb & 0xFF000000) >> 24;
+				uint r = argb & 0x000000FF;
+				uint g = (argb & 0x0000FF00) >> 8;
+				uint b = (argb & 0x00FF0000) >> 16;
+				return new COLORREF ((a << 24) | (b << 16) | (g << 8) | r);
+			}
+			/// <summary>从 COLORREF 隐式转换为 System.Drawing.Color</summary>
+			public static implicit operator System.Drawing.Color (COLORREF colorRef)
+			{
+				uint val = colorRef.Value;
+				byte a = (byte)((val >> 24) & 0xFF);
+				byte r = (byte)(val & 0xFF);
+				byte g = (byte)((val >> 8) & 0xFF);
+				byte b = (byte)((val >> 16) & 0xFF);
+				return System.Drawing.Color.FromArgb (a, r, g, b);
+			}
+			/// <summary>从 uint 隐式转换为 COLORREF</summary>
+			public static implicit operator COLORREF (uint value)
+			{
+				return new COLORREF (value);
+			}
+			/// <summary>从 COLORREF 隐式转换为 uint</summary>
+			public static implicit operator uint (COLORREF colorRef)
+			{
+				return colorRef.Value;
+			}
+			/// <summary>从 int 隐式转换为 COLORREF</summary>
+			public static implicit operator COLORREF (int value)
+			{
+				return new COLORREF ((uint)value);
+			}
+			/// <summary>从 COLORREF 隐式转换为 int</summary>
+			public static implicit operator int (COLORREF colorRef)
+			{
+				return (int)colorRef.Value;
+			}
+			/// <summary>从 System.Windows.Media.Color 隐式转换为 COLORREF</summary>
+			public static implicit operator COLORREF (System.Windows.Media.Color color)
+			{
+				// 注意：WPF 的 Color 使用 A,R,G,B 属性，不要用 ToArgb（那是 Drawing 的扩展）
+				uint a = color.A;
+				uint r = color.R;
+				uint g = color.G;
+				uint b = color.B;
+				return new COLORREF ((a << 24) | (b << 16) | (g << 8) | r);
+			}
+			/// <summary>从 COLORREF 隐式转换为 System.Windows.Media.Color</summary>
+			public static implicit operator System.Windows.Media.Color (COLORREF colorRef)
+			{
+				uint val = colorRef.Value;
+				byte a = (byte)((val >> 24) & 0xFF);
+				byte r = (byte)(val & 0xFF);
+				byte g = (byte)((val >> 8) & 0xFF);
+				byte b = (byte)((val >> 16) & 0xFF);
+				return System.Windows.Media.Color.FromArgb (a, r, g, b);
+			}
+			/// <summary>返回形如 COLORREF: 0x00BBGGRR 的字符串</summary>
+			public override string ToString ()
+			{
+				return $"COLORREF: 0x{Value:X8}";
+			}
+		}
 	}
 	/// <summary>
 	/// Win32 API 原生方法的静态封装（兼容 Windows XP）。
@@ -1110,6 +1219,8 @@ namespace Sidebar
 		[DllImport ("user32.dll")]
 		[return: MarshalAs (UnmanagedType.Bool)]
 		public static extern bool EnumWindows (EnumWindowsProc lpEnumFunc, IntPtr lParam);
+		[DllImport ("gdi32.dll", SetLastError = true)]
+		public static extern IntPtr CreateRoundRectRgn (int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
 	}
 	public static class HWndExtraMethods
 	{

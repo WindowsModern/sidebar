@@ -14,6 +14,8 @@
 	<!-- Options -->
 	<s:Boolean x:Key="EnableBlur">false</s:Boolean>
 	<s:Boolean x:Key="EnableShadow">false</s:Boolean>
+	<s:Boolean x:Key="EnableNotificationBlur">false</s:Boolean>
+	<s:Boolean x:Key="EnableNotificationClipRound">false</s:Boolean>
 	<!-- Styles -->
 	<SolidColorBrush x:Key="GlobalForegroundBrush" Color="White" />
 	<s:Double x:Key="GlobalFontSize">10</s:Double>
@@ -305,6 +307,164 @@
 			</EventTrigger>
 		</Style.Triggers>
 	</Style>
+	<!-- Notification -->
+	<Style x:Key="NotificationWindow" TargetType="Window">
+		<Setter Property="MinWidth" Value="152"></Setter>
+		<Setter Property="MinHeight" Value="67"></Setter>
+		<Setter Property="MaxWidth" Value="354"></Setter>
+		<Setter Property="MaxHeight" Value="275"></Setter>
+	</Style>
+	<Style x:Key="NotificationRegionBorder" TargetType="Border">
+		<Setter Property="CornerRadius" Value="5"></Setter>
+		<Setter Property="ClipToBounds" Value="True"></Setter>
+		<Setter Property="Margin" Value="0,0,9,10"></Setter>
+	</Style>
+	<Style x:Key="NotificationBaseBackground" TargetType="Border">
+		<Setter Property="Background" Value="#070707"></Setter>
+		<Setter Property="CornerRadius" Value="5"></Setter>
+	</Style>
+	<Style x:Key="NotificationBackgroundImageSlice9" TargetType="snt:Slice9Image">
+		<Setter Property="Source" Value="Images\NotificationHighlight.png"></Setter>
+		<Setter Property="SliceThickness" Value="7,6"></Setter>
+	</Style>
+	<Style x:Key="NotificationBackgroundHighlight" TargetType="Border">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="NotificationBorder" TargetType="Border">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="NotificationHeader" TargetType="StackPanel">
+		<Setter Property="Orientation" Value="Horizontal"></Setter>
+		<Setter Property="HorizontalAlignment" Value="Right"></Setter>
+		<Setter Property="VerticalAlignment" Value="Top"></Setter>
+		<Setter Property="Margin" Value="0,1,5,0"></Setter>
+		<Setter Property="Height" Value="14"></Setter>
+	</Style>
+	<Style x:Key="NotificationOptionsButton" TargetType="Button">
+		<Setter Property="Width" Value="Auto"></Setter>
+		<Setter Property="Height" Value="Auto"></Setter>
+		<Setter Property="VerticalAlignment" Value="Center"></Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<TextBlock Foreground="White" FontSize="10" FontFamily="{DynamicResource GlobalFontFamily}" Text="{TemplateBinding Content}"></TextBlock>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationCloseButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<snt:ImageButton NormalSource="Images\CloseNormal.png"
+										HoverSource="Images\CloseLight.png"
+										ActiveSource="Images\ClosePress.png"
+										UseAnimation="True"
+										></snt:ImageButton>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationIcon" TargetType="Image">
+		<Setter Property="Width" Value="16"></Setter>
+		<Setter Property="Height" Value="16"></Setter>
+		<Setter Property="Margin" Value="0,21,0,0"></Setter>
+		<Setter Property="HorizontalAlignment" Value="Left"></Setter>
+		<Setter Property="VerticalAlignment" Value="Top"></Setter>
+	</Style>
+	<Style x:Key="NotificationIconReflection" TargetType="Image">
+		<Setter Property="Width" Value="16"></Setter>
+		<Setter Property="Height" Value="16"></Setter>
+		<Setter Property="Margin" Value="0,53,0,0"></Setter>
+		<Setter Property="HorizontalAlignment" Value="Left"></Setter>
+		<Setter Property="VerticalAlignment" Value="Top"></Setter>
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<ScaleTransform ScaleY="-1" />
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Opacity" Value="0.44"></Setter>
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="NotificationTextAreaOuterBorder" TargetType="Border">
+		<Setter Property="BorderBrush">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+					<GradientStop Color="#80BABEC0" Offset="0"></GradientStop>
+					<GradientStop Color="#00FFFFFF" Offset="0.5"></GradientStop>
+					<GradientStop Color="#80BABEC0" Offset="1"></GradientStop>
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Margin" Value="16,15,5,0"></Setter>
+		<Setter Property="CornerRadius" Value="4"></Setter>
+		<Setter Property="BorderThickness" Value="0"></Setter>
+	</Style>
+	<Style x:Key="NotificationTextAreaInnerBorder" TargetType="Border">
+		<Setter Property="BorderBrush">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+					<GradientStop Color="#8054585A" Offset="0"></GradientStop>
+					<GradientStop Color="#80D0D8DA" Offset="0.25"></GradientStop>
+					<GradientStop Color="#00FFFFFF" Offset="0.5"></GradientStop>
+					<GradientStop Color="#80D0D8DA" Offset="0.75"></GradientStop>
+					<GradientStop Color="#8054585A" Offset="1"></GradientStop>
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="CornerRadius" Value="3"></Setter>
+		<Setter Property="BorderThickness" Value="0"></Setter>
+	</Style>
+	<Style x:Key="NotificationTextAreaTextPart" TargetType="Border">
+		<Setter Property="Margin" Value="3"></Setter>
+		<Setter Property="Cursor" Value="Hand"></Setter>
+	</Style>
+	<Style x:Key="NotificationTextAreaBackgroundImageSlice9" TargetType="snt:Slice9Image">
+		<Setter Property="Margin" Value="16,15,5,0"></Setter>
+		<Setter Property="Source" Value="Images\TextBlock.png"></Setter>
+		<Setter Property="SliceThickness" Value="7"></Setter>
+	</Style>
+	<Style x:Key="NotificationTimeout" TargetType="Control">
+		<Setter Property="Width" Value="5"></Setter>
+		<Setter Property="HorizontalAlignment" Value="Right"></Setter>
+		<Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+		<Setter Property="Margin" Value="0,-10,0,0"></Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<snt:Slice9Image Source="Images\NotificationTimeout.png" SliceThickness="0,10,0,0"></snt:Slice9Image>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationHeightClipContainer" TargetType="Grid">
+		<Setter Property="Width" Value="0"></Setter>
+		<Setter Property="Height" Value="15"></Setter>
+		<Setter Property="Tag" Value="5"></Setter>
+	</Style>
+	<Style x:Key="NotificationTitle" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"></Setter>
+		<Setter Property="FontSize" Value="14"></Setter>
+		<Setter Property="Margin" Value="5,7,5,0"></Setter>
+		<Setter Property="Foreground" Value="Black"></Setter>
+	</Style>
+	<Style x:Key="NotificationContent" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"></Setter>
+		<Setter Property="FontSize" Value="11"></Setter>
+		<Setter Property="FontWeight" Value="Normal"></Setter>
+		<Setter Property="Margin" Value="5,3,5,5"></Setter>
+		<Setter Property="Foreground" Value="Black"></Setter>
+	</Style>
+	<Storyboard x:Key="NotificationEnter">
+		<DoubleAnimation Storyboard.TargetName="BackgroundHeightChange" Storyboard.TargetProperty="Height" From="15" To="0" Duration="0:0:0.4"/>
+		<DoubleAnimation Storyboard.TargetName="HeaderBar" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.4" />
+	</Storyboard>
+	<Storyboard x:Key="NotificationLeave">
+		<DoubleAnimation Storyboard.TargetName="BackgroundHeightChange" Storyboard.TargetProperty="Height" From="0" To="15" Duration="0:0:0.4"/>
+		<DoubleAnimation Storyboard.TargetName="HeaderBar" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.4" />
+	</Storyboard>
+	<Storyboard x:Key="NotificationLoaded"></Storyboard>
+	<Storyboard x:Key="NotificationUnloaded"></Storyboard>
 	<!-- Tiles -->
 	<!-- Clock -->
 	<!-- Clock:FlyoutCalendar -->
