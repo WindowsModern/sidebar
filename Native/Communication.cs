@@ -15,4 +15,12 @@ namespace Sidebar
 		public string Content { get; set; }
 		public ToolTipIcon Icon { get; set; } = ToolTipIcon.None;
 	}
+	[ComVisible (true)]
+	public class NotifyIconNotification2: NotifyIconNotification
+	{
+		/// <summary>
+		/// 如果可以的话，默认使用用于磁贴显示图标的图标。
+		/// </summary>
+		public System.Windows.Media.ImageSource IconImage { get; set; } = null;
+	}
 }

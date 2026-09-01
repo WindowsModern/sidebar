@@ -62,6 +62,7 @@ namespace Sidebar
 			UpdateTheme ();
 			SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 			ReleaseLargeResourcesAsync ();
+			Notification.ShowNotification ("测试", "Test\n12Test", 3000000);
 		}
 		private void SystemEvents_UserPreferenceChanged (object sender, UserPreferenceChangedEventArgs e)
 		{

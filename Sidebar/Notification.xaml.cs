@@ -142,10 +142,7 @@ namespace Sidebar
 			widthRefreshTimer.Tick += WidthRefreshTimer_Tick;
 			widthRefreshTimer.Start ();
 			UpdateLocation ();
-			if (timeSpan.Seconds > 0)
-			{
-				AnimateTimeoutBar ();
-			}
+			AnimateTimeoutBar ();
 			App.CurrentUserConfig.PropertyChanged += CurrentUserConfig_PropertyChanged;
 		}
 		private void CurrentUserConfig_PropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -168,14 +165,8 @@ namespace Sidebar
 		}
 		public void UpdateTimeout (TimeSpan ts)
 		{
-			if (IsLoaded)
-			{
-				if (timeSpan.Seconds > 0)
-				{
-					AnimateTimeoutBar ();
-				}
-			}
-			else timeSpan = ts;
+			timeSpan = ts;
+			if (IsLoaded) AnimateTimeoutBar ();
 		}
 		private AnimationClock ac = null;
 		private void AnimateTimeoutBar ()
@@ -243,7 +234,9 @@ namespace Sidebar
 		{
 			Utilities.ReleaseLargeResourcesAsync ();
 			PopupNotificationQueue ();
-			BalloonTipClosed?.Invoke (sender, e);
+			foreach (var h in tipClosed) h?.Invoke (sender, e);
+			tipClicked?.Clear ();
+			tipClosed?.Clear ();
 		}
 		private void Root_SourceInitialized (object sender, EventArgs e)
 		{
@@ -279,17 +272,28 @@ namespace Sidebar
 		}
 		private void OnNotificationClick ()
 		{
+			var e = new EventArgs ();
 			try
 			{
-				BalloonTipClicked?.Invoke (this, new EventArgs ());
+				foreach (var h in tipClicked) h?.Invoke (this, e);
 			}
 			finally
 			{
 				try { PauseTimeoutAnimation (); Close (); } catch { }
 			}
 		}
-		public event EventHandler BalloonTipClicked;
-		public event EventHandler BalloonTipClosed;
+		private HashSet<EventHandler> tipClicked = new HashSet<EventHandler> ();
+		private HashSet<EventHandler> tipClosed = new HashSet<EventHandler> ();
+		public event EventHandler BalloonTipClicked
+		{
+			add { tipClicked?.Add (value); }
+			remove { tipClicked?.Remove (value); }
+		}
+		public event EventHandler BalloonTipClosed
+		{
+			add { tipClosed?.Add (value); }
+			remove { tipClosed?.Remove (value); }
+		}
 		private void Root_MouseEnter (object sender, MouseEventArgs e)
 		{
 			PauseTimeoutAnimation ();
@@ -344,14 +348,14 @@ namespace Sidebar
 		}
 		private static Queue<Notification> noticeQueue = new Queue<Notification> ();
 		private static DispatcherTimer poptimer = new DispatcherTimer () {
-			Interval = TimeSpan.FromSeconds (1)
+			Interval = TimeSpan.FromSeconds (0.1)
 		};
 		private static void PopupNotificationQueue ()
 		{
 			poptimer.Stop ();
 			poptimer.Start ();
 		}
-		public static void ShowNotification (NotifyIconNotification nin, ImageSource icon = null)
+		public static Notification ShowNotification (NotifyIconNotification nin, ImageSource icon = null)
 		{
 			var wnd = new Notification ();
 			wnd.MessageTitle.Text = nin?.Title;
@@ -360,7 +364,15 @@ namespace Sidebar
 			wnd.UpdateTimeout (TimeSpan.FromSeconds ((nin?.Timeout ?? 30000) * 0.001));
 			noticeQueue.Enqueue (wnd);
 			PopupNotificationQueue ();
+			return wnd;
 		}
+		public static Notification ShowNotification (string title, string content, int timeout = 300000, ImageSource icon = null)
+			=> ShowNotification (new NotifyIconNotification {
+				Timeout = timeout,
+				Title = title,
+				Content = content,
+				Icon = System.Windows.Forms.ToolTipIcon.None
+			}, icon);
 		private void OptionsButton_Click (object sender, RoutedEventArgs e)
 		{
 			try

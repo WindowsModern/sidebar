@@ -15,7 +15,7 @@
 		MouseEnter="Root_MouseEnter" MouseLeave="Root_MouseLeave" TouchEnter="Root_TouchEnter" TouchLeave="Root_TouchLeave">
 	<Window.Resources>
 		<ContextMenu x:Key="NotificationOptionsMenu">
-			<MenuItem Name="ItemOpenCtrlRule" Header="{Binding Source='Rules...', Converter={x:Static local:StringResourceConverter.Instance}}" Click="ItemOpenCtrlRule_Click"></MenuItem>
+			<MenuItem Name="ItemOpenCtrlRule" Header="{Binding Source='SIDEBAR_NOTIFY_RULES', Converter={x:Static local:StringResourceConverter.Instance}}" Click="ItemOpenCtrlRule_Click"></MenuItem>
 		</ContextMenu>
 	</Window.Resources>
 	<Window.Triggers>
@@ -64,7 +64,7 @@
 						<nt:Slice9Image Name="BackgroundHighlightImage" Style="{DynamicResource NotificationBackgroundImageSlice9}"></nt:Slice9Image>
 						<Border Name="BackgroundBorder" Style="{DynamicResource NotificationBorder}"></Border>
 						<StackPanel Name="HeaderBar" Style="{DynamicResource NotificationHeader}" Opacity="0">
-							<Button Name="OptionsButton" Style="{DynamicResource NotificationOptionsButton}" Content="{Binding Source='SIDEBAR_OPTIONS', Converter={x:Static local:StringResourceConverter.Instance}}" Click="OptionsButton_Click" ContextMenu="{DynamicResource NotificationOptionsMenu}"></Button>
+							<Button Name="OptionsButton" Style="{DynamicResource NotificationOptionsButton}" Content="{Binding Source='SIDEBAR_NOTIFY_OPTIONS', Converter={x:Static local:StringResourceConverter.Instance}}" Click="OptionsButton_Click" ContextMenu="{DynamicResource NotificationOptionsMenu}"></Button>
 							<Button Name="CloseButton" Click="CloseButton_Click" Style="{DynamicResource NotificationCloseButton}"></Button>
 						</StackPanel>
 						<Control Name="TimeoutBar" Style="{DynamicResource NotificationTimeout}"></Control>

@@ -905,9 +905,9 @@ namespace Sidebar
 						var ts = App.TileMgr.GetByFamilyName (request.RequestSource);
 						var name = ts.TileFolder.StringResources.SuitableResource (ts.Manifest.Properties.DisplayName, ts.Manifest.Properties.DisplayName) ?? "Tile";
 						var content = request.RequestDatas as string;
-						if (string.IsNullOrEmpty (content)) content = "";
+						if (string.IsNullOrEmpty (content)) content = " ";
 						notifyIcon.ShowBalloonTip (
-							10000,
+							5000,
 							String.Format (
 								App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"),
 								name
@@ -1139,6 +1139,75 @@ namespace Sidebar
 							tile.TileIcon.Source = request.RequestDatas as ImageSource;
 							return true;
 						}
+					}
+				}
+				else if (request.RequestName.NEquals ("SidebarNotification"))
+				{
+					EventHandler handler = null;
+					handler = (s, e) => {
+						notifyIcon.BalloonTipClicked -= handler;
+						foreach (var i in tileCache)
+						{
+							if (i.Key.NEquals (request.RequestSource))
+							{
+								var resp = new TileResponse (request);
+								resp.Success = true;
+								resp.ResponseName = "NotificationClick";
+								Response (resp);
+								break;
+							}
+						}
+					};
+					notifyIcon.BalloonTipClicked += handler;
+					Notification ntwnd = null;
+					if (request.RequestDatas is string)
+					{
+						var ts = App.TileMgr.GetByFamilyName (request.RequestSource);
+						var name = ts.TileFolder.StringResources.SuitableResource (ts.Manifest.Properties.DisplayName, ts.Manifest.Properties.DisplayName) ?? "Tile";
+						var content = request.RequestDatas as string;
+						if (string.IsNullOrEmpty (content)) content = "";
+						var tc = tileCache [ts.Manifest.Identity.FamilyName];
+						ntwnd = Notification.ShowNotification (new NotifyIconNotification {
+							Timeout = 5000,
+							Title = String.Format (
+								App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"),
+								name
+							),
+							Content = content,
+							Icon = System.Windows.Forms.ToolTipIcon.None
+						}, tc.TileVisual.TileLogo);
+					}
+					else if (request.RequestDatas is NotifyIconNotification)
+					{
+						var ts = App.TileMgr.GetByFamilyName (request.RequestSource);
+						var name = ts.TileFolder.StringResources.SuitableResource (ts.Manifest.Properties.DisplayName, ts.Manifest.Properties.DisplayName) ?? "Tile";
+						var nin = request.RequestDatas as NotifyIconNotification;
+						var timeout = nin.Timeout;
+						var content = nin.Content;
+						if (string.IsNullOrEmpty (content)) content = " ";
+						var title = nin.Title;
+						if (string.IsNullOrEmpty (title))
+						{
+							title = String.Format (App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"), name ?? " ");
+						}
+						var tc = tileCache [ts.Manifest.Identity.FamilyName];
+						ImageSource img = tc.TileVisual.TileLogo;
+						if (nin is NotifyIconNotification2)
+						{
+							var nin2 = nin as NotifyIconNotification2;
+							img = nin2.IconImage ?? img;
+						}
+						ntwnd = Notification.ShowNotification (new NotifyIconNotification {
+							Timeout = timeout,
+							Title = title,
+							Content = content,
+							Icon = nin.Icon
+						}, img);
+					}
+					if (ntwnd != null)
+					{
+						ntwnd.BalloonTipClicked += handler;
+						return true;
 					}
 				}
 				return false;
@@ -1466,7 +1535,7 @@ namespace Sidebar
 		public int Compare (TileVisualInfo x, TileVisualInfo y)
 		{
 			if (x == null && y == null) return 0;
-			if (x == null) return 1; 
+			if (x == null) return 1;
 			if (y == null) return -1;
 			var tile_x = x?.TileElement as Tile;
 			var tile_y = y?.TileElement as Tile;

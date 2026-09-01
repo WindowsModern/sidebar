@@ -444,15 +444,15 @@
 	</Style>
 	<Style x:Key="NotificationTitle" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"></Setter>
-		<Setter Property="FontSize" Value="14"></Setter>
-		<Setter Property="Margin" Value="5,7,5,0"></Setter>
+		<Setter Property="FontSize" Value="13"></Setter>
+		<Setter Property="Margin" Value="3,3,3,0"></Setter>
 		<Setter Property="Foreground" Value="Black"></Setter>
 	</Style>
 	<Style x:Key="NotificationContent" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"></Setter>
-		<Setter Property="FontSize" Value="11"></Setter>
+		<Setter Property="FontSize" Value="10"></Setter>
 		<Setter Property="FontWeight" Value="Normal"></Setter>
-		<Setter Property="Margin" Value="5,3,5,5"></Setter>
+		<Setter Property="Margin" Value="3"></Setter>
 		<Setter Property="Foreground" Value="Black"></Setter>
 	</Style>
 	<Storyboard x:Key="NotificationEnter">
