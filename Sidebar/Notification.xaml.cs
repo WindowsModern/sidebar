@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -359,6 +360,32 @@ namespace Sidebar
 			wnd.UpdateTimeout (TimeSpan.FromSeconds ((nin?.Timeout ?? 30000) * 0.001));
 			noticeQueue.Enqueue (wnd);
 			PopupNotificationQueue ();
+		}
+		private void OptionsButton_Click (object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				if (OptionsButton.ContextMenu != null)
+				{
+					OptionsButton.ContextMenu.IsOpen = true;
+				}
+			}
+			catch { }
+		}
+		private void ItemOpenCtrlRule_Click (object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				Process.Start ("explorer.exe", "shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9}");
+			}
+			catch
+			{
+				try
+				{
+					Process.Start ("rundll32.exe", "shell32.dll,Options_RunDLL 1");
+				}
+				catch { }
+			}
 		}
 	}
 }

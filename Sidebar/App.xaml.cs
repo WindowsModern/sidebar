@@ -62,21 +62,6 @@ namespace Sidebar
 			UpdateTheme ();
 			SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 			ReleaseLargeResourcesAsync ();
-			Notification.ShowNotification (new NotifyIconNotification {
-				Title = "测试用标题",
-				Content = "测试用内容",
-				Timeout = 100000
-			}, null);
-			Notification.ShowNotification (new NotifyIconNotification {
-				Title = "测试用标题1",
-				Content = "测试用内容1",
-				Timeout = 5000
-			}, null);
-			Notification.ShowNotification (new NotifyIconNotification {
-				Title = "测试用标题2",
-				Content = "测试用内容2",
-				Timeout = 301000
-			}, null);
 		}
 		private void SystemEvents_UserPreferenceChanged (object sender, UserPreferenceChangedEventArgs e)
 		{

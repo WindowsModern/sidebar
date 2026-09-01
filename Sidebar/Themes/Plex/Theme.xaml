@@ -323,6 +323,7 @@
 	<Style x:Key="NotificationBackgroundImageSlice9" TargetType="snt:Slice9Image">
 		<Setter Property="Source" Value="Images\NotificationHighlight.png"></Setter>
 		<Setter Property="SliceThickness" Value="7,6"></Setter>
+		<Setter Property="Margin" Value="0,16,0,1"></Setter>
 	</Style>
 	<Style x:Key="NotificationBackgroundHighlight" TargetType="Border">
 		<Setter Property="Visibility" Value="Collapsed"></Setter>
@@ -483,6 +484,7 @@
 		<DoubleAnimation Storyboard.TargetName="HeaderBar" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.4" />
 		<ThicknessAnimation Storyboard.TargetName="BackgroundHighlightImage" Storyboard.TargetProperty="Margin" From="0,16,0,2" To="0" Duration="0:0:0.4" />
 		<ThicknessAnimation Storyboard.TargetName="TimeoutBar" Storyboard.TargetProperty="Padding" From="0,15,0,-15" To="0" Duration="0:0:0.4" />
+		<!-- <ThicknessAnimation Storyboard.TargetName="TextAreaBackgroundImage" Storyboard.TargetProperty="Padding" From="20,19,4,6" To="20,19,4,4" Duration="0:0:0.4" /> -->
 	</Storyboard>
 	<Storyboard x:Key="NotificationLeave">
 		<DoubleAnimation Storyboard.TargetName="BackgroundHeightChange" Storyboard.TargetProperty="Height" From="0" To="15" Duration="0:0:0.4"/>
@@ -490,6 +492,7 @@
 		<DoubleAnimation Storyboard.TargetName="HeaderBar" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.4" />
 		<ThicknessAnimation Storyboard.TargetName="BackgroundHighlightImage" Storyboard.TargetProperty="Margin" To="0,16,0,2" From="0" Duration="0:0:0.4" />
 		<ThicknessAnimation Storyboard.TargetName="TimeoutBar" Storyboard.TargetProperty="Padding" To="0,15,0,-15" From="0" Duration="0:0:0.4" />
+		<!-- <ThicknessAnimation Storyboard.TargetName="TextAreaBackgroundImage" Storyboard.TargetProperty="Padding" To="20,19,4,6" From="20,19,4,4" Duration="0:0:0.4" /> -->
 	</Storyboard>
 	<PowerEase x:Key="NotificationJumpUpEase" Power="2" EasingMode="EaseOut"/>
 	<PowerEase x:Key="NotificationJumpDownEase" Power="2" EasingMode="EaseIn"/>

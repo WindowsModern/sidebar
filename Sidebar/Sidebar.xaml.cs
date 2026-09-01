@@ -904,13 +904,15 @@ namespace Sidebar
 					{
 						var ts = App.TileMgr.GetByFamilyName (request.RequestSource);
 						var name = ts.TileFolder.StringResources.SuitableResource (ts.Manifest.Properties.DisplayName, ts.Manifest.Properties.DisplayName) ?? "Tile";
+						var content = request.RequestDatas as string;
+						if (string.IsNullOrEmpty (content)) content = "";
 						notifyIcon.ShowBalloonTip (
-							5000,
+							10000,
 							String.Format (
 								App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"),
 								name
 							),
-							request.RequestDatas as string,
+							content,
 							System.Windows.Forms.ToolTipIcon.None
 						);
 						return true;
@@ -920,10 +922,24 @@ namespace Sidebar
 						var ts = App.TileMgr.GetByFamilyName (request.RequestSource);
 						var name = ts.TileFolder.StringResources.SuitableResource (ts.Manifest.Properties.DisplayName, ts.Manifest.Properties.DisplayName) ?? "Tile";
 						var nin = request.RequestDatas as NotifyIconNotification;
-						notifyIcon.ShowBalloonTip (nin.Timeout, nin.Title ?? String.Format (
-								App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"),
-								name
-							), nin.Content, nin.Icon);
+						var timeout = nin.Timeout;
+						var content = nin.Content;
+						if (string.IsNullOrEmpty (content)) content = " ";
+						var title = nin.Title;
+						if (string.IsNullOrEmpty (title))
+						{
+							title = String.Format (App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"), name ?? " ");
+						}
+						try
+						{
+							notifyIcon.ShowBalloonTip (timeout, title, content, nin.Icon);
+						}
+						catch (Exception ex)
+						{
+							var exmsg = ex.InnerException?.Message ?? ex.Message;
+							var stack = ex.InnerException?.StackTrace ?? ex.StackTrace;
+							MessageBox.Show ($"{exmsg}\n\n{stack}", ex.GetType ().ToString (), MessageBoxButton.OK, MessageBoxImage.Error);
+						}
 						return true;
 					}
 					else
