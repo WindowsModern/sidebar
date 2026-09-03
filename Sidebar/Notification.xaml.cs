@@ -160,6 +160,11 @@ namespace Sidebar
 					var aerpcontains = Application.Current.Resources.Contains ("EnableNotificationBlur");
 					if (aerpcontains) isaero = (bool)Application.Current.Resources ["EnableNotificationBlur"] && !DWMAPI.IsElderWindows ();
 					ChangeAeroStatus (isaero);
+					UpdateWidth ();
+					UpdateLocation ();
+					break;
+				case nameof (cuc.Direction):
+					UpdateLocation ();
 					break;
 			}
 		}
@@ -228,7 +233,11 @@ namespace Sidebar
 			HWND hwnd = Handle;
 			var scr = ScreenHelper.GetScreenByHWND (hwnd) ?? System.Windows.Forms.Screen.PrimaryScreen;
 			var wa = scr.WorkingArea;
-			hwnd.Move (wa.Left + wa.Width - this.GetPixelWidth (), wa.Top + wa.Height - this.GetPixelHeight ());
+			var sidebar = App.Current.MainWindow;
+			var left = wa.Left + wa.Width;
+			if (App.CurrentUserConfig.Direction == SidebarDirection.Right)
+				left = Math.Min (sidebar.GetPixelLeft (), left);
+			hwnd.Move (left - this.GetPixelWidth (), wa.Top + wa.Height - this.GetPixelHeight ());
 		}
 		private void Root_Closed (object sender, EventArgs e)
 		{
