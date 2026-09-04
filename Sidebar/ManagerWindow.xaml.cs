@@ -119,8 +119,7 @@ namespace Sidebar
 		private bool _refreshPending = false;
 		private void PinnedTiles_CollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-			_refreshTimer?.Stop ();
-			_refreshTimer?.Start ();
+			RefreshLists ();
 		}
 
 		private void LoadTiles ()

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -321,5 +322,22 @@ namespace Sidebar
 			=> element.SetValue (MyOffsetProperty, value);
 		public static double GetOffsetMargin (DependencyObject element)
 			=> (double)element.GetValue (MyOffsetProperty);
+	}
+	public class CalendarModeToBooleanConverter: IValueConverter
+	{
+		public static CalendarModeToBooleanConverter Instance { get; private set; } = new CalendarModeToBooleanConverter ();
+		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value == null || value == DependencyProperty.UnsetValue) return true;
+			if (value is CalendarMode)
+			{
+				return (CalendarMode)value == CalendarMode.Month;
+			}
+			return true;
+		}
+		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotSupportedException ();
+		}
 	}
 }

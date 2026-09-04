@@ -134,6 +134,9 @@
     <Compile Include="Observable.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="SidebarAppBar.cs" />
+    <Compile Include="TestPage.xaml.cs">
+      <DependentUpon>TestPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
@@ -154,7 +157,7 @@
     <Compile Include="TopOptions.xaml.cs">
       <DependentUpon>TopOptions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UIConfig.cs" />
+    <Compile Include="UIConventer.cs" />
     <Compile Include="WinForm.cs" />
     <None Include="packages.config" />
     <None Include="Signature.pfx" />
@@ -658,6 +661,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Page Include="TestPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -674,7 +681,7 @@
     <Content Include="Images\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Project1.ico" />
+    <None Include="Project1.ico" />
     <!--<Content Include="Themes\Slate\Theme.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>-->

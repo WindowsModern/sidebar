@@ -206,8 +206,8 @@ namespace Sidebar
 				case WindowsXPVisualStyle.Plex:
 				case WindowsXPVisualStyle.Slate:
 				case WindowsXPVisualStyle.Watercolor:
-					SetCurrentBaseTheme (WpfTheme.Aero);
-					SetTheme ("Luna");
+					SetCurrentBaseTheme (WpfTheme.Default);
+					SetTheme ("Classic");
 					break;
 				case WindowsXPVisualStyle.Luna:
 					SetCurrentBaseTheme (WpfTheme.Luna, colorScheme);

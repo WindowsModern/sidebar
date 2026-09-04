@@ -24,26 +24,31 @@
 			<Image x:Name="ImageNormal" 
                    Source="{Binding NormalSource, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
                    Stretch="{Binding NormalStretch, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
+				   RenderOptions.BitmapScalingMode="HighQuality"
                    Opacity="1"/>
 			<!-- Focus -->
 			<Image x:Name="ImageFocus" 
                    Source="{Binding FocusSource, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
                    Stretch="{Binding FocusStretch, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
+				   RenderOptions.BitmapScalingMode="HighQuality"
                    Opacity="0"/>
 			<!-- Hover -->
 			<Image x:Name="ImageHover" 
                    Source="{Binding HoverSource, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
                    Stretch="{Binding HoverStretch, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
+				   RenderOptions.BitmapScalingMode="HighQuality"
                    Opacity="0"/>
 			<!-- Active (Pressed) -->
 			<Image x:Name="ImageActive" 
                    Source="{Binding ActiveSource, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
                    Stretch="{Binding ActiveStretch, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
+				   RenderOptions.BitmapScalingMode="HighQuality"
                    Opacity="0"/>
 			<!-- Disabled -->
 			<Image x:Name="ImageDisabled" 
                    Source="{Binding DisabledSource, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
                    Stretch="{Binding DisabledStretch, RelativeSource={RelativeSource AncestorType=local:ImageButton}}"
+				   RenderOptions.BitmapScalingMode="HighQuality"
                    Opacity="0"/>
 			<!-- Content -->
 			<ContentPresenter Name="ContentRegion"
