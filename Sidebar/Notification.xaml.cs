@@ -47,6 +47,8 @@ namespace Sidebar
 		{
 			try
 			{
+				foreach (var h in tipCloseClick)
+					h?.Invoke (this, e);
 				Close ();
 			}
 			catch { }
@@ -88,7 +90,7 @@ namespace Sidebar
 			BackgroundContainer.Clip = new RectangleGeometry (
 				new Rect (
 					0,
-					top, 
+					top,
 					BackgroundContainer.ActualWidth,
 					height
 				), // 裁剪区域
@@ -117,9 +119,9 @@ namespace Sidebar
 		}
 		private void ApplyRoundedRegion (int l, int t, int w, int h, int r1, int r2)
 		{
-				IntPtr hRgn = Win32WindowNative.CreateRoundRectRgn (l, t, w, h, r1, r2);
-				Win32WindowNative.SetWindowRgn (this.Handle, hRgn, true);
-				Win32WindowNative.DeleteObject (hRgn);
+			IntPtr hRgn = Win32WindowNative.CreateRoundRectRgn (l, t, w, h, r1, r2);
+			Win32WindowNative.SetWindowRgn (this.Handle, hRgn, true);
+			Win32WindowNative.DeleteObject (hRgn);
 		}
 		private void UpdateWidth ()
 		{
@@ -246,6 +248,7 @@ namespace Sidebar
 			foreach (var h in tipClosed) h?.Invoke (sender, e);
 			tipClicked?.Clear ();
 			tipClosed?.Clear ();
+			tipCloseClick?.Clear ();
 		}
 		private void Root_SourceInitialized (object sender, EventArgs e)
 		{
@@ -293,6 +296,7 @@ namespace Sidebar
 		}
 		private HashSet<EventHandler> tipClicked = new HashSet<EventHandler> ();
 		private HashSet<EventHandler> tipClosed = new HashSet<EventHandler> ();
+		private HashSet<EventHandler> tipCloseClick = new HashSet<EventHandler> ();
 		public event EventHandler BalloonTipClicked
 		{
 			add { tipClicked?.Add (value); }
@@ -302,6 +306,11 @@ namespace Sidebar
 		{
 			add { tipClosed?.Add (value); }
 			remove { tipClosed?.Remove (value); }
+		}
+		public event EventHandler BalloonTipCloseClicked
+		{
+			add { tipCloseClick?.Add (value); }
+			remove { tipCloseClick?.Remove (value); }
 		}
 		private void Root_MouseEnter (object sender, MouseEventArgs e)
 		{

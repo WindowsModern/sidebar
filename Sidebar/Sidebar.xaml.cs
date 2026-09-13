@@ -1143,22 +1143,6 @@ namespace Sidebar
 				}
 				else if (request.RequestName.NEquals ("SidebarNotification"))
 				{
-					EventHandler handler = null;
-					handler = (s, e) => {
-						notifyIcon.BalloonTipClicked -= handler;
-						foreach (var i in tileCache)
-						{
-							if (i.Key.NEquals (request.RequestSource))
-							{
-								var resp = new TileResponse (request);
-								resp.Success = true;
-								resp.ResponseName = "NotificationClick";
-								Response (resp);
-								break;
-							}
-						}
-					};
-					notifyIcon.BalloonTipClicked += handler;
 					Notification ntwnd = null;
 					if (request.RequestDatas is string)
 					{
@@ -1191,7 +1175,12 @@ namespace Sidebar
 							title = String.Format (App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"), name ?? " ");
 						}
 						var tc = tileCache [ts.Manifest.Identity.FamilyName];
-						ImageSource img = tc.TileVisual.TileLogo;
+						ImageSource img = null;
+						try
+						{
+							img = tc?.TileVisual?.TileLogo;
+						}
+						catch { }
 						if (nin is NotifyIconNotification2)
 						{
 							var nin2 = nin as NotifyIconNotification2;
@@ -1206,7 +1195,45 @@ namespace Sidebar
 					}
 					if (ntwnd != null)
 					{
-						ntwnd.BalloonTipClicked += handler;
+						ntwnd.BalloonTipClicked += (s, e) => {
+							foreach (var i in tileCache)
+							{
+								if (i.Key.NEquals (request.RequestSource))
+								{
+									var resp = new TileResponse (request);
+									resp.Success = true;
+									resp.ResponseName = "NotificationClick";
+									Response (resp);
+									break;
+								}
+							}
+						};
+						ntwnd.BalloonTipCloseClicked += (s, e) => {
+							foreach (var i in tileCache)
+							{
+								if (i.Key.NEquals (request.RequestSource))
+								{
+									var resp = new TileResponse (request);
+									resp.Success = true;
+									resp.ResponseName = "NotificationCloseClick";
+									Response (resp);
+									break;
+								}
+							}
+						};
+						ntwnd.BalloonTipClosed += (s, e) => {
+							foreach (var i in tileCache)
+							{
+								if (i.Key.NEquals (request.RequestSource))
+								{
+									var resp = new TileResponse (request);
+									resp.Success = true;
+									resp.ResponseName = "NotificationClose";
+									Response (resp);
+									break;
+								}
+							}
+						};
 						return true;
 					}
 				}
