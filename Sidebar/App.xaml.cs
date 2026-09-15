@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms.VisualStyles;
+using System.Windows.Threading;
 using Microsoft.Win32;
 
 namespace Sidebar

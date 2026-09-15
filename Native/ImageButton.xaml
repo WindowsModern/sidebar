@@ -8,6 +8,7 @@
              Focusable="True" 
              x:Name="RootElement"
              d:DesignHeight="300" d:DesignWidth="300"
+			 Background="Transparent"
              MouseEnter="UserControl_MouseEnter"
              MouseLeave="UserControl_MouseLeave"
              MouseLeftButtonDown="UserControl_MouseLeftButtonDown"

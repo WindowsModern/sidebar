@@ -17,7 +17,7 @@
         mc:Ignorable="d" ResizeMode="NoResize" ShowInTaskbar="False"
         Title="Flyout" Height="300" Width="300" Background="Transparent" MinWidth="54" MinHeight="21" WindowStyle="None" AllowsTransparency="True" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" Deactivated="Window_Deactivated" Topmost="True" Closing="Window_Closing" SourceInitialized="Window_SourceInitialized">
 	<Grid>
-		<Grid Name="BackgroundPart">
+		<Grid Name="BackgroundPart" ClipToBounds="True">
 			<Rectangle Name="FlyoutBackgroundBlur" Fill="Transparent" IsHitTestVisible="False" SnapsToDevicePixels="True"></Rectangle>
 			<Rectangle Name="FlyoutBackgroundFill" Style="{DynamicResource FlyoutBackgroundFill}"></Rectangle>
 			<Rectangle Name="FlyoutBorderBehind" Style="{DynamicResource FlyoutBorderBehind}"></Rectangle>

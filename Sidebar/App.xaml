@@ -543,6 +543,7 @@
 						<Setter Property="Margin" Value="4,37,0,0"></Setter>
 						<Setter Property="HorizontalAlignment" Value="Left"></Setter>
 						<Setter Property="VerticalAlignment" Value="Top"></Setter>
+						<Setter Property="RenderTransformOrigin" Value="0.5,0.5"></Setter>
 						<Setter Property="RenderTransform">
 							<Setter.Value>
 								<ScaleTransform ScaleY="-1" />
@@ -551,8 +552,8 @@
 						<Setter Property="OpacityMask">
 							<Setter.Value>
 								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-									<GradientStop Color="#33FFFFFF" Offset="0"></GradientStop>
-									<GradientStop Color="#00FFFFFF" Offset="1"></GradientStop>
+									<GradientStop Color="#33FFFFFF" Offset="1"></GradientStop>
+									<GradientStop Color="#00FFFFFF" Offset="0"></GradientStop>
 								</LinearGradientBrush>
 							</Setter.Value>
 						</Setter>

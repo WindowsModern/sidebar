@@ -77,7 +77,10 @@
 						</Image>
 						<Image Name="IconRef" Source="Images\default.ico" Style="{DynamicResource NotificationIconReflection}">
 							<Image.RenderTransform>
-								<TranslateTransform x:Name="IconRefTranslate" Y="0" />
+								<TransformGroup>
+									<ScaleTransform ScaleY="-1"/>
+									<TranslateTransform x:Name="IconRefTranslate" Y="0" />
+								</TransformGroup>
 							</Image.RenderTransform>
 						</Image>
 					</Grid>

@@ -312,7 +312,7 @@ namespace WindowsModern.TrayTile.Utils
 			string className = GetWindowClassName (hwnd);
 			string tooltip = GetWindowText (hwnd);
 			ImageSource icon = GetWindowIcon (hwnd);
-			if (icon == null) return;
+			//if (icon == null) return;
 
 			// Generate unique key with high bit set to avoid collision with tray icons
 			long key = (long)((ulong)hwnd | (ulong)0x8000000000000000);

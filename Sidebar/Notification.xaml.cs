@@ -244,7 +244,11 @@ namespace Sidebar
 		private void Root_Closed (object sender, EventArgs e)
 		{
 			Utilities.ReleaseLargeResourcesAsync ();
-			PopupNotificationQueue ();
+			lock (popuplock)
+			{
+				noticeQueue.Dequeue ();
+				PopupNotificationQueue ();
+			}
 			foreach (var h in tipClosed) h?.Invoke (sender, e);
 			tipClicked?.Clear ();
 			tipClosed?.Clear ();
@@ -358,7 +362,7 @@ namespace Sidebar
 			{
 				try
 				{
-					var poped = noticeQueue.Dequeue ();
+					var poped = noticeQueue.Peek ();
 					poped.Show ();
 				}
 				catch { }
@@ -366,23 +370,28 @@ namespace Sidebar
 		}
 		private static Queue<Notification> noticeQueue = new Queue<Notification> ();
 		private static DispatcherTimer poptimer = new DispatcherTimer () {
-			Interval = TimeSpan.FromSeconds (0.1)
+			Interval = TimeSpan.FromSeconds (0.01)
 		};
+		private static object popuplock = new object ();
 		private static void PopupNotificationQueue ()
 		{
-			poptimer.Stop ();
-			poptimer.Start ();
+			//poptimer.Stop (); poptimer.Start ();
+			PopupNotification_Tick (poptimer, new EventArgs ());
 		}
 		public static Notification ShowNotification (NotifyIconNotification nin, ImageSource icon = null)
 		{
-			var wnd = new Notification ();
-			wnd.MessageTitle.Text = nin?.Title;
-			wnd.MessageContent.Text = nin?.Content;
-			wnd.Icon.Source = wnd.IconRef.Source = icon ?? wnd.Icon.Source;
-			wnd.UpdateTimeout (TimeSpan.FromSeconds ((nin?.Timeout ?? 30000) * 0.001));
-			noticeQueue.Enqueue (wnd);
-			PopupNotificationQueue ();
-			return wnd;
+			lock (popuplock)
+			{
+				Notification wnd = null;
+				wnd = new Notification ();
+				wnd.MessageTitle.Text = nin?.Title;
+				wnd.MessageContent.Text = nin?.Content;
+				wnd.Icon.Source = wnd.IconRef.Source = icon ?? wnd.Icon.Source;
+				wnd.UpdateTimeout (TimeSpan.FromSeconds ((nin?.Timeout ?? 30000) * 0.001));
+				noticeQueue.Enqueue (wnd);
+				if (noticeQueue.Count == 1) PopupNotificationQueue ();
+				return wnd;
+			}
 		}
 		public static Notification ShowNotification (string title, string content, int timeout = 300000, ImageSource icon = null)
 			=> ShowNotification (new NotifyIconNotification {

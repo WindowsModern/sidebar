@@ -76,12 +76,16 @@ namespace Sidebar
 		}
 		private void OverflowTiles_CollectionChanged (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
 		{
-			Dispatcher.Invoke (new Action (() => {
-				if (OverflowTiles.Count == 0)
-					OverflowTilesRegion.Height = 0;
-				else
-					OverflowTilesRegion.Height = double.NaN; // 自动
-			}));
+			try
+			{
+				Dispatcher.Invoke (new Action (() => {
+					if (OverflowTiles.Count == 0)
+						OverflowTilesRegion.Height = 0;
+					else
+						OverflowTilesRegion.Height = double.NaN; // 自动
+				}));
+			}
+			catch { }
 		}
 		private void Pipe_OnMail (string name, object data, Type datatype)
 		{
