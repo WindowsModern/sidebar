@@ -17,6 +17,8 @@ namespace Sidebar
 		public string FileName { get; private set; }
 		[XmlAttribute ("ProcessorArchitecture")]
 		public ProcessorArchitecture ProcessorArchitecture { get; private set; }
+		[XmlAttribute ("OSMinVersion")]
+		public Version? OsMinVersion { get; private set; } = null;
 		public override string ToString ()
 			=> $"\"{FileName}\" {ProcessorArchitecture}";
 		public TileBundleFileListItem (string fn, ProcessorArchitecture pa)
@@ -24,16 +26,30 @@ namespace Sidebar
 			FileName = fn;
 			ProcessorArchitecture = pa;
 		}
+		public TileBundleFileListItem (string fn, ProcessorArchitecture pa, Version osMin)
+		{
+			FileName = fn;
+			ProcessorArchitecture = pa;
+			OsMinVersion = osMin;
+		}
 		private TileBundleFileListItem () { }
 		public XmlSchema GetSchema () => null;
 		public void ReadXml (XmlReader reader)
 		{
 			reader.MoveToContent ();
 			FileName = reader.GetAttribute ("FileName");
+
 			string arch = reader.GetAttribute ("ProcessorArchitecture");
 			ProcessorArchitecture pa;
 			if (!Enum.TryParse (arch, out pa)) pa = ProcessorArchitecture.Unknown;
 			ProcessorArchitecture = pa;
+			string verStr = reader.GetAttribute ("OSMinVersion");
+			if (!string.IsNullOrEmpty (verStr))
+			{
+				Version v;
+				if (Version.TryParse (verStr, out v))
+					OsMinVersion = v;
+			}
 			reader.ReadStartElement ("Package");
 		}
 		public void WriteXml (XmlWriter writer)
@@ -42,6 +58,8 @@ namespace Sidebar
 			writer.WriteAttributeString (
 				"ProcessorArchitecture",
 				ProcessorArchitecture.ToString ());
+			if (OsMinVersion != null)
+				writer.WriteAttributeString ("OSMinVersion", OsMinVersion.ToString ());
 		}
 	}
 	[XmlRoot ("Bundle")]
@@ -381,7 +399,7 @@ namespace Sidebar
 		}
 		private void Initialize ()
 		{
-			PackageType = TilePackageType.Single;
+			PackageType = TilePackageType.Bundle;
 			var zip = new ZipFile (FileName);
 			var isException = false;
 			try
@@ -483,78 +501,98 @@ namespace Sidebar
 			var zipFile = new ZipFile (new MemoryStream (zipData));
 			return zipFile;
 		}
-		public static ZipFile MakeBundlePackage (List <string> fileList, ProgressCallback callback = null)
+		public static ZipFile MakeBundlePackage (List<string> fileList, ProgressCallback callback = null)
 		{
+			if (fileList == null)
+				throw new ArgumentNullException (nameof (fileList));
 			if (fileList.Count <= 1)
-				throw new InvalidOperationException ("Error: To create a bundle package, you must provide two or more packages that support different processor architectures.");
+				throw new InvalidOperationException (
+					"Error: To create a bundle package, you must provide two or more packages.");
+
 			TileManifest lastManifest = null;
-			Dictionary<ProcessorArchitecture, string> dict = new Dictionary<ProcessorArchitecture, string> ();
+
+			// 唯一性键：(架构, OSMinVersion)。允许不同架构、不同 OS 版本共存，只要组合不重复。
+			// 注：System.Version 已正确重写 Equals/GetHashCode，可直接作为 Tuple 键的一部分。
+			var packageMap = new Dictionary<Tuple<ProcessorArchitecture, Version>, string> ();
+
 			foreach (var fp in fileList)
 			{
 				using (var p = TilePackageReadManager.GetPackage (fp))
 				{
 					if (p.PackageType == TilePackageType.Bundle)
-						throw new InvalidOperationException ("Error: A bundle package cannot be packed into another bundle.");
+						throw new InvalidOperationException (
+							"Error: A bundle package cannot be packed into another bundle.");
+
 					var sp = p as TilePackage;
-					if (sp.Manifest.Identity.ProcessorArchitecture == ProcessorArchitecture.Neutral ||
-						sp.Manifest.Identity.ProcessorArchitecture == ProcessorArchitecture.Unknown)
-						throw new InvalidOperationException ("Error: Packages with processor architecture Neutral or Unknown cannot be bundled into a bundle.");
+					if (sp == null)
+						throw new InvalidDataException ($"Error: \"{fp}\" is not a single package.");
+
+					var arch = sp.Manifest.Identity.ProcessorArchitecture;
+					if (arch == ProcessorArchitecture.Neutral ||
+						arch == ProcessorArchitecture.Unknown)
+						throw new InvalidOperationException (
+							$"Error: Package \"{fp}\" has architecture {arch}, which cannot be bundled.");
+
+					var osMin = sp.Manifest.Prerequisites.OSMinVersion;
+
+					// 清单一致性：除架构与 Prerequisites 外，其余必须一致
 					if (lastManifest == null)
 					{
 						lastManifest = sp.Manifest;
 					}
-					else
+					else if (!ManifestsConsistent (sp.Manifest, lastManifest))
 					{
-						#region check manifest
-						bool isEqual =
-							sp.Manifest.Identity.FamilyName.NEquals (lastManifest.Identity.FamilyName) &&
-							sp.Manifest.Identity.Version == lastManifest.Identity.Version &&
-							sp.Manifest.Properties.DisplayName == lastManifest.Properties.DisplayName &&
-							sp.Manifest.Properties.Description == lastManifest.Properties.Description &&
-							sp.Manifest.Properties.Logo == lastManifest.Properties.Logo &&
-							sp.Manifest.Properties.Publisher == lastManifest.Properties.Publisher &&
-							sp.Manifest.Prerequisites.OSMinVersion == lastManifest.Prerequisites.OSMinVersion &&
-							sp.Manifest.Prerequisites.OSMaxVersionTested == lastManifest.Prerequisites.OSMaxVersionTested &&
-							sp.Manifest.VisualElements.RailStyle.CanPinBottom == lastManifest.VisualElements.RailStyle.CanPinBottom &&
-							sp.Manifest.VisualElements.RailStyle.DefaultHeight == lastManifest.VisualElements.RailStyle.DefaultHeight &&
-							sp.Manifest.VisualElements.RailStyle.DisplayName == lastManifest.VisualElements.RailStyle.DisplayName &&
-							sp.Manifest.VisualElements.RailStyle.FlyoutCanResize == lastManifest.VisualElements.RailStyle.FlyoutCanResize &&
-							sp.Manifest.VisualElements.RailStyle.FlyoutHeight == lastManifest.VisualElements.RailStyle.FlyoutHeight &&
-							sp.Manifest.VisualElements.RailStyle.FlyoutWidth == lastManifest.VisualElements.RailStyle.FlyoutWidth &&
-							sp.Manifest.VisualElements.RailStyle.Logo == lastManifest.VisualElements.RailStyle.Logo &&
-							sp.Manifest.VisualElements.RailStyle.MaxHeight == lastManifest.VisualElements.RailStyle.MaxHeight &&
-							sp.Manifest.VisualElements.RailStyle.MinHeight == lastManifest.VisualElements.RailStyle.MinHeight &&
-							sp.Manifest.VisualElements.RailStyle.Overflow == lastManifest.VisualElements.RailStyle.Overflow &&
-							sp.Manifest.VisualElements.RailStyle.TileHasFlyout == lastManifest.VisualElements.RailStyle.TileHasFlyout &&
-							sp.Manifest.VisualElements.RailStyle.TileHasProperties == lastManifest.VisualElements.RailStyle.TileHasProperties;
-						#endregion
-						if (!isEqual)
-							throw new InvalidOperationException ("Error: Certain content in the manifests of all packages must be consistent.");
+						throw new InvalidOperationException (
+							$"Error: The manifest of \"{fp}\" is inconsistent with the first package " +
+							"(only ProcessorArchitecture and Prerequisites may differ).");
 					}
-					if (dict.ContainsKey (sp.Manifest.Identity.ProcessorArchitecture))
-						throw new InvalidOperationException ("Error: More than one package supports the same processor architecture.");
-					dict [sp.Manifest.Identity.ProcessorArchitecture] = fp;
+
+					var key = Tuple.Create (arch, osMin);
+					if (packageMap.ContainsKey (key))
+						throw new InvalidOperationException (
+							$"Error: More than one package has the same architecture and OS version " +
+							$"(arch: {arch}, osMin: {(osMin == null ? "<none>" : osMin.ToString ())}).");
+
+					packageMap [key] = fp;
 				}
 			}
-			TileIdentity identityBundle = new TileIdentity (
+
+			var bundleIdentity = new TileIdentity (
 				lastManifest.Identity.Name,
 				lastManifest.Identity.Publisher,
 				lastManifest.Identity.Version,
 				ProcessorArchitecture.Neutral
 			);
-			var bundleIdentity = identityBundle;
-			var packageMap = dict;
-			string filenamePrefix = bundleIdentity.Name.Length >= 16 ? bundleIdentity.Name.Substring (0, 16) : bundleIdentity.Name;
+
+			string filenamePrefix = bundleIdentity.Name.Length >= 16
+				? bundleIdentity.Name.Substring (0, 16)
+				: bundleIdentity.Name;
+
 			var ms = new MemoryStream ();
 			using (var zipOutputStream = new ZipOutputStream (ms))
 			{
 				zipOutputStream.SetLevel (9);
+
 				int total = packageMap.Count;
 				int current = 0;
 				var bundleItems = new List<TileBundleFileListItem> ();
-				foreach (var kv in packageMap)
+
+				// 排序以保证 bundle 输出可复现
+				var ordered = packageMap
+					.OrderBy (kv => kv.Key.Item1.ToString (), StringComparer.OrdinalIgnoreCase)
+					.ThenBy (kv => kv.Key.Item2.ToString () ?? "", StringComparer.Ordinal)
+					.ToList ();
+
+				foreach (var kv in ordered)
 				{
-					string internalFileName = $"{filenamePrefix}_{kv.Key.ToString ()}.sgpkg";
+					var arch = kv.Key.Item1;
+					var osMin = kv.Key.Item2;
+
+					// 内部文件名带上 OS 版本，避免同一架构下多版本冲突
+					string internalFileName = osMin == null
+						? $"{filenamePrefix}_{arch}.sgpkg"
+						: $"{filenamePrefix}_{arch}_{osMin}.sgpkg";
+
 					var entry = new ZipEntry (internalFileName);
 					entry.DateTime = File.GetLastWriteTime (kv.Value);
 					zipOutputStream.PutNextEntry (entry);
@@ -563,23 +601,79 @@ namespace Sidebar
 						fs.CopyTo (zipOutputStream);
 					}
 					zipOutputStream.CloseEntry ();
-					bundleItems.Add (new TileBundleFileListItem (internalFileName, kv.Key));
+
+					bundleItems.Add (new TileBundleFileListItem (internalFileName, arch, osMin));
 					current++;
 					callback?.Invoke (current, total, (double)current / total);
 				}
+
 				var bundleManifest = new TileBundleManifest (bundleIdentity, bundleItems);
 				var manifestEntry = new ZipEntry ("BundleManifest.xml");
 				manifestEntry.DateTime = DateTime.Now;
 				zipOutputStream.PutNextEntry (manifestEntry);
+
 				var serializer = new XmlSerializer (typeof (TileBundleManifest));
 				var ns = new XmlSerializerNamespaces ();
 				ns.Add ("", "");
 				serializer.Serialize (zipOutputStream, bundleManifest, ns);
 				zipOutputStream.CloseEntry ();
 			}
+
 			byte [] zipData = ms.ToArray ();
-			var zipFile = new ZipFile (new MemoryStream (zipData));
-			return zipFile;
+			return new ZipFile (new MemoryStream (zipData));
+		}
+		/// <summary>
+		/// 判断两个 Manifest 是否“除架构与 OS 版本外”一致。
+		/// 允许 Identity.ProcessorArchitecture 与 Prerequisites 不同。
+		/// </summary>
+		private static bool ManifestsConsistent (TileManifest a, TileManifest b)
+		{
+			if (a == null || b == null) return ReferenceEquals (a, b);
+
+			// Identity: 架构允许不同，其余必须一致
+			if (a.Identity == null || b.Identity == null) return ReferenceEquals (a.Identity, b.Identity);
+			if (!string.Equals (a.Identity.Name, b.Identity.Name, StringComparison.OrdinalIgnoreCase)) return false;
+			if (!string.Equals (a.Identity.Publisher, b.Identity.Publisher, StringComparison.OrdinalIgnoreCase)) return false;
+			if (!Equals (a.Identity.Version, b.Identity.Version)) return false;
+
+			// Properties
+			if (a.Properties == null || b.Properties == null)
+				return ReferenceEquals (a.Properties, b.Properties);
+			if (!string.Equals (a.Properties.DisplayName, b.Properties.DisplayName, StringComparison.Ordinal)) return false;
+			if (!string.Equals (a.Properties.PublisherDisplayName, b.Properties.PublisherDisplayName, StringComparison.Ordinal)) return false;
+			if (!string.Equals (a.Properties.Description, b.Properties.Description, StringComparison.Ordinal)) return false;
+			if (!string.Equals (a.Properties.Logo, b.Properties.Logo, StringComparison.Ordinal)) return false;
+			if (a.Properties.Type != b.Properties.Type) return false;
+
+			// Prerequisites: 明确跳过（允许不同 OS 版本）
+
+			// VisualElements
+			if (a.VisualElements == null || b.VisualElements == null)
+				return ReferenceEquals (a.VisualElements, b.VisualElements);
+			if (!RailStylesEqual (a.VisualElements.RailStyle, b.VisualElements.RailStyle)) return false;
+			if (!GridStylesEqual (a.VisualElements.GridStyle, b.VisualElements.GridStyle)) return false;
+
+			return true;
+		}
+		private static bool RailStylesEqual (TileRailStyle a, TileRailStyle b)
+		{
+			if (a == null || b == null) return ReferenceEquals (a, b);
+			return a.CanPinBottom == b.CanPinBottom
+				&& a.DefaultHeight == b.DefaultHeight
+				&& string.Equals (a.DisplayName, b.DisplayName, StringComparison.Ordinal)
+				&& a.FlyoutCanResize == b.FlyoutCanResize
+				&& a.FlyoutHeight == b.FlyoutHeight
+				&& a.FlyoutWidth == b.FlyoutWidth
+				&& string.Equals (a.Logo, b.Logo, StringComparison.Ordinal)
+				&& a.MaxHeight == b.MaxHeight
+				&& a.MinHeight == b.MinHeight
+				&& a.Overflow == b.Overflow
+				&& a.TileHasFlyout == b.TileHasFlyout
+				&& a.TileHasProperties == b.TileHasProperties;
+		}
+		private static bool GridStylesEqual (TileGridStyle a, TileGridStyle b)
+		{
+			return true;
 		}
 		private static string GetRelativePath (string baseDir, string fullPath)
 		{

@@ -115,7 +115,7 @@ namespace SGenWebRelease
 								};
 								var pre = am.Prerequisites;
 								prer = new {
-									osMinVersion = pre.OSMinVersion.Expression,
+									osMinVersion = bread.Packages.Select (p => p.Manifest.Prerequisites.OSMinVersion).Min ().Expression,
 									osMaxVersionTested = pre.OSMaxVersionTested.Expression
 								};
 								var logo = bread.FileResources?.SuitableResource (pro.Logo, pro.Logo, 100) ?? pro.Logo;

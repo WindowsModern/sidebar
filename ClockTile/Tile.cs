@@ -182,9 +182,9 @@ namespace ClockTile
 			if (!_hasNotifiedForCurrentAlarm)
 			{
 				_hasNotifiedForCurrentAlarm = true;
-				string displayName = TileFolder.StringResources.SuitableResource (Manifest.Properties.DisplayName, Manifest.Properties.DisplayName) ?? "闹钟";
+				string displayName = Region.StringResources.SuitableResource ("NOTIFICATION_TITLE") ?? "Alarm Clock";
 				string message = Options.AlarmMessage;
-				PushNotification (60000, message, null, System.Windows.Forms.ToolTipIcon.Info);
+				PushNotification (60000, message, displayName, System.Windows.Forms.ToolTipIcon.Info);
 			}
 			alarmPlayer = new MediaPlayer ();
 			alarmPlayer.Volume = Math.Max (0, Math.Min (1, Options.AlarmVolume));

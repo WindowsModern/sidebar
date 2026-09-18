@@ -249,7 +249,11 @@ namespace Sidebar
 				noticeQueue.Dequeue ();
 				PopupNotificationQueue ();
 			}
-			foreach (var h in tipClosed) h?.Invoke (sender, e);
+			try
+			{
+				foreach (var h in tipClosed) h?.Invoke (sender, e);
+			}
+			catch { }
 			tipClicked?.Clear ();
 			tipClosed?.Clear ();
 			tipCloseClick?.Clear ();

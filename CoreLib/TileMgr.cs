@@ -868,27 +868,36 @@ namespace Sidebar
 			TilePackageBundle bundle = package as TilePackageBundle;
 			if (bundle != null)
 			{
+				var osVer = GetSystemVersion (); 
 				ProcessorArchitecture currentArch = GetSystemArchitecture ();
 				TilePackage selected = null;
+				#region select package
+				var list = new SortedDictionary<Version, Dictionary<ProcessorArchitecture, TilePackage>> (new ReverseVersionComparer ());
 				foreach (var p in bundle.Packages)
 				{
-					if (p.Manifest.Identity.ProcessorArchitecture == currentArch)
-					{
-						selected = p;
-						break;
-					}
+					Dictionary<ProcessorArchitecture, TilePackage> _;
+					if (!list.TryGetValue (p.Manifest.Prerequisites.OSMinVersion, out _))
+						list [p.Manifest.Prerequisites.OSMinVersion] = new Dictionary<ProcessorArchitecture, TilePackage> ();
+					list [p.Manifest.Prerequisites.OSMinVersion] [p.Manifest.Identity.ProcessorArchitecture] = p;
 				}
-				if (selected == null && currentArch != ProcessorArchitecture.Neutral)
+				foreach (var kv in list)
 				{
-					foreach (var p in bundle.Packages)
+					if (kv.Key <= osVer)
 					{
-						if (p.Manifest.Identity.ProcessorArchitecture == ProcessorArchitecture.Neutral)
+						if (kv.Value.ContainsKey (currentArch))
 						{
-							selected = p;
-							break;
+							selected = kv.Value [currentArch];
+							goto loop;
+						}
+						if (kv.Value.ContainsKey (ProcessorArchitecture.Neutral))
+						{
+							selected = kv.Value [ProcessorArchitecture.Neutral];
+							goto loop;
 						}
 					}
 				}
+				loop:
+				#endregion
 				if (selected == null)
 					throw new InvalidOperationException (
 						$"No package in bundle supports the current system architecture ({currentArch}).");

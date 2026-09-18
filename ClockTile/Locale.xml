@@ -2788,4 +2788,46 @@
 		<lang name="zh-hk">查看你所在的時區或自訂時區的時間和日期。除此之外，還可以設定一個簡單的鬧鈴。</lang>
 		<lang name="zh-tw">查看你所在的時區或自訂時區的時間和日期。除此之外，還可以設定一個簡單的鬧鈴。</lang>
 	</resource>
+	<resource id="NOTIFICATION_TITLE">
+		<lang name="zh-CN">闹钟</lang>
+		<lang name="en-US">Alarm Clock</lang>
+		<lang name="ar-SA">منبه</lang>
+		<lang name="bn-BD">অ্যালার্ম ঘড়ি</lang>
+		<lang name="cs-CZ">Budík</lang>
+		<lang name="de-de">Wecker</lang>
+		<lang name="el-GR">Ξυπνητήρι</lang>
+		<lang name="en-au">Alarm Clock</lang>
+		<lang name="en-ca">Alarm Clock</lang>
+		<lang name="en-gb">Alarm Clock</lang>
+		<lang name="en-in">Alarm Clock</lang>
+		<lang name="es-es">Despertador</lang>
+		<lang name="es-MX">Despertador</lang>
+		<lang name="fa-IR">ساعت زنگدار</lang>
+		<lang name="fil-PH">Orasang May Alarma</lang>
+		<lang name="fr-ca">Réveille-matin</lang>
+		<lang name="fr-fr">Réveil</lang>
+		<lang name="fr-mc">Réveil</lang>
+		<lang name="he-IL">שעון מעורר</lang>
+		<lang name="hi-IN">अलार्म घड़ी</lang>
+		<lang name="hu-HU">Ébresztőóra</lang>
+		<lang name="id-ID">Jam Alarm</lang>
+		<lang name="it-it">Sveglia</lang>
+		<lang name="ja-jp">目覚まし時計</lang>
+		<lang name="ko-KR">알람 시계</lang>
+		<lang name="nl-NL">Wekker</lang>
+		<lang name="pl-PL">Budzik</lang>
+		<lang name="pt-br">Despertador</lang>
+		<lang name="pt-PT">Despertador</lang>
+		<lang name="ro-RO">Ceas deșteptător</lang>
+		<lang name="ru-RU">Будильник</lang>
+		<lang name="sv-SE">Väckarklocka</lang>
+		<lang name="th-TH">นาฬิกาปลุก</lang>
+		<lang name="tr-TR">Çalar saat</lang>
+		<lang name="uk-UA">Будильник</lang>
+		<lang name="vi-VN">Đồng hồ báo thức</lang>
+		<lang name="zh-Hans">闹钟</lang>
+		<lang name="zh-HK">鬧鐘</lang>
+		<lang name="zh-TW">鬧鐘</lang>
+		<lang name="zh-Hant">鬧鐘</lang>
+	</resource>
 </resources>

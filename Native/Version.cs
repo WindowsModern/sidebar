@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Xml;
@@ -264,5 +266,38 @@ namespace Sidebar
 		{
 			writer.WriteString (this.ToString ());
 		}
+	}
+	public class VersionComparer: IComparer<Version>, IComparer
+	{
+		public int Compare (object x, object y)
+		{
+			if (ReferenceEquals (x, y)) return 0;
+			if (x == null) return 1;    // null 视为最低，排最后
+			if (y == null) return -1;
+			Version ver1, ver2;
+			if (x is Version) ver1 = (Version)x;
+			else if (x is ulong) ver1 = new Sidebar.Version ((ulong)x);
+			else throw new ArgumentException ("x must be Version or ulong.", "x");
+			if (y is Version) ver2 = (Version)y;
+			else if (y is ulong) ver2 = new Sidebar.Version ((ulong)y);
+			else throw new ArgumentException ("x must be Version or ulong.", "x");
+			var res = ver1.Compare (ver2);
+			if (res < 0) return -1;
+			else if (res > 0) return 1;
+			else return 0;
+		}
+		public int Compare (Version x, Version y)
+		{
+			var res = x.Compare (y);
+			if (res < 0) return -1;
+			else if (res > 0) return 1;
+			else return 0;
+		}
+	}
+	public class ReverseVersionComparer: IComparer<Version>, IComparer
+	{
+		private VersionComparer vc = new VersionComparer ();
+		public int Compare (object x, object y) { return -vc.Compare (x, y); }
+		public int Compare (Version x, Version y) { return -vc.Compare (x, y); }
 	}
 }

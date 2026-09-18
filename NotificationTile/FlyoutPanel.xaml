@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="WindowsModern.NotificationHistoryTile.FlyoutPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WindowsModern.NotificationHistoryTile"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<DockPanel>
+			<Button Name="GotoRulesAlertButton" Content="Go to Rules and Alerts" Style="{DynamicResource TileNotificationRulesAndAlertsButton}" Click="GotoRulesAlertButton_Click">
+				<Button.Template>
+					<ControlTemplate TargetType="Button">
+						<StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+							<Image Style="{DynamicResource TileNotificationRulesAndAlertsImage}"></Image>
+							<TextBlock Style="{DynamicResource TileNotificationRulesAndAlerts}" Text="{TemplateBinding Content}"></TextBlock>
+						</StackPanel>
+					</ControlTemplate>
+				</Button.Template>
+			</Button>
+			<ScrollViewer Style="{DynamicResource TileNotificationFlyoutScrollViewer}">
+				<ItemsControl ItemsSource="{Binding Grouped}" Grid.IsSharedSizeScope="True">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Orientation="Vertical"></StackPanel>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel>
+								<TextBlock Text="{Binding Date, Converter={x:Static local:LocalDateConverter.Instance}}" Style="{DynamicResource TileNotificationFlyoutDateTitle}"/>
+								<ItemsControl ItemsSource="{Binding}">
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Vertical"></StackPanel>
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
+									<ItemsControl.ItemTemplate>
+										<DataTemplate>
+											<Grid MinHeight="20">
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="Auto" SharedSizeGroup="FlyoutTime"></ColumnDefinition>
+													<ColumnDefinition Width="Auto" SharedSizeGroup="FlyoutIcon"></ColumnDefinition>
+													<ColumnDefinition Width="*"></ColumnDefinition>
+												</Grid.ColumnDefinitions>
+												<TextBlock Grid.Column="0" Text="{Binding TimeStampUtc, Converter={x:Static local:LocalTimeConverter.Instance}}" Style="{DynamicResource TileNotificationFlyoutItemTime}"/>
+												<Grid Grid.Column="1">
+													<Image x:Name="Icon" Style="{DynamicResource TileNotificationFlyoutItemImage}"/>
+													<Image x:Name="IconHover" Style="{DynamicResource TileNotificationFlyoutItemImageHover}" Opacity="0" />
+												</Grid>
+												<StackPanel Grid.Column="2" Style="{DynamicResource TileNotificationFlyoutItemTextPart}">
+													<TextBlock Text="{Binding InfoTitle}" Style="{DynamicResource TileNotificationFlyoutItemTitle}"></TextBlock>
+													<TextBlock Text="{Binding Info}" Style="{DynamicResource TileNotificationFlyoutItemText}"/>
+												</StackPanel>
+												<Button Grid.Column="0" Grid.ColumnSpan="3" Style="{DynamicResource TileNotificationFlyoutItemButton}" Click="Button_Click"/>
+											</Grid>
+											<DataTemplate.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Trigger.EnterActions>
+														<BeginStoryboard>
+															<Storyboard>
+																<DoubleAnimation Storyboard.TargetName="Icon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25"/>
+																<DoubleAnimation Storyboard.TargetName="IconHover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25"/>
+															</Storyboard>
+														</BeginStoryboard>
+													</Trigger.EnterActions>
+													<Trigger.ExitActions>
+														<BeginStoryboard>
+															<Storyboard>
+																<DoubleAnimation Storyboard.TargetName="Icon" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25"/>
+																<DoubleAnimation Storyboard.TargetName="IconHover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25"/>
+															</Storyboard>
+														</BeginStoryboard>
+													</Trigger.ExitActions>
+												</Trigger>
+											</DataTemplate.Triggers>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+		</DockPanel>   
+    </Grid>
+</UserControl>

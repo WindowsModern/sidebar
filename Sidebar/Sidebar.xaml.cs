@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Diagnostics;
 using System.Collections;
+using System.Security.Cryptography;
 
 namespace Sidebar
 {
@@ -791,7 +792,7 @@ namespace Sidebar
 				_configWnd.Closed += (s, e) => {
 					_configWnd = null;
 				};
-				_configWnd.ShowDialog ();
+				_configWnd.Show ();
 			}
 		}
 		private void Window_MouseMove (object sender, MouseEventArgs e)
@@ -902,14 +903,86 @@ namespace Sidebar
 					closeHandler = (s, e) => {
 						notifyIcon.BalloonTipClicked -= handler;
 						notifyIcon.BalloonTipClosed -= closeHandler;
+						try
+						{
+							if (notifyIcon.Icon != Properties.Resources.AppIcon)
+							{
+								var icon = notifyIcon.Icon;
+								notifyIcon.Icon = null;
+								icon?.Dispose ();
+							}
+						}
+						catch { }
+						finally
+						{
+							notifyIcon.Icon = Properties.Resources.AppIcon;
+						}
+						notifyIcon.Text = App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_TITLE");
 					};
+					notifyIcon.BalloonTipClicked -= handler;
+					notifyIcon.BalloonTipClosed -= closeHandler;
 					notifyIcon.BalloonTipClicked += handler;
+					notifyIcon.BalloonTipClosed += closeHandler;
 					if (request.RequestDatas is string)
 					{
 						var ts = App.TileMgr.GetByFamilyName (request.RequestSource);
+						var tc = tileCache [ts.Manifest.Identity.FamilyName];
+						//var icon = (tc.TileVisual.TileLogo as BitmapImage).ToIcon () ?? Properties.Resources.AppIcon;
+						var iconimg = tc.TileVisual.TileLogo;
 						var name = ts.TileFolder.StringResources.SuitableResource (ts.Manifest.Properties.DisplayName, ts.Manifest.Properties.DisplayName) ?? "Tile";
 						var content = request.RequestDatas as string;
 						if (string.IsNullOrEmpty (content)) content = " ";
+						var nin = new NotifyIconNotification2 {
+							Timeout = 5000,
+							Title = String.Format (
+								App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"),
+								name
+							),
+							Content = content,
+							Icon = System.Windows.Forms.ToolTipIcon.None,
+							IconImage = iconimg
+						};
+						var result = Communicate (new SidebarRequestInternal {
+							RequestTarget = "WindowsModern.NotificationHistoryTile_6jwq91e3ytb32",
+							RequestName = "InternalNotificationAddHistoryInternal",
+							RequestDatas = nin,
+						});
+						if (result)
+						{
+							Notification wnd = null;
+							EventHandler clickhandler = null, closehandler = null, closeclickhandler = null;
+							clickhandler = (s, e) => {
+								foreach (var i in tileCache)
+								{
+									if (i.Key.NEquals (request.RequestSource))
+									{
+										var resp = new TileResponse (request);
+										resp.Success = true;
+										resp.ResponseName = "NotificationClick";
+										Response (resp);
+										break;
+									}
+								}
+								Communicate (new SidebarRequestInternal {
+									RequestTarget = "WindowsModern.NotificationHistoryTile_6jwq91e3ytb32",
+									RequestName = "InternalNotificationSetRead",
+									RequestDatas = nin,
+								});
+							};
+							closeclickhandler = (s, e) => {
+								Communicate (new SidebarRequestInternal {
+									RequestTarget = "WindowsModern.NotificationHistoryTile_6jwq91e3ytb32",
+									RequestName = "InternalNotificationSetRead",
+									RequestDatas = nin,
+								});
+							};
+							wnd = Notification.ShowNotification (nin);
+							wnd.BalloonTipClicked += clickhandler;
+							wnd.BalloonTipCloseClicked += closeclickhandler;
+							return true;
+						}
+						//notifyIcon.Icon = icon;
+						//notifyIcon.Text = name;
 						notifyIcon.ShowBalloonTip (
 							5000,
 							String.Format (
@@ -924,6 +997,9 @@ namespace Sidebar
 					else if (request.RequestDatas is NotifyIconNotification)
 					{
 						var ts = App.TileMgr.GetByFamilyName (request.RequestSource);
+						var tc = tileCache [ts.Manifest.Identity.FamilyName];
+						//var icon = (tc.TileVisual.TileLogo as BitmapImage).ToIcon () ?? Properties.Resources.AppIcon;
+						var iconimg = tc.TileVisual.TileLogo;
 						var name = ts.TileFolder.StringResources.SuitableResource (ts.Manifest.Properties.DisplayName, ts.Manifest.Properties.DisplayName) ?? "Tile";
 						var nin = request.RequestDatas as NotifyIconNotification;
 						var timeout = nin.Timeout;
@@ -934,16 +1010,53 @@ namespace Sidebar
 						{
 							title = String.Format (App.ProgramFolder.StringResources.SuitableResource ("SIDEBAR_NOTIFY_TITLE", "Notification from {0}"), name ?? " ");
 						}
-						try
+						var nin2 = new NotifyIconNotification2 (nin) {
+							Title = title,
+							Content = content,
+							IconImage = ((nin is NotifyIconNotification2) ? (nin as NotifyIconNotification2).IconImage : null) ?? iconimg
+						};
+						var result = Communicate (new SidebarRequestInternal {
+							RequestTarget = "WindowsModern.NotificationHistoryTile_6jwq91e3ytb32",
+							RequestName = "InternalNotificationAddHistoryInternal",
+							RequestDatas = nin2,
+						});
+						if (result)
 						{
-							notifyIcon.ShowBalloonTip (timeout, title, content, nin.Icon);
+							Notification wnd = null;
+							EventHandler clickhandler = null, closehandler = null, closeclickhandler = null;
+							clickhandler = (s, e) => {
+								foreach (var i in tileCache)
+								{
+									if (i.Key.NEquals (request.RequestSource))
+									{
+										var resp = new TileResponse (request);
+										resp.Success = true;
+										resp.ResponseName = "NotificationClick";
+										Response (resp);
+										break;
+									}
+								}
+								Communicate (new SidebarRequestInternal {
+									RequestTarget = "WindowsModern.NotificationHistoryTile_6jwq91e3ytb32",
+									RequestName = "InternalNotificationSetRead",
+									RequestDatas = nin2,
+								});
+							};
+							closeclickhandler = (s, e) => {
+								Communicate (new SidebarRequestInternal {
+									RequestTarget = "WindowsModern.NotificationHistoryTile_6jwq91e3ytb32",
+									RequestName = "InternalNotificationSetRead",
+									RequestDatas = nin2,
+								});
+							};
+							wnd = Notification.ShowNotification (nin2);
+							wnd.BalloonTipClicked += clickhandler;
+							wnd.BalloonTipCloseClicked += closeclickhandler;
+							return true;
 						}
-						catch (Exception ex)
-						{
-							var exmsg = ex.InnerException?.Message ?? ex.Message;
-							var stack = ex.InnerException?.StackTrace ?? ex.StackTrace;
-							MessageBox.Show ($"{exmsg}\n\n{stack}", ex.GetType ().ToString (), MessageBoxButton.OK, MessageBoxImage.Error);
-						}
+						//notifyIcon.Icon = icon;
+						//notifyIcon.Text = name;
+						notifyIcon.ShowBalloonTip (timeout, title, content, nin.Icon);
 						return true;
 					}
 					else
@@ -1206,7 +1319,7 @@ namespace Sidebar
 								{
 									var resp = new TileResponse (request);
 									resp.Success = true;
-									resp.ResponseName = "NotificationClick";
+									resp.ResponseName = "SidebarNotificationClick";
 									Response (resp);
 									break;
 								}
@@ -1219,7 +1332,7 @@ namespace Sidebar
 								{
 									var resp = new TileResponse (request);
 									resp.Success = true;
-									resp.ResponseName = "NotificationCloseClick";
+									resp.ResponseName = "SidebarNotificationCloseClick";
 									Response (resp);
 									break;
 								}
@@ -1232,7 +1345,7 @@ namespace Sidebar
 								{
 									var resp = new TileResponse (request);
 									resp.Success = true;
-									resp.ResponseName = "NotificationClose";
+									resp.ResponseName = "SidebarNotificationClose";
 									Response (resp);
 									break;
 								}
@@ -1579,5 +1692,28 @@ namespace Sidebar
 			if (index_y < 0) index_y = int.MaxValue;
 			return index_y - index_x;
 		}
+	}
+	public class SidebarRequestInternal: ITileRequest
+	{
+		private DateTime genTime = DateTime.UtcNow;
+		public object RequestDatas { get; set; }
+		public string RequestId
+		{
+			get
+			{
+				string raw = $"{(RequestName ?? "").NNormalize ()}|{(RequestSource ?? "").NNormalize ()}|{(RequestTarget ?? "").NNormalize ()}|{genTime.Ticks}";
+				using (var sha256 = SHA256.Create ())
+				{
+					byte [] hash = sha256.ComputeHash (Encoding.UTF8.GetBytes (raw));
+					StringBuilder sb = new StringBuilder (32);
+					for (int i = 0; i < 16; i++) sb.Append (hash [i].ToString ("x2"));
+					return sb.ToString ();
+				}
+			}
+		}
+		public string RequestName { get; set; }
+		public string RequestSource => "Sidebar";
+		public string RequestTarget { get; set; }
+		public object TransferDatas { get; set; }
 	}
 }
