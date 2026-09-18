@@ -76,7 +76,7 @@ namespace WindowsModern.TrayTile.Utils
 		{
 			get { return _type; }
 		}
-
+		private bool IsTraditional => CallbackMessage != 0;
 		public TrayIconImpl (long key, IntPtr hwnd, uint uid, uint callbackMsg,
 							ImageSource icon, string tooltip, string className,
 							object data, byte type)
@@ -108,23 +108,59 @@ namespace WindowsModern.TrayTile.Utils
 
 		private void SendMouseMessage (int msg)
 		{
-			if (Hwnd == IntPtr.Zero)
-				return;
+			if (Hwnd == IntPtr.Zero) return;
 
-			if (CallbackMessage != 0)
+			if (IsTraditional)
 			{
-				// Traditional tray icon: post to owner window with uid
+				// 传统：发给 owner 窗口，wParam = uID
 				NativeMethods.PostMessage (Hwnd, CallbackMessage, (int)Uid, msg);
 			}
 			else
 			{
-				// New-style button: post directly to the window itself
+				// 新式：直接发给按钮窗口自身
 				NativeMethods.PostMessage (Hwnd, (uint)msg, IntPtr.Zero, IntPtr.Zero);
 			}
 		}
+		private const int NIN_POPUPOPEN = 0x0406;  // WM_USER + 6
+		private const int NIN_POPUPCLOSE = 0x0407;  // WM_USER + 7
+		private const uint WM_MOUSEMOVE = 0x0200;
+		private const uint WM_MOUSELEAVE = 0x02A3;
 
-		public void OnHover () { }
-		public void OnLeave () { }
+		public void OnHover ()
+		{
+			return;
+			if (Hwnd == IntPtr.Zero) return;
+
+			if (IsTraditional)
+			{
+				// 传统托盘图标：按 NOTIFYICON_VERSION_4 发 NIN_POPUPOPEN
+				//   lParam = MAKELONG(uID, NIN_POPUPOPEN)
+				//   wParam = MAKELONG(x, y)，owner 一般不读，填 0
+				IntPtr lParam = (IntPtr)((NIN_POPUPOPEN << 16) | ((int)Uid & 0xFFFF));
+				NativeMethods.SendMessage (Hwnd, CallbackMessage, IntPtr.Zero, lParam);
+			}
+			else
+			{
+				// 新式按钮：模拟鼠标进入客户区
+				NativeMethods.SendMessage (Hwnd, WM_MOUSEMOVE, IntPtr.Zero, IntPtr.Zero);
+			}
+		}
+
+		public void OnLeave ()
+		{
+			return;
+			if (Hwnd == IntPtr.Zero) return;
+
+			if (IsTraditional)
+			{
+				IntPtr lParam = (IntPtr)((NIN_POPUPCLOSE << 16) | ((int)Uid & 0xFFFF));
+				NativeMethods.SendMessage (Hwnd, CallbackMessage, IntPtr.Zero, lParam);
+			}
+			else
+			{
+				NativeMethods.SendMessage (Hwnd, WM_MOUSELEAVE, IntPtr.Zero, IntPtr.Zero);
+			}
+		}
 
 		public void OnClick ()
 		{
