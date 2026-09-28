@@ -6,6 +6,7 @@
 * This project contains portions of code and XAML derived from LongBar, which are used and modified in accordance with the terms of the Microsoft Public License (Ms-PL).
 * Information regarding third-party code and attribution can be found in the `NOTICE` file. The original LongBar license text is included in the `LICENSE - LongBar` file.
 * This project utilizes AI assistance in some aspects of development.
+* Sep. 23, 2026: Due to new ideas about the project’s direction and the difficulty of maintaining and updating the old system, the project will undergo a major overhaul soon. This overhaul will also be incompatible with the previous tiles. Therefore, tile developers for this project, please take note.
 
 ## Release
 
