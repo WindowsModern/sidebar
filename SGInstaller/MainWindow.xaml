@@ -1,0 +1,23 @@
+﻿<Window x:Class="SGInstaller.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:SGInstaller" Title="{local:StringResource Key=INSTALLER_WNDTITLE, Fallback='Sidebar Gadget Installer'}" Height="480" Width="640" MinWidth="520" MinHeight="360" WindowStartupLocation="CenterScreen" FontFamily="{StaticResource GlobalFontFamily}" Background="{StaticResource AppBackground}" Foreground="{StaticResource AppForeground}">
+	<Window.DataContext>
+		<local:MainViewModel />
+	</Window.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<ContentControl x:Name="PageHost" Grid.Row="0" Content="{Binding CurrentPage}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+		<Border Grid.Row="1" Background="{StaticResource CommandBarBackground}" BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,0" Padding="16,10">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="1" Margin="0,0,8,0" Content="{Binding CurrentPage.SecondaryButtonTitle}" Command="{Binding CurrentPage.SecondaryCommand}" Visibility="{Binding CurrentPage.ShowSecondaryButton, Converter={StaticResource BoolToVis}}" />
+				<Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Content="{Binding CurrentPage.PrimaryButtonTitle}" Command="{Binding CurrentPage.PrimaryCommand}" Visibility="{Binding CurrentPage.ShowPrimaryButton, Converter={StaticResource BoolToVis}}" />
+			</Grid>
+		</Border>
+	</Grid>
+</Window>

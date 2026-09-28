@@ -1,52 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 
 namespace Sidebar
 {
-	/// <summary>
-	/// 表示一个配置节（例如全局配置或某个用户的配置），支持通过索引器读写任意类型的值。
-	/// </summary>
 	[ComVisible (true)]
 	public class ConfigSection
 	{
 		private XElement _root;
 		private readonly object _lock;
 		private readonly Action _saveHandler;
+
 		internal ConfigSection (XElement root, object lockObj, Action saveHandler)
 		{
 			_root = root;
 			_lock = lockObj;
 			_saveHandler = saveHandler;
 		}
-		/// <summary>
-		/// 索引器，获取或设置配置项的值。
-		/// </summary>
+
+		public XElement Element { get { return _root; } }
+
+		// ---------------- Setting 访问 ----------------
+
 		public object this [string key]
 		{
 			get
 			{
 				if (_root == null) return null;
-				var elem = GetSettingElement (key);
+				XElement elem = GetSettingElement (key);
 				if (elem == null) return null;
-				var typeAttr = elem.Attribute ("type");
+				XAttribute typeAttr = elem.Attribute ("type");
 				if (typeAttr == null || string.IsNullOrEmpty (typeAttr.Value)) return null;
-				var type = Type.GetType (typeAttr.Value);
+				Type type = Type.GetType (typeAttr.Value);
 				if (type == null) return null;
-				var json = elem.Value;
+				string json = elem.Value;
 				if (string.IsNullOrEmpty (json)) return null;
 				return JsonConvert.DeserializeObject (json, type);
 			}
 			set
 			{
-				if (_root == null) throw new InvalidOperationException ("Configuration section is not available.");
-				var elem = GetSettingElement (key);
-				var typeName = value?.GetType ().AssemblyQualifiedName ?? typeof (object).AssemblyQualifiedName;
-				var json = value == null ? "null" : JsonConvert.SerializeObject (value);
+				if (_root == null)
+					throw new InvalidOperationException ("Configuration section is not available.");
+
+				XElement elem = GetSettingElement (key);
+				string typeName = value == null
+					? typeof (object).AssemblyQualifiedName
+					: value.GetType ().AssemblyQualifiedName;
+				string json = value == null ? "null" : JsonConvert.SerializeObject (value);
+
 				lock (_lock)
 				{
 					if (elem == null)
@@ -62,87 +66,211 @@ namespace Sidebar
 						elem.Attribute ("type").Value = typeName;
 						elem.Value = json;
 					}
-					_saveHandler?.Invoke ();
+					if (_saveHandler != null) _saveHandler ();
 				}
 			}
 		}
-		/// <summary>
-		/// 获取配置项，并转换为指定类型。
-		/// </summary>
+
 		public T Get<T> (string key, T defaultValue = default (T))
 		{
-			var val = this [key];
+			object val = this [key];
 			if (val == null) return defaultValue;
 			try { return (T)val; } catch { return defaultValue; }
 		}
-		/// <summary>
-		/// 设置配置项。
-		/// </summary>
-		public void Set<T> (string key, T value) => this [key] = value;
-		/// <summary>
-		/// 判断配置项是否存在。
-		/// </summary>
-		public bool ContainsKey (string key) => GetSettingElement (key) != null;
-		/// <summary>
-		/// 删除配置项。
-		/// </summary>
+
+		public void Set<T> (string key, T value)
+		{
+			this [key] = value;
+		}
+
+		public bool ContainsKey (string key)
+		{
+			return GetSettingElement (key) != null;
+		}
+
 		public bool Remove (string key)
 		{
-			var elem = GetSettingElement (key);
+			XElement elem = GetSettingElement (key);
 			if (elem == null) return false;
 			lock (_lock)
 			{
 				elem.Remove ();
-				_saveHandler?.Invoke ();
+				if (_saveHandler != null) _saveHandler ();
 			}
 			return true;
 		}
+
+		// ---------------- Section 嵌套 ----------------
+
+		/// <summary>
+		/// 获取或创建当前节下的子节（单层）。
+		/// </summary>
+		public ConfigSection GetSection (string name)
+		{
+			if (_root == null)
+				throw new InvalidOperationException ("Configuration section is not available.");
+			if (string.IsNullOrEmpty (name)) return this;
+
+			XElement child = FindChildSection (_root, name);
+			if (child == null)
+			{
+				lock (_lock)
+				{
+					child = FindChildSection (_root, name);
+					if (child == null)
+					{
+						child = new XElement ("Section", new XAttribute ("name", name));
+						_root.Add (child);
+						if (_saveHandler != null) _saveHandler ();
+					}
+				}
+			}
+			return new ConfigSection (child, _lock, _saveHandler);
+		}
+
+		/// <summary>
+		/// 获取或创建多层级子节，路径用 / 或 \ 分隔。
+		/// 例：GetSectionPath("Appearance/Colors/Theme")
+		/// </summary>
+		public ConfigSection GetSectionPath (string path)
+		{
+			if (string.IsNullOrEmpty (path)) return this;
+			string [] parts = path.Split (new char [] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+			ConfigSection current = this;
+			for (int i = 0; i < parts.Length; i++)
+				current = current.GetSection (parts [i]);
+			return current;
+		}
+
+		/// <summary>
+		/// 返回当前节下直接的所有子节。
+		/// </summary>
+		public ConfigSection [] GetSections ()
+		{
+			if (_root == null) return new ConfigSection [0];
+			List<ConfigSection> list = new List<ConfigSection> ();
+			foreach (XElement e in _root.Elements ("Section"))
+				list.Add (new ConfigSection (e, _lock, _saveHandler));
+			return list.ToArray ();
+		}
+
+		/// <summary>
+		/// 返回当前节下直接的所有子节名称。
+		/// </summary>
+		public string [] GetSectionNames ()
+		{
+			if (_root == null) return new string [0];
+			List<string> list = new List<string> ();
+			foreach (XElement e in _root.Elements ("Section"))
+			{
+				XAttribute nameAttr = e.Attribute ("name");
+				if (nameAttr != null) list.Add (nameAttr.Value);
+			}
+			return list.ToArray ();
+		}
+
+		public bool HasSection (string name)
+		{
+			if (_root == null) return false;
+			return FindChildSection (_root, name) != null;
+		}
+
+		public bool RemoveSection (string name)
+		{
+			XElement child = FindChildSection (_root, name);
+			if (child == null) return false;
+			lock (_lock)
+			{
+				child.Remove ();
+				if (_saveHandler != null) _saveHandler ();
+			}
+			return true;
+		}
+
+		// ---------------- 内部辅助 ----------------
+
+		private static XElement FindChildSection (XElement parent, string name)
+		{
+			if (parent == null) return null;
+			foreach (XElement e in parent.Elements ("Section"))
+			{
+				XAttribute nameAttr = e.Attribute ("name");
+				if (nameAttr != null && nameAttr.Value == name) return e;
+			}
+			return null;
+		}
+
 		private XElement GetSettingElement (string key)
 		{
-			return _root?.Elements ("Setting").FirstOrDefault (e => {
-				var nameAttr = e.Attribute ("name");
-				return nameAttr != null && nameAttr.Value == key;
-			});
+			if (_root == null) return null;
+			foreach (XElement e in _root.Elements ("Setting"))
+			{
+				XAttribute nameAttr = e.Attribute ("name");
+				if (nameAttr != null && nameAttr.Value == key) return e;
+			}
+			return null;
 		}
+
 		internal void SetRoot (XElement newRoot)
 		{
 			_root = newRoot;
 		}
 	}
-	/// <summary>
-	/// 管理整个配置文件，提供全局和用户配置节。
-	/// </summary>
+
 	[ComVisible (true)]
 	public class XmlConfig
 	{
 		private static readonly object _staticLock = new object ();
 		private static XmlConfig _defaultInstance;
 		private static string _currentUserName;
-		private static ConfigSection _globalSection;
-		private static ConfigSection _userSection;
+
 		private readonly object _instanceLock = new object ();
 		private readonly string _filePath;
 		private XDocument _doc;
-		public ConfigSection Global { get; private set; }
-		public ConfigSection CurrentUser { get; private set; }
+
+		public string FilePath { get { return _filePath; } }
+
+		// ---------------- 实例属性（兼容旧用法） ----------------
+
+		public ConfigSection Global
+		{
+			get { return GetSection ("Global"); }
+		}
+
+		public ConfigSection CurrentUser
+		{
+			get
+			{
+				string user = _currentUserName;
+				if (string.IsNullOrEmpty (user)) return null;
+				return GetSection ("Users/" + user);
+			}
+		}
+
+		// ---------------- 静态访问器 ----------------
+
 		public static ConfigSection GlobalSettings
 		{
 			get
 			{
 				if (_defaultInstance == null)
 					throw new InvalidOperationException ("XmlConfig not initialized. Call Initialize first.");
-				return _defaultInstance.Global;
+				return _defaultInstance.GetSection ("Global");
 			}
 		}
+
 		public static ConfigSection CurrentUserSettings
 		{
 			get
 			{
 				if (_defaultInstance == null)
 					throw new InvalidOperationException ("XmlConfig not initialized. Call Initialize first.");
-				return _defaultInstance.CurrentUser;
+				string user = _currentUserName;
+				if (string.IsNullOrEmpty (user)) return null;
+				return _defaultInstance.GetSection ("Users/" + user);
 			}
 		}
+
 		public static string CurrentUserName
 		{
 			get { return _currentUserName; }
@@ -150,46 +278,38 @@ namespace Sidebar
 			{
 				if (_currentUserName == value) return;
 				_currentUserName = value;
-				if (_defaultInstance != null)
-					_defaultInstance.SwitchUser (value);
+				if (_defaultInstance != null && !string.IsNullOrEmpty (value))
+					_defaultInstance.GetSection ("Users/" + value);
 			}
 		}
-		/// <summary>
-		/// 初始化默认配置文件（静态使用）。传入目录或完整文件路径。
-		/// </summary>
+
 		public static void Initialize (string path)
 		{
 			lock (_staticLock)
 			{
 				_defaultInstance = new XmlConfig (path);
-				_currentUserName = Environment.UserName; // 默认当前 Windows 用户名
-				_defaultInstance.SwitchUser (_currentUserName);
+				_currentUserName = Environment.UserName;
+				_defaultInstance.GetSection ("Global");
+				_defaultInstance.GetSection ("Users/" + _currentUserName);
 			}
 		}
-		/// <summary>
-		/// 构造函数，创建一个新的配置文件实例。
-		/// </summary>
-		/// <param name="path">文件路径，或者目录（会自动加上 Config.xml）</param>
+
+		// ---------------- 构造与持久化 ----------------
+
 		public XmlConfig (string path)
 		{
-			// 如果传入的是目录，则拼接 Config.xml
 			if (Directory.Exists (path) || (!File.Exists (path) && !Path.HasExtension (path)))
-			{
 				_filePath = Path.Combine (path, "Config.xml");
-			}
 			else
-			{
 				_filePath = path;
-			}
 
 			LoadOrCreate ();
-			Global = new ConfigSection (_doc.Root.Element ("Global"), _instanceLock, Save);
-			CurrentUser = new ConfigSection (null, _instanceLock, Save);
 		}
+
 		private void LoadOrCreate ()
 		{
-			var dir = Path.GetDirectoryName (_filePath);
-			if (!Directory.Exists (dir))
+			string dir = Path.GetDirectoryName (_filePath);
+			if (!string.IsNullOrEmpty (dir) && !Directory.Exists (dir))
 				Directory.CreateDirectory (dir);
 
 			if (File.Exists (_filePath))
@@ -200,13 +320,14 @@ namespace Sidebar
 			{
 				_doc = new XDocument (
 					new XElement ("Config",
-						new XElement ("Global"),
-						new XElement ("Users")
+						new XElement ("Section", new XAttribute ("name", "Global")),
+						new XElement ("Section", new XAttribute ("name", "Users"))
 					)
 				);
 				Save ();
 			}
 		}
+
 		private void Save ()
 		{
 			lock (_instanceLock)
@@ -214,32 +335,116 @@ namespace Sidebar
 				_doc.Save (_filePath);
 			}
 		}
-		private void SwitchUser (string userName)
+
+		// ---------------- GetSection 核心 ----------------
+
+		/// <summary>
+		/// 按路径获取或创建节。路径用 / 或 \ 分隔，例如：
+		///   "Global"
+		///   "Users/Bruce"
+		///   "Global/Appearance/Colors"
+		/// 空路径返回根节。
+		/// </summary>
+		public ConfigSection GetSection (string path)
 		{
+			if (_doc == null || _doc.Root == null)
+				throw new InvalidOperationException ("XmlConfig is not initialized.");
+
+			XElement current = _doc.Root;
+			if (!string.IsNullOrEmpty (path))
+			{
+				string [] parts = path.Split (new char [] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < parts.Length; i++)
+				{
+					XElement child = FindChildSection (current, parts [i]);
+					if (child == null)
+					{
+						lock (_instanceLock)
+						{
+							child = FindChildSection (current, parts [i]);
+							if (child == null)
+							{
+								child = new XElement ("Section", new XAttribute ("name", parts [i]));
+								current.Add (child);
+								Save ();
+							}
+						}
+					}
+					current = child;
+				}
+			}
+			return new ConfigSection (current, _instanceLock, Save);
+		}
+
+		/// <summary>
+		/// 判断某个路径的节是否存在（不创建）。
+		/// </summary>
+		public bool HasSection (string path)
+		{
+			if (_doc == null || _doc.Root == null) return false;
+			XElement current = _doc.Root;
+			if (!string.IsNullOrEmpty (path))
+			{
+				string [] parts = path.Split (new char [] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < parts.Length; i++)
+				{
+					XElement child = FindChildSection (current, parts [i]);
+					if (child == null) return false;
+					current = child;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// 顶层节名称列表。
+		/// </summary>
+		public string [] GetSectionNames ()
+		{
+			if (_doc == null || _doc.Root == null) return new string [0];
+			List<string> list = new List<string> ();
+			foreach (XElement e in _doc.Root.Elements ("Section"))
+			{
+				XAttribute nameAttr = e.Attribute ("name");
+				if (nameAttr != null) list.Add (nameAttr.Value);
+			}
+			return list.ToArray ();
+		}
+
+		public bool RemoveSection (string path)
+		{
+			if (_doc == null || _doc.Root == null || string.IsNullOrEmpty (path)) return false;
+			string [] parts = path.Split (new char [] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+			if (parts.Length == 0) return false;
+
+			XElement parent = _doc.Root;
+			for (int i = 0; i < parts.Length - 1; i++)
+			{
+				XElement child = FindChildSection (parent, parts [i]);
+				if (child == null) return false;
+				parent = child;
+			}
+
+			XElement target = FindChildSection (parent, parts [parts.Length - 1]);
+			if (target == null) return false;
+
 			lock (_instanceLock)
 			{
-				var usersRoot = _doc.Root.Element ("Users");
-				if (usersRoot == null)
-				{
-					usersRoot = new XElement ("Users");
-					_doc.Root.Add (usersRoot);
-					Save ();
-				}
-
-				XElement userNode = null;
-				if (!string.IsNullOrEmpty (userName))
-				{
-					userNode = usersRoot.Elements ("User")
-						.FirstOrDefault (e => e.Attribute ("name")?.Value == userName);
-					if (userNode == null)
-					{
-						userNode = new XElement ("User", new XAttribute ("name", userName));
-						usersRoot.Add (userNode);
-						Save ();
-					}
-				}
-				CurrentUser.SetRoot (userNode);
+				target.Remove ();
+				Save ();
 			}
+			return true;
+		}
+
+		private static XElement FindChildSection (XElement parent, string name)
+		{
+			if (parent == null) return null;
+			foreach (XElement e in parent.Elements ("Section"))
+			{
+				XAttribute nameAttr = e.Attribute ("name");
+				if (nameAttr != null && nameAttr.Value == name) return e;
+			}
+			return null;
 		}
 	}
 }

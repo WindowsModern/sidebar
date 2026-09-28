@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="Sidebar.TileControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Sidebar"
+             mc:Ignorable="d" Background="Transparent"
+             d:DesignHeight="300" d:DesignWidth="300">
+	<UserControl.Resources>
+		<ControlTemplate x:Key="TileSplliterTemplate" TargetType="Control">
+			<Grid>
+				<Line Name="SplitterLine1" HorizontalAlignment="Stretch" Stretch="Fill" Stroke="#53000000" StrokeThickness="1" X1="0" X2="100" />
+			</Grid>
+			<ControlTemplate.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.EnterActions>
+						<BeginStoryboard>
+							<Storyboard>
+								<ColorAnimation Storyboard.TargetName="SplitterLine1" Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" To="#53FFFFFF" Duration="0:0:0.15"/>
+							</Storyboard>
+						</BeginStoryboard>
+					</Trigger.EnterActions>
+					<Trigger.ExitActions>
+						<BeginStoryboard>
+							<Storyboard>
+								<ColorAnimation Storyboard.TargetName="SplitterLine1" Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" To="#53000000" Duration="0:0:0.15"/>
+							</Storyboard>
+						</BeginStoryboard>
+					</Trigger.ExitActions>
+				</Trigger>
+			</ControlTemplate.Triggers>
+		</ControlTemplate>
+		<Style x:Key="TileSplliter" TargetType="Thumb">
+			<Setter Property="DockPanel.Dock" Value="Bottom"></Setter>
+			<Setter Property="Height" Value="4"></Setter>
+			<Setter Property="Cursor" Value="SizeNS" />
+			<Setter Property="Template" Value="{DynamicResource TileSplliterTemplate}"></Setter>
+		</Style>
+		<Style x:Key="TileSplliterPinned" TargetType="Thumb">
+			<Setter Property="DockPanel.Dock" Value="Top"></Setter>
+			<Setter Property="Height" Value="4"></Setter>
+			<Setter Property="Cursor" Value="SizeNS" />
+			<Setter Property="Template" Value="{DynamicResource TileSplliterTemplate}"></Setter>
+		</Style>
+		<Style x:Key="TileBackground" TargetType="Control">
+			<Setter Property="Visibility" Value="Collapsed"></Setter>
+		</Style>
+		<Style x:Key="TileHeaderContainer" TargetType="Grid">
+			<Setter Property="Height" Value="20"></Setter>
+			<Setter Property="DockPanel.Dock" Value="Top"></Setter>
+			<Setter Property="Background" Value="Transparent"></Setter>
+		</Style>
+		<Style x:Key="TileHeaderBackground" TargetType="Control">
+			<Setter Property="Visibility" Value="Collapsed"></Setter>
+		</Style>
+		<Style x:Key="TileHeaderDisplayName" TargetType="TextBlock">
+			<Setter Property="Text" Value="Title"></Setter>
+			<Setter Property="Foreground" Value="White"></Setter>
+			<Setter Property="DockPanel.Dock" Value="Left"></Setter>
+			<Setter Property="VerticalAlignment" Value="Bottom"></Setter>
+			<Setter Property="Margin" Value="6,0"></Setter>
+			<Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
+			<Setter Property="TextWrapping" Value="NoWrap"></Setter>
+		</Style>
+		<Style x:Key="TileHeaderIcon" TargetType="Image">
+			<Setter Property="Source" Value="Images\default.ico"></Setter>
+			<Setter Property="Width" Value="16"></Setter>
+			<Setter Property="Height" Value="16"></Setter>
+			<Setter Property="DockPanel.Dock" Value="Right"></Setter>
+		</Style>
+		<Style x:Key="TileHeaderHighlight" TargetType="Control">
+			<Setter Property="Visibility" Value="Collapsed"></Setter>
+		</Style>
+		<Style x:Key="TileContentBackground" TargetType="Control">
+			<Setter Property="Visibility" Value="Collapsed"></Setter>
+		</Style>
+		<Style x:Key="TileContentHighlight" TargetType="Control">
+			<Setter Property="Visibility" Value="Collapsed"></Setter>
+		</Style>
+		<Style x:Key="TileHighlight" TargetType="Control">
+			<Setter Property="Visibility" Value="Collapsed"></Setter>
+		</Style>
+	</UserControl.Resources>
+    <Grid>
+		<DockPanel>
+			<Thumb Style="{DynamicResource TileSplliter}"></Thumb>
+			<Grid>
+				<Control Style="{DynamicResource TileBackground}"></Control>
+				<DockPanel>
+					<Grid Style="{DynamicResource TileHeaderContainer}">
+						<Control Style="{DynamicResource TileHeaderBackground}"></Control>
+						<DockPanel>
+							<Image Name="TileDisplayImageControl" Style="{DynamicResource TileHeaderIcon}"></Image>
+							<TextBlock Name="TileDisplayNameControl" Style="{DynamicResource TileHeaderDisplayName}"></TextBlock>
+						</DockPanel>
+						<Control Style="{DynamicResource TileHeaderHighlight}" IsHitTestVisible="False"></Control>
+					</Grid>
+					<Grid>
+						<Control Style="{DynamicResource TileContentBackground}"></Control>
+						<Grid Name="TileContentControl" Style="{DynamicResource TileContentContainer}"></Grid>
+						<Control Style="{DynamicResource TileContentHighlight}" IsHitTestVisible="False"></Control>
+					</Grid>
+				</DockPanel>
+				<Control Style="{DynamicResource TileHighlight}" IsHitTestVisible="False"></Control>
+			</Grid>
+		</DockPanel>
+    </Grid>
+</UserControl>

@@ -167,6 +167,7 @@ namespace Sidebar
 		IProgramFolder UserRegion { get; }
 		UIElement TileUI { get; }
 		ISidebarFeatures Features { get; }
+		ITileApplication Application { get; }
 	}
 	[ComVisible (true)]
 	public class SizeChangedEventArgs: EventArgs
@@ -248,11 +249,14 @@ namespace Sidebar
 			Config = runtime.Config;
 			Features = runtime.Features;
 			UserRegion = runtime.UserRegion;
+			Application = runtime.Application;
 		}
 		public ITileManifest Manifest { get; private set; } = null;
 		public IProgramFolder Region { get; private set; } = null;
 		public IProgramFolder UserRegion { get; private set; } = null;
 		public UIElement TileUI { get; private set; } = null;
+		public ITileApplication Application { get; private set; } = null;
+		public string UserModelId => $"{Manifest?.Identity?.FamilyName}!{Application?.Id}";
 		public virtual void OnInitialize () { }
 		public virtual void OnDestroy () { }
 		public void OnHostChanged (TileHostEvent eventName, object context, object sender = null)

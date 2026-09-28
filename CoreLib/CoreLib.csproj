@@ -71,7 +71,7 @@
     <Compile Include="Shell.cs" />
     <Compile Include="Themes.cs" />
     <Compile Include="TileConfig.cs" />
-    <Compile Include="TileMgr.cs" />
+    <Compile Include="TileManager.cs" />
     <Compile Include="TilePackaging.cs" />
     <Compile Include="WPFExt.cs" />
   </ItemGroup>

@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="SGPkgMgr.Views.PackageFilesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:SGPkgMgr.Localization">
+	<Grid Margin="8">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+			<Button Content="{x:Static loc:Strings.AddFiles}"
+                    Padding="10,2" Click="OnAdd" />
+			<Button Content="{x:Static loc:Strings.ReplaceFile}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnReplace" />
+			<Button Content="{x:Static loc:Strings.DeleteFile}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnDelete" />
+			<Button Content="{x:Static loc:Strings.ExtractFile}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnExtract" />
+			<Button Content="{x:Static loc:Strings.Refresh}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnRefresh" />
+		</StackPanel>
+
+		<TreeView Grid.Row="1" x:Name="treeFiles"
+                  AllowDrop="True"
+                  PreviewDragOver="OnDragOver"
+                  PreviewDrop="OnDrop"
+                  SelectedItemChanged="OnSelectedItemChanged">
+			<TreeView.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="{x:Static loc:Strings.AddFiles}" Click="OnAdd" />
+					<MenuItem Header="{x:Static loc:Strings.ReplaceFile}" Click="OnReplace" />
+					<MenuItem Header="{x:Static loc:Strings.DeleteFile}" Click="OnDelete" />
+					<MenuItem Header="{x:Static loc:Strings.ExtractFile}" Click="OnExtract" />
+				</ContextMenu>
+			</TreeView.ContextMenu>
+		</TreeView>
+
+		<TextBlock Grid.Row="2" x:Name="txtInfo" Foreground="#606060" Margin="0,6,0,0" />
+	</Grid>
+</UserControl>

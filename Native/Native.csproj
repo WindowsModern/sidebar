@@ -60,7 +60,7 @@
     <Compile Include="Accent.cs" />
     <Compile Include="Architecture.cs" />
     <Compile Include="ButtonStatus.cs" />
-    <Compile Include="Communication.cs" />
+    <Compile Include="Tile\Communication.cs" />
     <Compile Include="DescRes.cs" />
     <Compile Include="DWinMgr.cs" />
     <Compile Include="HResult.cs" />
@@ -93,9 +93,10 @@
     </Compile>
     <Compile Include="Task.cs" />
     <Compile Include="Themes.cs" />
-    <Compile Include="TileConfig.cs" />
-    <Compile Include="TileManifest.cs" />
-    <Compile Include="TileProp.cs" />
+    <Compile Include="Tile\TileConfig.cs" />
+    <Compile Include="Tile\TileElement.cs" />
+    <Compile Include="Tile\TileManifest.cs" />
+    <Compile Include="Tile\TileProp.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Version.cs" />

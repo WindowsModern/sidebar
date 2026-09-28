@@ -8,8 +8,84 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using ICSharpCode.SharpZipLib.Zip;
+
 namespace Sidebar
 {
+	/// <summary>
+	/// 清单版本检测与支持性校验。
+	/// 当前仅支持版本 2 及更高版本；版本 1（或无版本属性）直接拒绝，
+	/// 因为版本 1 没有应用程序入口点的概念，无法确定要启动哪个可执行文件。
+	/// </summary>
+	public static class TileManifestSupport
+	{
+		/// <summary>
+		/// 当前支持的最低清单版本。
+		/// </summary>
+		public const uint MinSupportedVersion = 2;
+
+		/// <summary>
+		/// 从原始字节检测清单版本。没有 Version 属性或解析失败均视为版本 1。
+		/// 完全无法解析返回 0。
+		/// </summary>
+		public static uint DetectVersion (byte [] data)
+		{
+			if (data == null || data.Length == 0) return 0;
+			try
+			{
+				using (var ms = new MemoryStream (data, false))
+				using (var reader = XmlReader.Create (ms))
+				{
+					if (reader.MoveToContent () == XmlNodeType.None) return 0;
+					string versionStr = reader.GetAttribute ("Version");
+					if (string.IsNullOrEmpty (versionStr)) return 1;
+					uint v;
+					if (!uint.TryParse (versionStr, out v)) return 1;
+					return v;
+				}
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// 读取清单流并做版本校验。低于 <see cref="MinSupportedVersion"/> 直接抛
+		/// <see cref="NotSupportedException"/>。
+		/// 由于需要两次遍历（检测版本 + 反序列化），会先把内容缓存到内存。
+		/// </summary>
+		/// <param name="stream">清单数据流</param>
+		/// <param name="source">用于错误消息的来源描述（文件路径或包名）</param>
+		public static TileManifest ReadChecked (Stream stream, string source = null)
+		{
+			if (stream == null) throw new ArgumentNullException (nameof (stream));
+
+			byte [] data;
+			using (var ms = new MemoryStream ())
+			{
+				stream.CopyTo (ms);
+				data = ms.ToArray ();
+			}
+
+			uint version = DetectVersion (data);
+			string suffix = string.IsNullOrEmpty (source) ? "" : $" (source: {source})";
+
+			if (version == 0)
+				throw new InvalidDataException ($"Failed to parse manifest XML{suffix}.");
+
+			if (version < MinSupportedVersion)
+				throw new NotSupportedException (
+					$"Manifest version {version} is not supported{suffix}. " +
+					$"Only version {MinSupportedVersion} or newer is supported. " +
+					"Version 1 manifests do not declare application entry points, " +
+					"so they cannot be launched.");
+
+			using (var ms = new MemoryStream (data, false))
+			{
+				return TileManifest.FromStream (ms);
+			}
+		}
+	}
 	[XmlRoot ("Package")]
 	public class TileBundleFileListItem: IXmlSerializable
 	{
@@ -19,6 +95,8 @@ namespace Sidebar
 		public ProcessorArchitecture ProcessorArchitecture { get; private set; }
 		[XmlAttribute ("OSMinVersion")]
 		public Version? OsMinVersion { get; private set; } = null;
+		[XmlAttribute ("OSMaxVersion")]
+		public Version? OsMaxVersion { get; private set; } = null;
 		public override string ToString ()
 			=> $"\"{FileName}\" {ProcessorArchitecture}";
 		public TileBundleFileListItem (string fn, ProcessorArchitecture pa)
@@ -32,6 +110,13 @@ namespace Sidebar
 			ProcessorArchitecture = pa;
 			OsMinVersion = osMin;
 		}
+		public TileBundleFileListItem (string fn, ProcessorArchitecture pa, Version osMin, Version ?osMax)
+		{
+			FileName = fn;
+			ProcessorArchitecture = pa;
+			OsMinVersion = osMin;
+			OsMaxVersion = osMax;
+		}
 		private TileBundleFileListItem () { }
 		public XmlSchema GetSchema () => null;
 		public void ReadXml (XmlReader reader)
@@ -43,12 +128,18 @@ namespace Sidebar
 			ProcessorArchitecture pa;
 			if (!Enum.TryParse (arch, out pa)) pa = ProcessorArchitecture.Unknown;
 			ProcessorArchitecture = pa;
-			string verStr = reader.GetAttribute ("OSMinVersion");
-			if (!string.IsNullOrEmpty (verStr))
+
+			string minStr = reader.GetAttribute ("OSMinVersion");
+			if (!string.IsNullOrEmpty (minStr))
 			{
 				Version v;
-				if (Version.TryParse (verStr, out v))
-					OsMinVersion = v;
+				if (Version.TryParse (minStr, out v)) OsMinVersion = v;
+			}
+			string maxStr = reader.GetAttribute ("OSMaxVersion");
+			if (!string.IsNullOrEmpty (maxStr))
+			{
+				Version v;
+				if (Version.TryParse (maxStr, out v)) OsMaxVersion = v;
 			}
 			reader.ReadStartElement ("Package");
 		}
@@ -60,6 +151,8 @@ namespace Sidebar
 				ProcessorArchitecture.ToString ());
 			if (OsMinVersion != null)
 				writer.WriteAttributeString ("OSMinVersion", OsMinVersion.ToString ());
+			if (OsMaxVersion != null)
+				writer.WriteAttributeString ("OSMaxVersion", OsMaxVersion.ToString ());
 		}
 	}
 	[XmlRoot ("Bundle")]
@@ -82,7 +175,7 @@ namespace Sidebar
 		public static TileBundleManifest FromStream (Stream stream)
 		{
 			var serializer = new XmlSerializer (typeof (TileBundleManifest));
-			return (TileBundleManifest) serializer.Deserialize (stream);
+			return (TileBundleManifest)serializer.Deserialize (stream);
 		}
 		public static TileBundleManifest FromFile (string filePath)
 		{
@@ -105,9 +198,7 @@ namespace Sidebar
 		public void ReadXml (XmlReader reader)
 		{
 			reader.MoveToContent ();
-
 			reader.ReadStartElement ("Bundle");
-
 			while (reader.NodeType != XmlNodeType.EndElement)
 			{
 				if (reader.NodeType == XmlNodeType.Element)
@@ -117,42 +208,30 @@ namespace Sidebar
 						var ser = new XmlSerializer (
 							typeof (TileIdentity),
 							new XmlRootAttribute ("Identity"));
-
-						Identity =
-							(TileIdentity)ser.Deserialize (reader);
+						Identity = (TileIdentity)ser.Deserialize (reader);
 					}
 					else if (reader.LocalName == "Packages")
 					{
 						bool empty = reader.IsEmptyElement;
-
 						reader.ReadStartElement ("Packages");
-
 						if (!empty)
 						{
-							while (
-								reader.NodeType != XmlNodeType.EndElement)
+							while (reader.NodeType != XmlNodeType.EndElement)
 							{
-								if (
-									reader.NodeType ==
-									XmlNodeType.Element &&
+								if (reader.NodeType == XmlNodeType.Element &&
 									reader.LocalName == "Package")
 								{
 									var ser = new XmlSerializer (
-										typeof (
-											TileBundleFileListItem),
-										new XmlRootAttribute (
-											"Package"));
-
+										typeof (TileBundleFileListItem),
+										new XmlRootAttribute ("Package"));
 									Packages.Add (
-										(TileBundleFileListItem)
-										ser.Deserialize (reader));
+										(TileBundleFileListItem)ser.Deserialize (reader));
 								}
 								else
 								{
 									reader.Read ();
 								}
 							}
-
 							reader.ReadEndElement ();
 						}
 					}
@@ -166,32 +245,24 @@ namespace Sidebar
 					reader.Read ();
 				}
 			}
-
 			reader.ReadEndElement ();
 		}
 		public void WriteXml (XmlWriter writer)
 		{
 			var ns = new XmlSerializerNamespaces ();
-
 			ns.Add ("", "");
-
 			var idSer = new XmlSerializer (
 				typeof (TileIdentity),
 				new XmlRootAttribute ("Identity"));
-
 			idSer.Serialize (writer, Identity, ns);
-
 			writer.WriteStartElement ("Packages");
-
 			var pkgSer = new XmlSerializer (
 				typeof (TileBundleFileListItem),
 				new XmlRootAttribute ("Package"));
-
 			foreach (var p in Packages)
 			{
 				pkgSer.Serialize (writer, p, ns);
 			}
-
 			writer.WriteEndElement ();
 		}
 	}
@@ -213,7 +284,7 @@ namespace Sidebar
 		/// 支持路径格式：自动转换反斜杠为正斜杠，忽略首尾斜杠和空格，大小写不敏感匹配。
 		/// </summary>
 		/// <param name="entryName">要提取的条目名称（例如 "folder/file.txt"）</param>
-		/// <returns>文件内容的字节数组，未找到则返回 null</returns>
+		/// <returns>文件内容的字节数组，未找到则返回空数组</returns>
 		public virtual byte [] ExtractFile (string entryName)
 		{
 			if (string.IsNullOrEmpty (entryName)) return new byte [0];
@@ -291,21 +362,37 @@ namespace Sidebar
 			try
 			{
 				var manifestEntry = zip.GetEntry ("Manifest.xml");
-				var tileEntry = zip.GetEntry ("Tile.dll");
-				if (!manifestEntry.IsFile)
-				{
-					zip.Close ();
-					throw new Exception ("Error: cannot find file Manifest.xml");
-				}
-				if (!tileEntry.IsFile)
+				if (manifestEntry == null || !manifestEntry.IsFile)
 				{
 					zip.Close ();
 					throw new Exception ("Error: cannot find file Manifest.xml");
 				}
 				using (Stream manifestStream = zip.GetInputStream (manifestEntry))
 				{
-					Manifest = TileManifest.FromStream (manifestStream);
+					// 版本 < 2 会抛 NotSupportedException
+					Manifest = TileManifestSupport.ReadChecked (manifestStream, $"\"{FileName}\"");
 				}
+
+				// 逐个校验清单中声明的可执行文件确实存在于包内
+				foreach (var app in Manifest.Applications)
+				{
+					if (app == null) continue;
+					if (string.IsNullOrEmpty (app.Executable))
+					{
+						zip.Close ();
+						throw new Exception (
+							$"Error: application '{app.Id}' does not declare an Executable");
+					}
+					string entryName = app.Executable.Replace ('\\', '/');
+					var exeEntry = zip.GetEntry (entryName);
+					if (exeEntry == null || !exeEntry.IsFile)
+					{
+						zip.Close ();
+						throw new Exception (
+							$"Error: cannot find file '{app.Executable}' declared by application '{app.Id}'");
+					}
+				}
+
 				FileStream = zip;
 				InitResources ();
 			}
@@ -336,15 +423,28 @@ namespace Sidebar
 				{
 					var subZip = new ZipFile (memoryStream);
 					var manifestEntry = subZip.GetEntry ("Manifest.xml");
-					var tileEntry = subZip.GetEntry ("Tile.dll");
 					if (manifestEntry == null || !manifestEntry.IsFile)
 						throw new Exception ("Error: cannot find file Manifest.xml in subpackage");
-					if (tileEntry == null || !tileEntry.IsFile)
-						throw new Exception ("Error: cannot find file Tile.dll in subpackage");
 					using (Stream manifestStream = subZip.GetInputStream (manifestEntry))
 					{
-						Manifest = TileManifest.FromStream (manifestStream);
+						// 版本 < 2 会抛 NotSupportedException
+						Manifest = TileManifestSupport.ReadChecked (manifestStream, $"\"{FileName}\"");
 					}
+
+					// 逐个校验清单中声明的可执行文件
+					foreach (var app in Manifest.Applications)
+					{
+						if (app == null) continue;
+						if (string.IsNullOrEmpty (app.Executable))
+							throw new Exception (
+								$"Error: application '{app.Id}' does not declare an Executable in subpackage");
+						string entryName = app.Executable.Replace ('\\', '/');
+						var exeEntry = subZip.GetEntry (entryName);
+						if (exeEntry == null || !exeEntry.IsFile)
+							throw new Exception (
+								$"Error: cannot find file '{app.Executable}' declared by application '{app.Id}' in subpackage");
+					}
+
 					FileStream = subZip;
 					InitResources ();
 				}
@@ -455,11 +555,15 @@ namespace Sidebar
 			{
 				return new TilePackageBundle (filePath);
 			}
+			catch (NotSupportedException)
+			{
+				// 版本不支持：直接向上传播，避免被 Single 解析后再抛出误导性的错误。
+				throw;
+			}
 			catch
 			{
 				return new TilePackage (filePath);
 			}
-			return null;
 		}
 	}
 	public static class TilePackageWriteManager
@@ -469,22 +573,41 @@ namespace Sidebar
 		{
 			if (folder == null) throw new ArgumentNullException (nameof (folder));
 			if (!Directory.Exists (folder)) throw new DirectoryNotFoundException ($"Folder not found: {folder}");
+
 			string manifestPath = Path.Combine (folder, "Manifest.xml");
-			string tileDllPath = Path.Combine (folder, "Tile.dll");
 			if (!File.Exists (manifestPath)) throw new FileNotFoundException ("Cannot find Manifest.xml");
-			if (!File.Exists (tileDllPath)) throw new FileNotFoundException ("Cannot find Tile.dll");
-			TileManifest manifest = TileManifest.FromFile (manifestPath);
+
+			TileManifest manifest;
+			using (var manifestStream = File.OpenRead (manifestPath))
+			{
+				// 版本 < 2 会抛 NotSupportedException
+				manifest = TileManifestSupport.ReadChecked (manifestStream, manifestPath);
+			}
+
+			// 逐个校验清单中声明的可执行文件
+			foreach (var app in manifest.Applications)
+			{
+				if (app == null) continue;
+				if (string.IsNullOrEmpty (app.Executable))
+					throw new InvalidDataException (
+						$"Application '{app.Id}' does not declare an Executable.");
+				string exePath = Path.Combine (folder, app.Executable);
+				if (!File.Exists (exePath))
+					throw new FileNotFoundException (
+						$"Cannot find executable '{app.Executable}' declared by application '{app.Id}'.");
+			}
+
 			var allFiles = Directory.EnumerateFiles (folder, "*", SearchOption.AllDirectories).ToList ();
 			int total = allFiles.Count;
 			int current = 0;
+
 			var ms = new MemoryStream ();
 			using (var zipOutputStream = new ZipOutputStream (ms))
 			{
-				zipOutputStream.SetLevel (9); 
+				zipOutputStream.SetLevel (9);
 				foreach (string filePath in allFiles)
 				{
-					string relativePath = GetRelativePath (folder, filePath);
-					relativePath = relativePath.Replace ('\\', '/');
+					string relativePath = GetRelativePath (folder, filePath).Replace ('\\', '/');
 					var entry = new ZipEntry (relativePath);
 					entry.DateTime = File.GetLastWriteTime (filePath);
 					zipOutputStream.PutNextEntry (entry);
@@ -498,8 +621,7 @@ namespace Sidebar
 				}
 			}
 			byte [] zipData = ms.ToArray ();
-			var zipFile = new ZipFile (new MemoryStream (zipData));
-			return zipFile;
+			return new ZipFile (new MemoryStream (zipData));
 		}
 		public static ZipFile MakeBundlePackage (List<string> fileList, ProgressCallback callback = null)
 		{
@@ -511,9 +633,9 @@ namespace Sidebar
 
 			TileManifest lastManifest = null;
 
-			// 唯一性键：(架构, OSMinVersion)。允许不同架构、不同 OS 版本共存，只要组合不重复。
-			// 注：System.Version 已正确重写 Equals/GetHashCode，可直接作为 Tuple 键的一部分。
-			var packageMap = new Dictionary<Tuple<ProcessorArchitecture, Version>, string> ();
+			// 唯一性键：(架构, OSMinVersion, OSMaxVersion)。
+			// OSMaxVersion 为 null 表示无上限。
+			var packageMap = new Dictionary<Tuple<ProcessorArchitecture, Version, Version?>, string> ();
 
 			foreach (var fp in fileList)
 			{
@@ -534,6 +656,7 @@ namespace Sidebar
 							$"Error: Package \"{fp}\" has architecture {arch}, which cannot be bundled.");
 
 					var osMin = sp.Manifest.Prerequisites.OSMinVersion;
+					var osMax = sp.Manifest.Prerequisites.OSMaxVersion;
 
 					// 清单一致性：除架构与 Prerequisites 外，其余必须一致
 					if (lastManifest == null)
@@ -547,11 +670,12 @@ namespace Sidebar
 							"(only ProcessorArchitecture and Prerequisites may differ).");
 					}
 
-					var key = Tuple.Create (arch, osMin);
+					var key = Tuple.Create (arch, osMin, osMax);
 					if (packageMap.ContainsKey (key))
 						throw new InvalidOperationException (
-							$"Error: More than one package has the same architecture and OS version " +
-							$"(arch: {arch}, osMin: {(osMin == null ? "<none>" : osMin.ToString ())}).");
+							$"Error: More than one package has the same architecture and OS range " +
+							$"(arch: {arch}, osMin: {(osMin == null ? "<none>" : osMin.ToString ())}, " +
+							$"osMax: {(osMax == null ? "<none>" : osMax.ToString ())}).");
 
 					packageMap [key] = fp;
 				}
@@ -577,21 +701,22 @@ namespace Sidebar
 				int current = 0;
 				var bundleItems = new List<TileBundleFileListItem> ();
 
-				// 排序以保证 bundle 输出可复现
+				// 排序保证可复现
 				var ordered = packageMap
 					.OrderBy (kv => kv.Key.Item1.ToString (), StringComparer.OrdinalIgnoreCase)
-					.ThenBy (kv => kv.Key.Item2.ToString () ?? "", StringComparer.Ordinal)
+					.ThenBy (kv => kv.Key.Item2 != null ? kv.Key.Item2.ToString () : "", StringComparer.Ordinal)
+					.ThenBy (kv => kv.Key.Item3 != null ? kv.Key.Item3.ToString () : "", StringComparer.Ordinal)
 					.ToList ();
 
 				foreach (var kv in ordered)
 				{
 					var arch = kv.Key.Item1;
 					var osMin = kv.Key.Item2;
+					var osMax = kv.Key.Item3;
 
-					// 内部文件名带上 OS 版本，避免同一架构下多版本冲突
-					string internalFileName = osMin == null
-						? $"{filenamePrefix}_{arch}.sgpkg"
-						: $"{filenamePrefix}_{arch}_{osMin}.sgpkg";
+					string internalFileName = osMax == null
+						? $"{filenamePrefix}_{arch}_{osMin}.sgpkg"
+						: $"{filenamePrefix}_{arch}_{osMin}-{osMax}.sgpkg";
 
 					var entry = new ZipEntry (internalFileName);
 					entry.DateTime = File.GetLastWriteTime (kv.Value);
@@ -602,11 +727,10 @@ namespace Sidebar
 					}
 					zipOutputStream.CloseEntry ();
 
-					bundleItems.Add (new TileBundleFileListItem (internalFileName, arch, osMin));
+					bundleItems.Add (new TileBundleFileListItem (internalFileName, arch, osMin, osMax));
 					current++;
 					callback?.Invoke (current, total, (double)current / total);
 				}
-
 				var bundleManifest = new TileBundleManifest (bundleIdentity, bundleItems);
 				var manifestEntry = new ZipEntry ("BundleManifest.xml");
 				manifestEntry.DateTime = DateTime.Now;
@@ -643,37 +767,57 @@ namespace Sidebar
 			if (!string.Equals (a.Properties.PublisherDisplayName, b.Properties.PublisherDisplayName, StringComparison.Ordinal)) return false;
 			if (!string.Equals (a.Properties.Description, b.Properties.Description, StringComparison.Ordinal)) return false;
 			if (!string.Equals (a.Properties.Logo, b.Properties.Logo, StringComparison.Ordinal)) return false;
-			if (a.Properties.Type != b.Properties.Type) return false;
 
 			// Prerequisites: 明确跳过（允许不同 OS 版本）
 
-			// VisualElements
-			if (a.VisualElements == null || b.VisualElements == null)
-				return ReferenceEquals (a.VisualElements, b.VisualElements);
-			if (!RailStylesEqual (a.VisualElements.RailStyle, b.VisualElements.RailStyle)) return false;
-			if (!GridStylesEqual (a.VisualElements.GridStyle, b.VisualElements.GridStyle)) return false;
+			// Applications：按 Id 排序后逐一比较
+			if (a.Applications == null || b.Applications == null)
+				return ReferenceEquals (a.Applications, b.Applications);
+			if (a.Applications.Count != b.Applications.Count) return false;
+
+			var aApps = a.Applications.OrderBy (x => x.Id, StringComparer.OrdinalIgnoreCase).ToList ();
+			var bApps = b.Applications.OrderBy (x => x.Id, StringComparer.OrdinalIgnoreCase).ToList ();
+			for (int i = 0; i < aApps.Count; i++)
+			{
+				if (!ApplicationsEqual (aApps [i], bApps [i])) return false;
+			}
 
 			return true;
 		}
-		private static bool RailStylesEqual (TileRailStyle a, TileRailStyle b)
+		private static bool ApplicationsEqual (TileApplication a, TileApplication b)
 		{
 			if (a == null || b == null) return ReferenceEquals (a, b);
-			return a.CanPinBottom == b.CanPinBottom
-				&& a.DefaultHeight == b.DefaultHeight
-				&& string.Equals (a.DisplayName, b.DisplayName, StringComparison.Ordinal)
-				&& a.FlyoutCanResize == b.FlyoutCanResize
-				&& a.FlyoutHeight == b.FlyoutHeight
-				&& a.FlyoutWidth == b.FlyoutWidth
-				&& string.Equals (a.Logo, b.Logo, StringComparison.Ordinal)
-				&& a.MaxHeight == b.MaxHeight
-				&& a.MinHeight == b.MinHeight
-				&& a.Overflow == b.Overflow
-				&& a.TileHasFlyout == b.TileHasFlyout
-				&& a.TileHasProperties == b.TileHasProperties;
+			if (!string.Equals (a.Id, b.Id, StringComparison.OrdinalIgnoreCase)) return false;
+			if (!string.Equals (a.Executable, b.Executable, StringComparison.OrdinalIgnoreCase)) return false;
+			if (!string.Equals (a.EntryPoint, b.EntryPoint, StringComparison.Ordinal)) return false;
+			if (a.HasFlyout != b.HasFlyout) return false;
+			if (a.HasProperties != b.HasProperties) return false;
+			return VisualElementsEqual (a.VisualElements, b.VisualElements);
 		}
-		private static bool GridStylesEqual (TileGridStyle a, TileGridStyle b)
+		private static bool VisualElementsEqual (TileVisualElements a, TileVisualElements b)
 		{
+			if (a == null || b == null) return ReferenceEquals (a, b);
+			if (!string.Equals (a.DisplayName, b.DisplayName, StringComparison.Ordinal)) return false;
+			if (!string.Equals (a.Logo, b.Logo, StringComparison.Ordinal)) return false;
+			if (!TilesEqual (a.Tile, b.Tile)) return false;
+			if (!FlyoutsEqual (a.Flyout, b.Flyout)) return false;
 			return true;
+		}
+		private static bool TilesEqual (TileVisualElementTile a, TileVisualElementTile b)
+		{
+			if (a == null || b == null) return ReferenceEquals (a, b);
+			return a.MinHeight == b.MinHeight
+				&& a.MaxHeight == b.MaxHeight
+				&& a.DefaultHeight == b.DefaultHeight
+				&& a.CanPinBottom == b.CanPinBottom
+				&& a.Overflow == b.Overflow;
+		}
+		private static bool FlyoutsEqual (TileVisualElementFlyout a, TileVisualElementFlyout b)
+		{
+			if (a == null || b == null) return ReferenceEquals (a, b);
+			return a.FlyoutWidth == b.FlyoutWidth
+				&& a.FlyoutHeight == b.FlyoutHeight
+				&& a.FlyoutCanResize == b.FlyoutCanResize;
 		}
 		private static string GetRelativePath (string baseDir, string fullPath)
 		{
@@ -688,27 +832,42 @@ namespace Sidebar
 			return Uri.UnescapeDataString (relativeUri.ToString ()).Replace ('/', '\\');
 		}
 		/// <summary>
-		/// 保存 ZipFile 到指定目录，添加完整性数据（TileBlockMap 和 Signature）。
+		/// 保存 ZipFile 到指定目录，添加完整性数据（BlockMap.xml 和 Signature.bin）。
 		/// 扩展名根据包内容自动选择：.sgpkg（单包）或 .sgpkgbundle（捆绑包）。
+		/// BlockMap 中每个条目只记录 UTC 打包时间（Packed），不再记录创建 / 修改时间。
 		/// </summary>
-		/// <param name="zip">要保存的 ZipFile 实例（必须可读，且不包含 BlockMap.xml 和 Signature.bin）</param>
+		/// <param name="zip">要保存的 ZipFile 实例（不包含 BlockMap.xml 和 Signature.bin）</param>
 		/// <param name="saveDir">目标目录</param>
 		/// <param name="saveFileName">文件名（不含扩展名）</param>
-		public static void SavePackageFile (ZipFile zip, string saveDir, string saveFileName)
+		/// <param name="packedUtc">
+		/// 可选：写入 BlockMap 的打包时刻（UTC）。为 null 时使用 <see cref="DateTime.UtcNow"/>。
+		/// </param>
+		public static void SavePackageFile (
+			ZipFile zip,
+			string saveDir,
+			string saveFileName,
+			DateTime? packedUtc = null)
 		{
 			if (zip == null) throw new ArgumentNullException (nameof (zip));
 			if (string.IsNullOrEmpty (saveDir)) throw new ArgumentNullException (nameof (saveDir));
 			if (string.IsNullOrEmpty (saveFileName)) throw new ArgumentNullException (nameof (saveFileName));
 			if (!Directory.Exists (saveDir))
 				Directory.CreateDirectory (saveDir);
+
 			bool isBundle = zip.GetEntry ("BundleManifest.xml") != null;
 			bool isSingle = zip.GetEntry ("Manifest.xml") != null;
 			string extension = isBundle ? ".sgpkgbundle" : (isSingle ? ".sgpkg" : ".sgpkg");
 			string outputPath = Path.Combine (saveDir, saveFileName + extension);
+
 			var entries = zip.Cast<ZipEntry> ()
 				.Where (e => e.Name != "BlockMap.xml" && e.Name != "Signature.bin" && e.IsFile)
 				.ToList ();
+
+			DateTime packed = packedUtc ?? DateTime.UtcNow;
+
 			var fileHashes = new Dictionary<string, string> ();
+			var files = new List<TileBlockMapFile> (entries.Count);
+
 			foreach (var entry in entries)
 			{
 				using (var stream = zip.GetInputStream (entry))
@@ -716,15 +875,18 @@ namespace Sidebar
 					byte [] hash = ComputeSha256 (stream);
 					fileHashes [entry.Name] = Convert.ToBase64String (hash);
 				}
+
+				files.Add (new TileBlockMapFile {
+					Name = entry.Name,
+					HashBase64 = fileHashes [entry.Name],
+					PackedDate = packed
+				});
 			}
-			var blockMap = new TileBlockMap {
-				Files = fileHashes.Select (kv => new TileBlockMapFile {
-					Name = kv.Key,
-					HashBase64 = kv.Value
-				}).ToList ()
-			};
+
+			var blockMap = new TileBlockMap { Files = files };
 			string blockMapXml = SerializeToXml (blockMap);
 			byte [] blockMapBytes = Encoding.UTF8.GetBytes (blockMapXml);
+
 			byte [] allHashBytes = fileHashes.Values
 				.Select (Convert.FromBase64String)
 				.SelectMany (b => b)
@@ -735,6 +897,7 @@ namespace Sidebar
 			{
 				signature = hmac.ComputeHash (blockMapBytes);
 			}
+
 			using (var outputStream = File.Create (outputPath))
 			using (var zipOutputStream = new ZipOutputStream (outputStream))
 			{
@@ -798,6 +961,9 @@ namespace Sidebar
 		public string Name { get; set; }
 		[XmlAttribute ("Hash")]
 		public string HashBase64 { get; set; }
+		/// <summary>文件被添加到包中的时间（UTC）。</summary>
+		[XmlAttribute ("Packed")]
+		public DateTime PackedDate { get; set; }
 	}
 	internal static class TilePackageVerifier
 	{

@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="AppTitle" xml:space="preserve"><value>边栏小工具包管理器</value></data>
+	<data name="TabManifestEditor" xml:space="preserve"><value>清单编辑器</value></data>
+	<data name="TabPackageReader" xml:space="preserve"><value>包查看器</value></data>
+	<data name="TabSinglePackage" xml:space="preserve"><value>创建单包</value></data>
+	<data name="TabBundlePackage" xml:space="preserve"><value>创建捆绑包</value></data>
+	<data name="TabPackageConverter" xml:space="preserve"><value>V1 → V2 转换器</value></data>
+	<data name="Browse" xml:space="preserve"><value>浏览...</value></data>
+	<data name="Load" xml:space="preserve"><value>加载</value></data>
+	<data name="Save" xml:space="preserve"><value>保存</value></data>
+	<data name="Run" xml:space="preserve"><value>运行</value></data>
+	<data name="Output" xml:space="preserve"><value>输出：</value></data>
+	<data name="Success" xml:space="preserve"><value>成功</value></data>
+	<data name="Warning" xml:space="preserve"><value>警告</value></data>
+	<data name="Error" xml:space="preserve"><value>错误</value></data>
+	<data name="Done" xml:space="preserve"><value>完成。</value></data>
+	<data name="FailedPrefix" xml:space="preserve"><value>失败：</value></data>
+	<data name="Unsupported" xml:space="preserve"><value>不受支持</value></data>
+	<data name="ManifestFile" xml:space="preserve"><value>清单文件：</value></data>
+	<data name="ConvertFromV1" xml:space="preserve"><value>从 V1 转换...</value></data>
+	<data name="ConvertFromV1Title" xml:space="preserve"><value>将 V1 清单转换为 V2</value></data>
+	<data name="Identity" xml:space="preserve"><value>标识</value></data>
+	<data name="Name" xml:space="preserve"><value>名称</value></data>
+	<data name="Publisher" xml:space="preserve"><value>发布者</value></data>
+	<data name="Version" xml:space="preserve"><value>版本</value></data>
+	<data name="Architecture" xml:space="preserve"><value>体系结构</value></data>
+	<data name="Properties" xml:space="preserve"><value>属性</value></data>
+	<data name="DisplayName" xml:space="preserve"><value>显示名称</value></data>
+	<data name="PublisherDisplayName" xml:space="preserve"><value>发布者显示名称</value></data>
+	<data name="Logo" xml:space="preserve"><value>徽标（相对路径）</value></data>
+	<data name="Description" xml:space="preserve"><value>说明</value></data>
+	<data name="Prerequisites" xml:space="preserve"><value>先决条件</value></data>
+	<data name="OsMinVersion" xml:space="preserve"><value>最低 OS 版本</value></data>
+	<data name="OsMaxVersion" xml:space="preserve"><value>最高 OS 版本</value></data>
+	<data name="OsMaxVersionHint" xml:space="preserve"><value>留空表示未来版本都支持</value></data>
+	<data name="Applications" xml:space="preserve"><value>应用程序</value></data>
+	<data name="AddApplication" xml:space="preserve"><value>添加</value></data>
+	<data name="RemoveApplication" xml:space="preserve"><value>移除</value></data>
+	<data name="ApplicationId" xml:space="preserve"><value>ID</value></data>
+	<data name="Executable" xml:space="preserve"><value>可执行文件</value></data>
+	<data name="EntryPoint" xml:space="preserve"><value>入口点</value></data>
+	<data name="HasFlyout" xml:space="preserve"><value>有弹出窗口</value></data>
+	<data name="HasProperties" xml:space="preserve"><value>有属性窗口</value></data>
+	<data name="VisualElements" xml:space="preserve"><value>视觉元素</value></data>
+	<data name="Tile" xml:space="preserve"><value>磁贴</value></data>
+	<data name="Flyout" xml:space="preserve"><value>弹出窗口</value></data>
+	<data name="MinHeight" xml:space="preserve"><value>最小高度</value></data>
+	<data name="MaxHeight" xml:space="preserve"><value>最大高度</value></data>
+	<data name="DefaultHeight" xml:space="preserve"><value>默认高度</value></data>
+	<data name="CanPinBottom" xml:space="preserve"><value>可停靠在底部</value></data>
+	<data name="Overflow" xml:space="preserve"><value>溢出模式</value></data>
+	<data name="FlyoutWidth" xml:space="preserve"><value>弹出窗口宽度</value></data>
+	<data name="FlyoutHeight" xml:space="preserve"><value>弹出窗口高度</value></data>
+	<data name="FlyoutCanResize" xml:space="preserve"><value>弹出窗口可调整大小</value></data>
+	<data name="SourcePackage" xml:space="preserve"><value>源包（.sgpkg / .sgpkgbundle）：</value></data>
+	<data name="TargetPackage" xml:space="preserve"><value>目标文件夹：</value></data>
+	<data name="Convert" xml:space="preserve"><value>转换</value></data>
+	<data name="Converting" xml:space="preserve"><value>正在转换包...</value></data>
+	<data name="ConversionSuccess" xml:space="preserve"><value>转换成功：</value></data>
+	<data name="ConversionFailed" xml:space="preserve"><value>转换失败：</value></data>
+	<data name="AlreadyV2" xml:space="preserve"><value>该包已经是 V2 版本，无需转换。</value></data>
+	<data name="V1Detected" xml:space="preserve"><value>检测到 V1 包，正在转换为 V2...</value></data>
+
+	<data name="FilePath" xml:space="preserve"><value>文件路径</value></data>
+	<data name="FileName" xml:space="preserve"><value>文件名</value></data>
+	<data name="Add" xml:space="preserve"><value>添加...</value></data>
+	<data name="Remove" xml:space="preserve"><value>移除</value></data>
+	<data name="Clear" xml:space="preserve"><value>清空</value></data>
+	<data name="SaveFolder" xml:space="preserve"><value>保存文件夹：</value></data>
+	<data name="BundleName" xml:space="preserve"><value>捆绑包名称：</value></data>
+	<data name="SourceFolder" xml:space="preserve"><value>源文件夹：</value></data>
+	<data name="PackageName" xml:space="preserve"><value>包名称：</value></data>
+	<data name="Package" xml:space="preserve"><value>包：</value></data>
+	<data name="Read" xml:space="preserve"><value>读取</value></data>
+
+	<data name="TabPackageEditor" xml:space="preserve"><value>包编辑器</value></data>
+	<data name="BundleProperties" xml:space="preserve"><value>捆绑包属性</value></data>
+	<data name="SubPackages" xml:space="preserve"><value>子包</value></data>
+	<data name="SaveAs" xml:space="preserve"><value>另存为...</value></data>
+	<data name="Saved" xml:space="preserve"><value>已保存</value></data>
+	<data name="LoadPackageFirst" xml:space="preserve"><value>请先加载一个包。</value></data>
+	<data name="CopyNode" xml:space="preserve"><value>复制此节点</value></data>
+	<data name="CopySubtree" xml:space="preserve"><value>复制子树</value></data>
+	<data name="CopyAll" xml:space="preserve"><value>复制全部</value></data>
+	<data name="FilePath" xml:space="preserve"><value>文件路径</value></data>
+	<data name="FileName" xml:space="preserve"><value>文件名</value></data>
+	<data name="Add" xml:space="preserve"><value>添加...</value></data>
+	<data name="Remove" xml:space="preserve"><value>移除</value></data>
+	<data name="Clear" xml:space="preserve"><value>清空</value></data>
+	<data name="SaveFolder" xml:space="preserve"><value>保存文件夹：</value></data>
+	<data name="BundleName" xml:space="preserve"><value>捆绑包名称：</value></data>
+	<data name="SourceFolder" xml:space="preserve"><value>源文件夹：</value></data>
+	<data name="PackageName" xml:space="preserve"><value>包名称：</value></data>
+	<data name="Package" xml:space="preserve"><value>包：</value></data>
+	<data name="Read" xml:space="preserve"><value>读取</value></data>
+
+	<data name="Manifest" xml:space="preserve"><value>清单</value></data>
+	<data name="Files" xml:space="preserve"><value>文件</value></data>
+	<data name="AddFiles" xml:space="preserve"><value>添加文件...</value></data>
+	<data name="ReplaceFile" xml:space="preserve"><value>替换...</value></data>
+	<data name="DeleteFile" xml:space="preserve"><value>删除</value></data>
+	<data name="ExtractFile" xml:space="preserve"><value>导出...</value></data>
+	<data name="Refresh" xml:space="preserve"><value>刷新</value></data>
+	<data name="BundleFiles" xml:space="preserve"><value>捆绑包文件</value></data>
+
+	<data name="FindEntryPoints" xml:space="preserve"><value>查找入口点</value></data>
+	<data name="FoundEntryPoints" xml:space="preserve"><value>已找到入口点</value></data>
+	<data name="OsMaxUnbounded" xml:space="preserve"><value>支持所有未来版本</value></data>
+</root>

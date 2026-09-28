@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="AppTitle" xml:space="preserve"><value>Sidebar Gadget Package Manager</value></data>
+
+	<!-- Tabs -->
+	<data name="TabManifestEditor" xml:space="preserve"><value>Manifest Editor</value></data>
+	<data name="TabPackageReader" xml:space="preserve"><value>Package Reader</value></data>
+	<data name="TabSinglePackage" xml:space="preserve"><value>Create Single Package</value></data>
+	<data name="TabBundlePackage" xml:space="preserve"><value>Create Bundle Package</value></data>
+	<data name="TabPackageConverter" xml:space="preserve"><value>V1 → V2 Converter</value></data>
+
+	<!-- Common -->
+	<data name="Browse" xml:space="preserve"><value>Browse...</value></data>
+	<data name="Load" xml:space="preserve"><value>Load</value></data>
+	<data name="Save" xml:space="preserve"><value>Save</value></data>
+	<data name="Run" xml:space="preserve"><value>Run</value></data>
+	<data name="Output" xml:space="preserve"><value>Output:</value></data>
+	<data name="Success" xml:space="preserve"><value>Success</value></data>
+	<data name="Warning" xml:space="preserve"><value>Warning</value></data>
+	<data name="Error" xml:space="preserve"><value>Error</value></data>
+	<data name="Done" xml:space="preserve"><value>Done.</value></data>
+	<data name="FailedPrefix" xml:space="preserve"><value>Failed: </value></data>
+	<data name="Unsupported" xml:space="preserve"><value>Unsupported</value></data>
+
+	<!-- Manifest Editor -->
+	<data name="ManifestFile" xml:space="preserve"><value>Manifest File:</value></data>
+	<data name="ConvertFromV1" xml:space="preserve"><value>Convert from V1...</value></data>
+	<data name="ConvertFromV1Title" xml:space="preserve"><value>Convert V1 Manifest to V2</value></data>
+	<data name="Identity" xml:space="preserve"><value>Identity</value></data>
+	<data name="Name" xml:space="preserve"><value>Name</value></data>
+	<data name="Publisher" xml:space="preserve"><value>Publisher</value></data>
+	<data name="Version" xml:space="preserve"><value>Version</value></data>
+	<data name="Architecture" xml:space="preserve"><value>Architecture</value></data>
+	<data name="Properties" xml:space="preserve"><value>Properties</value></data>
+	<data name="DisplayName" xml:space="preserve"><value>Display Name</value></data>
+	<data name="PublisherDisplayName" xml:space="preserve"><value>Publisher Display Name</value></data>
+	<data name="Logo" xml:space="preserve"><value>Logo (relative path)</value></data>
+	<data name="Description" xml:space="preserve"><value>Description</value></data>
+	<data name="Prerequisites" xml:space="preserve"><value>Prerequisites</value></data>
+	<data name="OsMinVersion" xml:space="preserve"><value>OS Min Version</value></data>
+	<data name="OsMaxVersion" xml:space="preserve"><value>OS Max Version</value></data>
+	<data name="OsMaxVersionHint" xml:space="preserve"><value>Leave empty = all future versions</value></data>
+	<data name="Applications" xml:space="preserve"><value>Applications</value></data>
+	<data name="AddApplication" xml:space="preserve"><value>Add</value></data>
+	<data name="RemoveApplication" xml:space="preserve"><value>Remove</value></data>
+	<data name="ApplicationId" xml:space="preserve"><value>Id</value></data>
+	<data name="Executable" xml:space="preserve"><value>Executable</value></data>
+	<data name="EntryPoint" xml:space="preserve"><value>Entry Point</value></data>
+	<data name="HasFlyout" xml:space="preserve"><value>Has Flyout</value></data>
+	<data name="HasProperties" xml:space="preserve"><value>Has Properties</value></data>
+	<data name="VisualElements" xml:space="preserve"><value>Visual Elements</value></data>
+	<data name="Tile" xml:space="preserve"><value>Tile</value></data>
+	<data name="Flyout" xml:space="preserve"><value>Flyout</value></data>
+	<data name="MinHeight" xml:space="preserve"><value>Min Height</value></data>
+	<data name="MaxHeight" xml:space="preserve"><value>Max Height</value></data>
+	<data name="DefaultHeight" xml:space="preserve"><value>Default Height</value></data>
+	<data name="CanPinBottom" xml:space="preserve"><value>Can Pin Bottom</value></data>
+	<data name="Overflow" xml:space="preserve"><value>Overflow</value></data>
+	<data name="FlyoutWidth" xml:space="preserve"><value>Flyout Width</value></data>
+	<data name="FlyoutHeight" xml:space="preserve"><value>Flyout Height</value></data>
+	<data name="FlyoutCanResize" xml:space="preserve"><value>Flyout Can Resize</value></data>
+
+	<!-- Package Converter -->
+	<data name="SourcePackage" xml:space="preserve"><value>Source Package (.sgpkg / .sgpkgbundle):</value></data>
+	<data name="TargetPackage" xml:space="preserve"><value>Target Folder:</value></data>
+	<data name="Convert" xml:space="preserve"><value>Convert</value></data>
+	<data name="Converting" xml:space="preserve"><value>Converting package...</value></data>
+	<data name="ConversionSuccess" xml:space="preserve"><value>Conversion succeeded: </value></data>
+	<data name="ConversionFailed" xml:space="preserve"><value>Conversion failed: </value></data>
+	<data name="AlreadyV2" xml:space="preserve"><value>This package is already version 2. Nothing to do.</value></data>
+	<data name="V1Detected" xml:space="preserve"><value>Version 1 package detected. Converting to version 2...</value></data>
+
+	<data name="FilePath" xml:space="preserve"><value>File Path</value></data>
+	<data name="FileName" xml:space="preserve"><value>File Name</value></data>
+	<data name="Add" xml:space="preserve"><value>Add...</value></data>
+	<data name="Remove" xml:space="preserve"><value>Remove</value></data>
+	<data name="Clear" xml:space="preserve"><value>Clear</value></data>
+	<data name="SaveFolder" xml:space="preserve"><value>Save Folder:</value></data>
+	<data name="BundleName" xml:space="preserve"><value>Bundle Name:</value></data>
+	<data name="SourceFolder" xml:space="preserve"><value>Source Folder:</value></data>
+	<data name="PackageName" xml:space="preserve"><value>Package Name:</value></data>
+	<data name="Package" xml:space="preserve"><value>Package:</value></data>
+	<data name="Read" xml:space="preserve"><value>Read</value></data>
+
+	<data name="TabPackageEditor" xml:space="preserve"><value>Package Editor</value></data>
+	<data name="BundleProperties" xml:space="preserve"><value>Bundle Properties</value></data>
+	<data name="SubPackages" xml:space="preserve"><value>SubPackages</value></data>
+	<data name="SaveAs" xml:space="preserve"><value>Save As...</value></data>
+	<data name="Saved" xml:space="preserve"><value>Saved</value></data>
+	<data name="LoadPackageFirst" xml:space="preserve"><value>Load a package first.</value></data>
+	<data name="CopyNode" xml:space="preserve"><value>Copy This Node</value></data>
+	<data name="CopySubtree" xml:space="preserve"><value>Copy Subtree</value></data>
+	<data name="CopyAll" xml:space="preserve"><value>Copy All</value></data>
+	<data name="FilePath" xml:space="preserve"><value>File Path</value></data>
+	<data name="FileName" xml:space="preserve"><value>File Name</value></data>
+	<data name="Add" xml:space="preserve"><value>Add...</value></data>
+	<data name="Remove" xml:space="preserve"><value>Remove</value></data>
+	<data name="Clear" xml:space="preserve"><value>Clear</value></data>
+	<data name="SaveFolder" xml:space="preserve"><value>Save Folder:</value></data>
+	<data name="BundleName" xml:space="preserve"><value>Bundle Name:</value></data>
+	<data name="SourceFolder" xml:space="preserve"><value>Source Folder:</value></data>
+	<data name="PackageName" xml:space="preserve"><value>Package Name:</value></data>
+	<data name="Package" xml:space="preserve"><value>Package:</value></data>
+	<data name="Read" xml:space="preserve"><value>Read</value></data>
+
+	<data name="Manifest" xml:space="preserve"><value>Manifest</value></data>
+	<data name="Files" xml:space="preserve"><value>Files</value></data>
+	<data name="AddFiles" xml:space="preserve"><value>Add Files...</value></data>
+	<data name="ReplaceFile" xml:space="preserve"><value>Replace...</value></data>
+	<data name="DeleteFile" xml:space="preserve"><value>Delete</value></data>
+	<data name="ExtractFile" xml:space="preserve"><value>Extract...</value></data>
+	<data name="Refresh" xml:space="preserve"><value>Refresh</value></data>
+	<data name="BundleFiles" xml:space="preserve"><value>Bundle Files</value></data>
+
+	<data name="FindEntryPoints" xml:space="preserve"><value>Find Entry Points</value></data>
+	<data name="FoundEntryPoints" xml:space="preserve"><value>Entry points found</value></data>
+	<data name="OsMaxUnbounded" xml:space="preserve"><value>Support all future versions</value></data>
+</root>

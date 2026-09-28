@@ -1,30 +1,42 @@
-﻿<UserControl x:Class="Sidebar.TopOptions"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Sidebar"
-             mc:Ignorable="d" 
-             d:DesignHeight="17" d:DesignWidth="300" Background="Transparent" MinHeight="17">
+﻿<UserControl
+	x:Class="Sidebar.TopOptions"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:Sidebar"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	MinHeight="17"
+	d:DesignHeight="17"
+	d:DesignWidth="300"
+	Background="Transparent"
+	mc:Ignorable="d">
 	<UserControl.Resources>
-		<local:DirectionToScaleXConverter x:Key="DirectionToScaleX"/>
-		<local:DirectionToHorizontalAlignmentConverter x:Key="DirToHAlign"/>
-		<local:DirectionToFlowDirectionConverter x:Key="DirToFlowDir"/>
+		<local:DirectionToScaleXConverter x:Key="DirectionToScaleX" />
+		<local:DirectionToHorizontalAlignmentConverter x:Key="DirToHAlign" />
+		<local:DirectionToFlowDirectionConverter x:Key="DirToFlowDir" />
 		<Storyboard x:Key="MouseEnterStoryboard">
-			<DoubleAnimation Storyboard.TargetName="TopOptionsLabel" 
-                             Storyboard.TargetProperty="Opacity" 
-                             To="1" Duration="0:0:0.2" />
-			<DoubleAnimation Storyboard.TargetName="TopOptionsIcon" 
-                             Storyboard.TargetProperty="Opacity" 
-                             To="1" Duration="0:0:0.2" />
+			<DoubleAnimation
+				Storyboard.TargetName="TopOptionsLabel"
+				Storyboard.TargetProperty="Opacity"
+				To="1"
+				Duration="0:0:0.2" />
+			<DoubleAnimation
+				Storyboard.TargetName="TopOptionsIcon"
+				Storyboard.TargetProperty="Opacity"
+				To="1"
+				Duration="0:0:0.2" />
 		</Storyboard>
 		<Storyboard x:Key="MouseLeaveStoryboard">
-			<DoubleAnimation Storyboard.TargetName="TopOptionsLabel" 
-                             Storyboard.TargetProperty="Opacity" 
-                             To="0" Duration="0:0:0.2" />
-			<DoubleAnimation Storyboard.TargetName="TopOptionsIcon" 
-                             Storyboard.TargetProperty="Opacity" 
-                             To="0.45" Duration="0:0:0.2" />
+			<DoubleAnimation
+				Storyboard.TargetName="TopOptionsLabel"
+				Storyboard.TargetProperty="Opacity"
+				To="0"
+				Duration="0:0:0.2" />
+			<DoubleAnimation
+				Storyboard.TargetName="TopOptionsIcon"
+				Storyboard.TargetProperty="Opacity"
+				To="0.45"
+				Duration="0:0:0.2" />
 		</Storyboard>
 	</UserControl.Resources>
 	<UserControl.Triggers>
@@ -36,12 +48,25 @@
 		</EventTrigger>
 	</UserControl.Triggers>
 	<Grid>
-		<StackPanel Name="TopOptionsBar" Orientation="Horizontal" VerticalAlignment="Center" 
-			 HorizontalAlignment="{Binding Source={StaticResource CurrentUserConfig}, Path=Direction, Converter={StaticResource DirToHAlign}, FallbackValue=Right}"
-                    FlowDirection="{Binding Source={StaticResource CurrentUserConfig}, Path=Direction, Converter={StaticResource DirToFlowDir}, FallbackValue=LeftToRight}"
-			>
-			<TextBlock Name="TopOptionsLabel" Opacity="0" Background="Transparent" VerticalAlignment="Center" Style="{DynamicResource TopOptionsText}">Options</TextBlock>
-			<Polygon Name="TopOptionsIcon" Points="0,0 3.5,3.5 7,0" VerticalAlignment="Center" Style="{DynamicResource TopOptionsIcon}"/>
+		<StackPanel
+			Name="TopOptionsBar"
+			HorizontalAlignment="{Binding Source={StaticResource CurrentUserConfig}, Path=Direction, Converter={StaticResource DirToHAlign}, FallbackValue=Right}"
+			VerticalAlignment="Center"
+			FlowDirection="{Binding Source={StaticResource CurrentUserConfig}, Path=Direction, Converter={StaticResource DirToFlowDir}, FallbackValue=LeftToRight}"
+			Orientation="Horizontal">
+			<TextBlock
+				Name="TopOptionsLabel"
+				VerticalAlignment="Center"
+				Background="Transparent"
+				Opacity="0"
+				Style="{DynamicResource TopOptionsText}">
+				Options
+			</TextBlock>
+			<Polygon
+				Name="TopOptionsIcon"
+				VerticalAlignment="Center"
+				Points="0,0 3.5,3.5 7,0"
+				Style="{DynamicResource TopOptionsIcon}" />
 		</StackPanel>
-    </Grid>
+	</Grid>
 </UserControl>

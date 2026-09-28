@@ -63,6 +63,7 @@ namespace Sidebar
 			UpdateTheme ();
 			SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 			ReleaseLargeResourcesAsync ();
+			new SidebarWindow ().Show ();
 		}
 		private void SystemEvents_UserPreferenceChanged (object sender, UserPreferenceChangedEventArgs e)
 		{
@@ -109,6 +110,7 @@ namespace Sidebar
 		}
 		private static void SetCurrentBaseTheme (WpfTheme wpfTheme, string color = "normalcolor", string themeUri = null)
 		{
+			return;
 			var appResources = Application.Current.Resources;
 			var mergedDictionaries = appResources.MergedDictionaries;
 			if (mergedDictionaries.Count < 2)

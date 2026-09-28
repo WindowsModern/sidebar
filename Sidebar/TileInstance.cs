@@ -12,7 +12,7 @@ using Microsoft.Win32.Init;
 
 namespace Sidebar
 {
-	public class TileInstance: ITileRuntime, IDisposable
+	public class TileInstance: ITileRuntime
 	{
 		public ITileConfig Config { get; private set; }
 		public ITileManifest Manifest { get; private set; }
@@ -20,37 +20,28 @@ namespace Sidebar
 		public UIElement TileUI { get; set; }
 		public TileStorage Storage { get; private set; }
 		public TileBase Instance { get; private set; }
-		public IProgramFolder UserRegion => Storage?.TileCurrentUserFolder;
+		public IProgramFolder UserRegion { get; private set; }
 		public ISidebarFeatures Features { get; private set; }
+		public ITileApplication Application { get; private set; }
 		private void LoadTileBase ()
 		{
-			Assembly assembly = Assembly.LoadFrom (Storage.TileFilePath);
+			Assembly assembly = Assembly.LoadFrom (Path.Combine (Storage.FolderPath, Application.Executable));
 			Type tileType = assembly.GetTypes ().FirstOrDefault (t => t.IsSubclassOf (typeof (TileBase)) && !t.IsAbstract);
 			if (tileType == null)
 				throw new InvalidOperationException ($"Cannot find tile \"{Manifest.Identity.FullName}\" class.");
 			Instance = (TileBase)Activator.CreateInstance (tileType);
 			Instance.InitTileInstance (this);
 		}
-		public void Dispose ()
+		public TileInstance (TileApplicationStorage application, UIElement container, ISidebarFeatures sidebar = null)
 		{
-			Config = null;
-			Manifest = null;
-			Region = null;
-			TileUI = null;
-			Storage = null;
-			Instance = null;
-			//UserRegion = null;
-			Features = null;
-		}
-		public TileInstance (TileStorage storage, UIElement container, ISidebarFeatures sidebar)
-		{
-			Storage = storage;
-			Region = storage.TileFolder;
-			Config = new TileConfig (storage.TileCurrentUserFolder);
-			//UserRegion = storage.TileCurrentUserFolder;
-			Manifest = storage.Manifest;
+			Storage = application.Storage;
+			Region = application.Storage.TileFolder;
+			UserRegion = application.AppCurrentUserFolder;
+			Config = new TileConfig (UserRegion);
+			Manifest = Storage.Manifest;
 			TileUI = container;
 			Features = sidebar;
+			Application = application.Infomation;
 		}
 		public void Initialize ()
 		{

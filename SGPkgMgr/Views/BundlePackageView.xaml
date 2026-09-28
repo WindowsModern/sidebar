@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="SGPkgMgr.Views.BundlePackageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:SGPkgMgr.Localization">
+	<Grid Margin="8">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<DataGrid Grid.Row="0" x:Name="gridPackages"
+                  AutoGenerateColumns="False" CanUserAddRows="False"
+                  AllowDrop="True"
+                  Drop="OnDrop" DragOver="OnDragOver">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="{x:Static loc:Strings.FilePath}"
+                                    Binding="{Binding FilePath}" Width="*" />
+				<DataGridTextColumn Header="{x:Static loc:Strings.FileName}"
+                                    Binding="{Binding FileName}" Width="200" IsReadOnly="True" />
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,6,0,0">
+			<Button Content="{x:Static loc:Strings.Add}"
+                    Padding="10,2" Click="OnAdd" />
+			<Button Content="{x:Static loc:Strings.Remove}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnRemove" />
+			<Button Content="{x:Static loc:Strings.Clear}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnClear" />
+		</StackPanel>
+
+		<Grid Grid.Row="2" Margin="0,6,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="{x:Static loc:Strings.SaveFolder}" />
+			<TextBox Grid.Column="1" x:Name="txtSaveDir" VerticalAlignment="Center" />
+			<Button Grid.Column="2" Content="{x:Static loc:Strings.Browse}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnBrowseSave" />
+		</Grid>
+
+		<Grid Grid.Row="3" Margin="0,6,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="{x:Static loc:Strings.BundleName}" />
+			<TextBox Grid.Column="1" x:Name="txtBundleName" VerticalAlignment="Center" />
+		</Grid>
+
+		<StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+			<ProgressBar x:Name="progress" Width="220" Height="16"
+                 VerticalAlignment="Center" Margin="0,0,10,0"
+                 Visibility="Collapsed" />
+			<Button x:Name="btnRun" Content="{x:Static loc:Strings.Run}"
+            Padding="20,4" Click="OnRun" />
+		</StackPanel>
+
+		<TextBox Grid.Row="5" x:Name="txtLog" Margin="0,8,0,0"
+                 IsReadOnly="True" AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Auto"
+                 TextWrapping="Wrap" />
+	</Grid>
+</UserControl>

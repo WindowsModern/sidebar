@@ -1159,7 +1159,7 @@ namespace Sidebar
 					src is ButtonBase ||
 					src is ComboBox)
 					return true;
-
+				if (src is Run) return false;
 				src = VisualTreeHelper.GetParent (src);
 			}
 			return false;
@@ -1259,18 +1259,22 @@ namespace Sidebar
 		}
 		private bool ShouldIgnoreDoubleClick (DependencyObject source)
 		{
-			if (source == null) return false;
-			DependencyObject current = source;
-			while (current != null)
+			try
 			{
-				if (current == Splitter || current == SplitterLine1 || current == SplitterLine2)
-					return true;
-				if (IsGestureConsumer (current))
-					return true;
-				if (current == TileFlyoutIcon)
-					return true;
-				current = VisualTreeHelper.GetParent (current);
+				if (source == null) return false;
+				DependencyObject current = source;
+				while (current != null)
+				{
+					if (current == Splitter || current == SplitterLine1 || current == SplitterLine2)
+						return true;
+					if (IsGestureConsumer (current))
+						return true;
+					if (current == TileFlyoutIcon)
+						return true;
+					current = VisualTreeHelper.GetParent (current);
+				}
 			}
+			catch { return false; }
 			return false;
 		}
 	}

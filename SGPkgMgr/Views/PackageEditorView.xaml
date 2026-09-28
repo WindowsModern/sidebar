@@ -1,0 +1,127 @@
+﻿<UserControl x:Class="SGPkgMgr.Views.PackageEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:SGPkgMgr.Views"
+             xmlns:loc="clr-namespace:SGPkgMgr.Localization">
+	<Grid Margin="8">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<Grid Grid.Row="0" Margin="0,0,0,8">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="{x:Static loc:Strings.Package}" Margin="0,0,6,0" />
+			<TextBox Grid.Column="1" x:Name="txtPackagePath" VerticalAlignment="Center" />
+			<Button Grid.Column="2" Content="{x:Static loc:Strings.Browse}"
+            Margin="6,0,0,0" Padding="10,2" Click="OnBrowse" />
+			<Button Grid.Column="3" Content="{x:Static loc:Strings.Load}"
+            Margin="6,0,0,0" Padding="10,2" Click="OnLoad" />
+			<Button Grid.Column="4" Content="{x:Static loc:Strings.FindEntryPoints}"
+            Margin="6,0,0,0" Padding="10,2" Click="OnFindEntryPoints" />
+			<Button Grid.Column="5" Content="{x:Static loc:Strings.SaveAs}"
+            Margin="6,0,0,0" Padding="10,2" Click="OnSaveAs" />
+		</Grid>
+
+		<Grid Grid.Row="1" Margin="0,0,0,6">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<TextBlock x:Name="txtStatus" Foreground="#606060" VerticalAlignment="Center" />
+			<ProgressBar Grid.Column="1" x:Name="progress" Width="220" Height="16"
+                 VerticalAlignment="Center" Visibility="Collapsed" />
+		</Grid>
+
+		<TabControl Grid.Row="2" x:Name="tabRoot">
+
+			<!-- ========== 单包：清单 ========== -->
+			<TabItem x:Name="tabSingleManifest" Header="{x:Static loc:Strings.Manifest}">
+				<views:ManifestEditorView x:Name="singleManifestEditor" />
+			</TabItem>
+
+			<!-- ========== 单包：文件 ========== -->
+			<TabItem x:Name="tabSingleFiles" Header="{x:Static loc:Strings.Files}">
+				<views:PackageFilesView x:Name="singleFilesView" />
+			</TabItem>
+
+			<!-- ========== Bundle：捆绑属性 ========== -->
+			<TabItem x:Name="tabBundleIdentity" Header="{x:Static loc:Strings.BundleProperties}">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<GroupBox Header="{x:Static loc:Strings.Identity}" Margin="6">
+						<StackPanel>
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Name}" />
+								<TextBox Grid.Column="1" x:Name="txtBundleName" VerticalAlignment="Center" />
+							</Grid>
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Publisher}" />
+								<TextBox Grid.Column="1" x:Name="txtBundlePublisher" VerticalAlignment="Center" />
+							</Grid>
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Version}" />
+								<StackPanel Grid.Column="1" Orientation="Horizontal">
+									<TextBox x:Name="txtBundleVerMajor" Width="60" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtBundleVerMinor" Width="60" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtBundleVerBuild" Width="60" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtBundleVerRev" Width="60" />
+								</StackPanel>
+							</Grid>
+						</StackPanel>
+					</GroupBox>
+				</ScrollViewer>
+			</TabItem>
+
+			<!-- ========== Bundle：捆绑包级文件 ========== -->
+			<TabItem x:Name="tabBundleFiles" Header="{x:Static loc:Strings.BundleFiles}">
+				<views:PackageFilesView x:Name="bundleFilesView" />
+			</TabItem>
+
+			<!-- ========== Bundle：子包 ========== -->
+			<TabItem x:Name="tabSubPackages" Header="{x:Static loc:Strings.SubPackages}">
+				<Grid Margin="6">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="220" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+
+					<ListBox Grid.Column="0" x:Name="lstSlots"
+                             DisplayMemberPath="DisplayName"
+                             SelectionChanged="OnSlotSelected" />
+
+					<TabControl Grid.Column="1" Margin="8,0,0,0">
+						<TabItem Header="{x:Static loc:Strings.Manifest}">
+							<views:ManifestEditorView x:Name="bundleManifestEditor" />
+						</TabItem>
+						<TabItem Header="{x:Static loc:Strings.Files}">
+							<views:PackageFilesView x:Name="slotFilesView" />
+						</TabItem>
+					</TabControl>
+				</Grid>
+			</TabItem>
+		</TabControl>
+	</Grid>
+</UserControl>

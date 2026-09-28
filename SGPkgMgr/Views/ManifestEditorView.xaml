@@ -1,0 +1,410 @@
+﻿<UserControl x:Class="SGPkgMgr.Views.ManifestEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:SGPkgMgr.Localization">
+	<Grid Margin="8">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<!-- 顶部：文件路径 + 按钮 -->
+		<Grid Grid.Row="0" Margin="0,0,0,8">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" Text="{x:Static loc:Strings.ManifestFile}"
+                       Margin="0,0,6,0" />
+			<TextBox Grid.Column="1" x:Name="txtManifestPath" />
+			<Button Grid.Column="2" Content="{x:Static loc:Strings.Browse}"
+                    Margin="6,0,0,0" Padding="10,2" Click="OnBrowse" />
+			<Button Grid.Column="3" Content="{x:Static loc:Strings.Load}"
+                    Margin="6,0,0,0" Padding="10,2" Click="OnLoad" />
+			<Button Grid.Column="4" Content="{x:Static loc:Strings.Save}"
+                    Margin="6,0,0,0" Padding="10,2" Click="OnSave" />
+			<Button Grid.Column="5" Content="{x:Static loc:Strings.ConvertFromV1}"
+                    Margin="6,0,0,0" Padding="10,2" Click="OnConvertFromV1" />
+		</Grid>
+
+		<TabControl Grid.Row="1">
+
+			<!-- ========== Identity ========== -->
+			<TabItem Header="{x:Static loc:Strings.Identity}">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<GroupBox Header="{x:Static loc:Strings.Identity}" Margin="6">
+						<StackPanel>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Name}" />
+								<TextBox Grid.Column="1" x:Name="txtName" VerticalAlignment="Center" />
+							</Grid>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Publisher}"
+                                           ToolTip="X.500 distinguished name" />
+								<TextBox Grid.Column="1" x:Name="txtPublisher" VerticalAlignment="Center" />
+							</Grid>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Version}"
+                                           ToolTip="Major.Minor.Build.Revision" />
+								<StackPanel Grid.Column="1" Orientation="Horizontal">
+									<TextBox x:Name="txtVerMajor" Width="60" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtVerMinor" Width="60" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtVerBuild" Width="60" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtVerRev" Width="60" />
+								</StackPanel>
+							</Grid>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Architecture}" />
+								<ComboBox Grid.Column="1" x:Name="cmbArch" VerticalAlignment="Center" />
+							</Grid>
+
+						</StackPanel>
+					</GroupBox>
+				</ScrollViewer>
+			</TabItem>
+
+			<!-- ========== Properties ========== -->
+			<TabItem Header="{x:Static loc:Strings.Properties}">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<GroupBox Header="{x:Static loc:Strings.Properties}" Margin="6">
+						<StackPanel>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.DisplayName}" />
+								<TextBox Grid.Column="1" x:Name="txtDisplayName" VerticalAlignment="Center" />
+							</Grid>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.PublisherDisplayName}" />
+								<TextBox Grid.Column="1" x:Name="txtPublisherDisplayName" VerticalAlignment="Center" />
+							</Grid>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Logo}" />
+								<TextBox Grid.Column="1" x:Name="txtPropertiesLogo" VerticalAlignment="Center" />
+							</Grid>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.Description}"
+                                           VerticalAlignment="Top" Margin="0,4,0,0" />
+								<TextBox Grid.Column="1" x:Name="txtDescription"
+                                         AcceptsReturn="True" TextWrapping="Wrap"
+                                         VerticalScrollBarVisibility="Auto"
+                                         MinHeight="100" />
+							</Grid>
+
+						</StackPanel>
+					</GroupBox>
+				</ScrollViewer>
+			</TabItem>
+
+			<!-- ========== Prerequisites ========== -->
+			<TabItem Header="{x:Static loc:Strings.Prerequisites}">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<GroupBox Header="{x:Static loc:Strings.Prerequisites}" Margin="6">
+						<StackPanel>
+
+							<!-- ============ OS Min Version ============ -->
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.OsMinVersion}" />
+								<ComboBox Grid.Column="1" x:Name="cmbOsMin"
+                              DisplayMemberPath="DisplayName"
+                              SelectionChanged="OnOsMinChanged" />
+							</Grid>
+
+							<Grid Margin="0,0,0,12">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="" />
+								<StackPanel Grid.Column="1" Orientation="Horizontal">
+									<TextBox x:Name="txtOsMinMajor" Width="60" TextAlignment="Center" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtOsMinMinor" Width="60" TextAlignment="Center" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtOsMinBuild" Width="60" TextAlignment="Center" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtOsMinRev" Width="60" TextAlignment="Center" />
+								</StackPanel>
+							</Grid>
+
+							<!-- ============ OS Max Version ============ -->
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{x:Static loc:Strings.OsMaxVersion}"
+                               ToolTip="{x:Static loc:Strings.OsMaxVersionHint}" />
+								<ComboBox Grid.Column="1" x:Name="cmbOsMax"
+                              DisplayMemberPath="DisplayName"
+                              ToolTip="{x:Static loc:Strings.OsMaxVersionHint}"
+                              SelectionChanged="OnOsMaxChanged" />
+							</Grid>
+
+							<Grid Margin="0,0,0,6">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="160" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="" />
+								<StackPanel Grid.Column="1" Orientation="Horizontal">
+									<TextBox x:Name="txtOsMaxMajor" Width="60" TextAlignment="Center" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtOsMaxMinor" Width="60" TextAlignment="Center" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtOsMaxBuild" Width="60" TextAlignment="Center" />
+									<TextBlock Text="." Margin="6,0" />
+									<TextBox x:Name="txtOsMaxRev" Width="60" TextAlignment="Center" />
+								</StackPanel>
+							</Grid>
+
+							<CheckBox x:Name="chkOsMaxUnbounded"
+                          Content="{x:Static loc:Strings.OsMaxUnbounded}"
+                          ToolTip="{x:Static loc:Strings.OsMaxVersionHint}"
+                          Margin="160,0,0,0"
+                          Checked="OnOsMaxUnboundedChanged"
+                          Unchecked="OnOsMaxUnboundedChanged" />
+						</StackPanel>
+					</GroupBox>
+				</ScrollViewer>
+			</TabItem>
+
+			<!-- ========== Applications ========== -->
+			<TabItem Header="{x:Static loc:Strings.Applications}">
+				<Grid Margin="6">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="200" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+
+					<ListBox Grid.Row="0" Grid.Column="0" x:Name="lstApplications"
+                             DisplayMemberPath="Id"
+                             SelectionChanged="OnApplicationSelected" />
+
+					<StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,6,0,0">
+						<Button Content="{x:Static loc:Strings.AddApplication}"
+                                Padding="10,2" Margin="0,0,4,0" Click="OnAddApplication" />
+						<Button Content="{x:Static loc:Strings.RemoveApplication}"
+                                Padding="10,2" Click="OnRemoveApplication" />
+					</StackPanel>
+
+					<ScrollViewer Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                  Margin="10,0,0,0" VerticalScrollBarVisibility="Auto">
+						<StackPanel DataContext="{Binding SelectedItem, ElementName=lstApplications}">
+
+							<GroupBox Header="{x:Static loc:Strings.ApplicationId}">
+								<StackPanel>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.ApplicationId}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.Executable}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding Executable, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.EntryPoint}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding EntryPoint, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<CheckBox Content="{x:Static loc:Strings.HasFlyout}"
+                                              IsChecked="{Binding HasFlyout}" Margin="140,4,0,4" />
+									<CheckBox Content="{x:Static loc:Strings.HasProperties}"
+                                              IsChecked="{Binding HasProperties}" Margin="140,4,0,4" />
+
+								</StackPanel>
+							</GroupBox>
+
+							<GroupBox Header="{x:Static loc:Strings.VisualElements}">
+								<StackPanel>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.DisplayName}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.Logo}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding Logo, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+								</StackPanel>
+							</GroupBox>
+
+							<GroupBox Header="{x:Static loc:Strings.Tile}">
+								<StackPanel>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.MinHeight}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding MinHeight, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.MaxHeight}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding MaxHeight, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.DefaultHeight}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding DefaultHeight, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<CheckBox Content="{x:Static loc:Strings.CanPinBottom}"
+                                              IsChecked="{Binding CanPinBottom}" Margin="140,4,0,4" />
+
+									<Grid Margin="0,6,0,0">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.Overflow}" />
+										<ComboBox Grid.Column="1" x:Name="cmbOverflow"
+                                                  SelectedItem="{Binding Overflow}"
+                                                  VerticalAlignment="Center" />
+									</Grid>
+
+								</StackPanel>
+							</GroupBox>
+
+							<GroupBox Header="{x:Static loc:Strings.Flyout}">
+								<StackPanel>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.FlyoutWidth}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding FlyoutWidth, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<Grid Margin="0,0,0,6">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="140" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{x:Static loc:Strings.FlyoutHeight}" />
+										<TextBox Grid.Column="1"
+                                                 Text="{Binding FlyoutHeight, UpdateSourceTrigger=PropertyChanged}"
+                                                 VerticalAlignment="Center" />
+									</Grid>
+
+									<CheckBox Content="{x:Static loc:Strings.FlyoutCanResize}"
+                                              IsChecked="{Binding FlyoutCanResize}" Margin="140,4,0,4" />
+
+								</StackPanel>
+							</GroupBox>
+
+						</StackPanel>
+					</ScrollViewer>
+				</Grid>
+			</TabItem>
+		</TabControl>
+	</Grid>
+</UserControl>
