@@ -19,9 +19,21 @@ namespace Sidebar
 	/// </summary>
 	public partial class TileControl: UserControl, ITileElement
 	{
+		private TileContext tileContext = null;
+		public TileInstance Instance { get; private set; }
+		private void SetInstance (TileInstance inst) => Instance = inst;
+		public static TileControl CreateTileControl (TileApplicationStorage tas, ISidebarFeatures isf = null)
+		{
+			var ctrl = new TileControl ();
+			var inst = new TileInstance (tas, ctrl.ContentContainer, isf);
+			ctrl.SetInstance (inst);
+			inst.Initialize ();
+			return ctrl;
+		}
 		public TileControl ()
 		{
 			InitializeComponent ();
+			tileContext = new TileContext (this, TileContentControl);
 		}
 		public Panel ContentContainer => TileContentControl;
 		public string DisplayName
@@ -34,5 +46,6 @@ namespace Sidebar
 			get { return TileDisplayImageControl?.Source; }
 			set { TileDisplayImageControl.Source = value; }
 		}
+
 	}
 }

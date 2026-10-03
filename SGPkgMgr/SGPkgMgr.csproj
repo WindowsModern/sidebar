@@ -70,6 +70,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\DirectoryPickerDialog.cs" />
+    <Compile Include="Helpers\InputDialog.cs" />
     <Compile Include="Helpers\UiTask.cs" />
     <Compile Include="Models\OSVersionCatalog.cs" />
     <Compile Include="Resources\Strings.Designer.cs">
@@ -77,11 +79,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\LegacyTileAnalyzer.cs" />
+    <Compile Include="Services\LegacyTileImporter.cs" />
     <Compile Include="Services\PackageConverter.cs" />
     <Compile Include="Services\PackageEditorSession.cs" />
+    <Compile Include="Services\ResourceModels.cs" />
     <Compile Include="Services\TileEntryPointFinder.cs" />
     <Compile Include="Views\BundlePackageView.xaml.cs">
       <DependentUpon>BundlePackageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImportLegacyTileView.xaml.cs">
+      <DependentUpon>ImportLegacyTileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LocaleResourceEditorView.xaml.cs">
+      <DependentUpon>LocaleResourceEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ManifestEditorView.xaml.cs">
       <DependentUpon>ManifestEditorView.xaml</DependentUpon>
@@ -97,6 +108,12 @@
     </Compile>
     <Compile Include="Views\PackageReaderView.xaml.cs">
       <DependentUpon>PackageReaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PathResourceEditorView.xaml.cs">
+      <DependentUpon>PathResourceEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ResourceFileEditorView.xaml.cs">
+      <DependentUpon>ResourceFileEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SinglePackageView.xaml.cs">
       <DependentUpon>SinglePackageView.xaml</DependentUpon>
@@ -121,6 +138,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ImportLegacyTileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LocaleResourceEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ManifestEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -138,6 +163,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PackageReaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PathResourceEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ResourceFileEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -190,6 +223,14 @@
     <ProjectReference Include="..\Native\Native.csproj">
       <Project>{52309125-e452-4d6f-8672-a49d8b52b2d9}</Project>
       <Name>Native</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OtherSDKs\KSideBarTileSDK\KarlSidebar.TileSDK.csproj">
+      <Project>{5c7cd956-f85c-47e6-9053-785eb66eb487}</Project>
+      <Name>KarlSidebar.TileSDK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OtherSDKs\LongBarTileLib\LongBar.TileLib.csproj">
+      <Project>{e9d551b9-c80a-41d6-915a-5c6c005547a8}</Project>
+      <Name>LongBar.TileLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\TileClient\TileClient.csproj">
       <Project>{e06095f3-687a-41fe-8c6a-50c719d7444a}</Project>

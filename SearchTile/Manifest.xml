@@ -1,46 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Manifest>
+<Manifest Version="2">
   <Identity Name="WindowsModern.SearchTile" Publisher="CN=Windows Modern" Version="1.0.0.1" ProcessorArchitecture="Neutral" />
   <Properties>
     <DisplayName>TILE_PROP_DISPNAME</DisplayName>
     <PublisherDisplayName>Windows Modern</PublisherDisplayName>
     <Description>TILE_PROP_DESC</Description>
     <Logo>Icon.png</Logo>
-    <Type>Content</Type>
   </Properties>
   <Prerequisites>
     <OSMinVersion>5.1.2600.0</OSMinVersion>
-    <OSMaxVersionTested>5.1.2600.0</OSMaxVersionTested>
   </Prerequisites>
-  <VisualElements>
-    <RailStyle>
-      <MinHeight>41</MinHeight>
-      <MaxHeight>41</MaxHeight>
-      <DefaultHeight>60</DefaultHeight>
-      <CanPinBottom>true</CanPinBottom>
-      <TileHasFlyout>true</TileHasFlyout>
-      <FlyoutWidth>398</FlyoutWidth>
-      <FlyoutHeight>99</FlyoutHeight>
-      <FlyoutCanResize>false</FlyoutCanResize>
-      <Overflow>Auto</Overflow>
-      <DisplayName>TILE_PROP_DISPNAME</DisplayName>
-      <TileHasProperties>false</TileHasProperties>
-      <Logo>Logo.png</Logo>
-    </RailStyle>
-    <GridStyle>
-      <Badge>Assets\Badge.png</Badge>
-      <DefaultTileSize>Small</DefaultTileSize>
-      <DisplayName>TILE_PROP_DISPNAME</DisplayName>
-      <SmallTile>Assets\SmallTile.png</SmallTile>
-      <MediumTile>Assets\MediumTile.png</MediumTile>
-      <WideTile>Assets\WideTile.png</WideTile>
-      <LargeTile>Assets\LargeTile.png</LargeTile>
-      <BackgroundColor>#FF8000</BackgroundColor>
-      <ForegroundColor>Light</ForegroundColor>
-      <ShowNameOnMediumTile>true</ShowNameOnMediumTile>
-      <ShowNameOnWideTile>true</ShowNameOnWideTile>
-      <ShowNameOnLargeTile>true</ShowNameOnLargeTile>
-      <EnableInteraction>false</EnableInteraction>
-    </GridStyle>
-  </VisualElements>
+  <Applications>
+    <Application Id="App" Executable="WindowsModern.SearchTile.dll" HasFlyout="true" HasProperties="false">
+      <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="Logo.png">
+        <Tile MinHeight="41" MaxHeight="41" DefaultHeight="60" CanPinBottom="true" Overflow="Auto" />
+        <Flyout FlyoutWidth="390" FlyoutHeight="78" FlyoutCanResize="false" />
+      </VisualElements>
+    </Application>
+  </Applications>
 </Manifest>

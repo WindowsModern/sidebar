@@ -37,8 +37,8 @@
 					</Style>
 				</Grid.Resources>
 			</Grid>
-			<local:TopOptions x:Name="FlyoutHeader" Style="{DynamicResource FlyoutHeaderOptionsBar}" VerticalAlignment="Top" IconStyle="{DynamicResource FlyoutHeaderOptionsIcon}">
-			</local:TopOptions>
+			<!-- <local:TopOptions x:Name="FlyoutHeader" Style="{DynamicResource FlyoutHeaderOptionsBar}" VerticalAlignment="Top" IconStyle="{DynamicResource FlyoutHeaderOptionsIcon}">
+			</local:TopOptions> -->
 		</Grid>
 	</Grid>
 </Window>

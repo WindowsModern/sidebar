@@ -56,14 +56,13 @@ namespace Sidebar
 			//BrowserEmulation.SetWebBrowserEmulation ();
 			var theme = ThemeMgr.CurrentUserTheme;
 			ThemeManager.Apply (theme);
-			var mainwnd = new MainWindow ();
+			var mainwnd = new SidebarWindow ();
 			this.MainWindow = mainwnd;
 			mainwnd.Show ();
 			SidebarPipe.StartServer ();
 			UpdateTheme ();
 			SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 			ReleaseLargeResourcesAsync ();
-			new SidebarWindow ().Show ();
 		}
 		private void SystemEvents_UserPreferenceChanged (object sender, UserPreferenceChangedEventArgs e)
 		{

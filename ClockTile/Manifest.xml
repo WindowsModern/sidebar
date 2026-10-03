@@ -1,46 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Manifest>
+<Manifest Version="2">
   <Identity Name="WindowsModern.ClockTile" Publisher="CN=Windows Modern" Version="1.0.0.2" ProcessorArchitecture="Neutral" />
   <Properties>
     <DisplayName>TILE_PROP_DISPNAME</DisplayName>
     <PublisherDisplayName>Windows Modern</PublisherDisplayName>
     <Description>TILE_PROP_DESC</Description>
     <Logo>Assets\Logo.png</Logo>
-    <Type>Content</Type>
   </Properties>
   <Prerequisites>
     <OSMinVersion>5.1.2600.0</OSMinVersion>
-    <OSMaxVersionTested>5.1.2600.0</OSMaxVersionTested>
   </Prerequisites>
-  <VisualElements>
-    <RailStyle>
-      <MinHeight>20</MinHeight>
-      <MaxHeight>200</MaxHeight>
-      <DefaultHeight>60</DefaultHeight>
-      <CanPinBottom>true</CanPinBottom>
-      <TileHasFlyout>true</TileHasFlyout>
-      <FlyoutWidth>501</FlyoutWidth>
-      <FlyoutHeight>324</FlyoutHeight>
-      <FlyoutCanResize>false</FlyoutCanResize>
-      <Overflow>Hidden</Overflow>
-      <DisplayName>TILE_PROP_DISPNAME</DisplayName>
-      <TileHasProperties>true</TileHasProperties>
-      <Logo>Assets\SmallLogo.png</Logo>
-    </RailStyle>
-    <GridStyle>
-      <Badge>Assets\Badge.png</Badge>
-      <DefaultTileSize>Small</DefaultTileSize>
-      <DisplayName>TILE_PROP_DISPNAME</DisplayName>
-      <SmallTile>Assets\SmallTile.png</SmallTile>
-      <MediumTile>Assets\MediumTile.png</MediumTile>
-      <WideTile>Assets\WideTile.png</WideTile>
-      <LargeTile>Assets\LargeTile.png</LargeTile>
-      <BackgroundColor>#FF8000</BackgroundColor>
-      <ForegroundColor>Light</ForegroundColor>
-      <ShowNameOnMediumTile>true</ShowNameOnMediumTile>
-      <ShowNameOnWideTile>true</ShowNameOnWideTile>
-      <ShowNameOnLargeTile>true</ShowNameOnLargeTile>
-      <EnableInteraction>false</EnableInteraction>
-    </GridStyle>
-  </VisualElements>
+  <Applications>
+    <Application Id="App" Executable="WindowsModern.ClockTile.dll" HasFlyout="true" HasProperties="true">
+      <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="Assets\SmallLogo.png">
+        <Tile MinHeight="20" MaxHeight="200" DefaultHeight="60" CanPinBottom="true" Overflow="Hidden" />
+        <Flyout FlyoutWidth="493" FlyoutHeight="303" FlyoutCanResize="false" />
+      </VisualElements>
+    </Application>
+  </Applications>
 </Manifest>

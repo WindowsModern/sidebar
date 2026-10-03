@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="SGPkgMgr.Views.PathResourceEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:SGPkgMgr.Localization">
+	<Grid Margin="8">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+			<Button Content="{x:Static loc:Strings.AddPathResource}"
+                    Padding="10,2" Click="OnAddResource" />
+			<Button Content="{x:Static loc:Strings.RemovePathResource}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnRemoveResource" />
+			<Separator Margin="10,0" Width="1" />
+			<Button Content="{x:Static loc:Strings.AddPathScale}"
+                    Padding="10,2" Click="OnAddScale" />
+			<Button Content="{x:Static loc:Strings.RemovePathScale}"
+                    Padding="10,2" Margin="6,0,0,0" Click="OnRemoveScale" />
+		</StackPanel>
+
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="250" MinWidth="150" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" MinWidth="300" />
+			</Grid.ColumnDefinitions>
+
+			<DataGrid Grid.Column="0" x:Name="gridResources"
+                      AutoGenerateColumns="False" CanUserAddRows="False"
+                      SelectionChanged="OnResourceSelected">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="{x:Static loc:Strings.PathResourceName}"
+                                        Binding="{Binding ResourceName, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="*" />
+				</DataGrid.Columns>
+			</DataGrid>
+
+			<GridSplitter Grid.Column="1" Width="4"
+                          HorizontalAlignment="Stretch"
+                          Background="Transparent" />
+
+			<DataGrid Grid.Column="2" x:Name="gridEntries"
+                      AutoGenerateColumns="False" CanUserAddRows="False">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="{x:Static loc:Strings.PathScale}"
+                                        Binding="{Binding Scale, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="100" />
+					<DataGridTextColumn Header="{x:Static loc:Strings.PathValue}"
+                                        Binding="{Binding Path, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="*" />
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+
+		<TextBlock Grid.Row="2" x:Name="txtInfo" Foreground="#606060" Margin="0,6,0,0" />
+	</Grid>
+</UserControl>

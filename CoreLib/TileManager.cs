@@ -13,9 +13,11 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using ICSharpCode.SharpZipLib.Zip;
-using static Sidebar.TilePackageWriteManager;
 using ImageSource = System.Windows.Media.ImageSource;
 using BitmapImage = System.Windows.Media.Imaging.BitmapImage;
+using System.Threading.Tasks;
+using AnyDiff;
+
 namespace Sidebar
 {
 	/// <summary>
@@ -725,8 +727,8 @@ namespace Sidebar
 				ParseOverflow ((string)railEl?.Element ("Overflow"))
 			);
 			var flyout = new TileVisualElementFlyout (
-				ParseInt ((string)railEl?.Element ("FlyoutWidth")),
-				ParseInt ((string)railEl?.Element ("FlyoutHeight")),
+				Math.Max (0, ParseInt ((string)railEl?.Element ("FlyoutWidth")) - 8),
+				Math.Max (0, ParseInt ((string)railEl?.Element ("FlyoutHeight")) - 21),
 				ParseBool ((string)railEl?.Element ("FlyoutCanResize"))
 			);
 			var visualElements = new TileVisualElements (
@@ -800,6 +802,8 @@ namespace Sidebar
 				throw new ArgumentException ("The instance of Tile needs the folder stored tile files.");
 			FolderPath = folderPath;
 			Manifest = TileManifest.FromFile (infoFile);
+			TileFolder = ProgramFolder.CreateFromPath (folderPath);
+			TileCurrentUserFolder = ProgramFolder.CreateFromPath (Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData), "Windows Modern\\Sidebar\\Tiles", Manifest.Identity.FamilyName));
 			foreach (var a in Manifest.Applications)
 			{
 				var dllfile = Path.Combine (folderPath, a.Executable);
@@ -807,8 +811,6 @@ namespace Sidebar
 					throw new ArgumentException ("The instance of Tile needs the folder stored tile files.");
 				Items.Add (new TileApplicationStorage (this, a));
 			}
-			TileFolder = ProgramFolder.CreateFromPath (folderPath);
-			TileCurrentUserFolder = ProgramFolder.CreateFromPath (Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData), "Windows Modern\\Sidebar\\Tiles", Manifest.Identity.FamilyName));
 		}
 		public TileStorage (string folderPath, ITileApplication application)
 		{
@@ -833,6 +835,24 @@ namespace Sidebar
 			get
 			{
 				var ret = Manifest?.Properties?.DisplayName;
+				ret = TileFolder?.StringResources?.SuitableResource (ret, ret) ?? ret;
+				return ret;
+			}
+		}
+		public string Publisher
+		{
+			get
+			{
+				var ret = Manifest?.Properties?.Publisher;
+				ret = TileFolder?.StringResources?.SuitableResource (ret, ret) ?? ret;
+				return ret;
+			}
+		}
+		public string Description
+		{
+			get
+			{
+				var ret = Manifest?.Properties?.Description;
 				ret = TileFolder?.StringResources?.SuitableResource (ret, ret) ?? ret;
 				return ret;
 			}
@@ -864,10 +884,27 @@ namespace Sidebar
 			get
 			{
 				if (imgsrc != null) return imgsrc;
-				if (string.IsNullOrEmpty (Logo)) return null;
-				if (!File.Exists (Logo)) return null;
-				imgsrc = new BitmapImage (new Uri (Logo, UriKind.RelativeOrAbsolute));
-				return imgsrc;
+				var path = Logo;
+				if (string.IsNullOrEmpty (path) || !File.Exists (path)) return null;
+				try
+				{
+					var bmp = new BitmapImage ();
+					using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.Read))
+					{
+						bmp.BeginInit ();
+						bmp.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+						//bmp.CreateOptions = System.Windows.Media.Imaging.BitmapCreateOptions.IgnoreImageCache;
+						bmp.StreamSource = fs;
+						bmp.EndInit ();
+					}
+					bmp.Freeze ();
+					imgsrc = bmp;
+					return imgsrc;
+				}
+				catch
+				{
+					return null;
+				}
 			}
 		}
 		public override string ToString ()
@@ -879,7 +916,7 @@ namespace Sidebar
 		{
 			if (obj is TileStorage)
 			{
-				FamilyName.NEquals ((obj as TileStorage)?.FamilyName);
+				return FamilyName.NEquals ((obj as TileStorage)?.FamilyName);
 			}
 			return base.Equals (obj);
 		}
@@ -945,198 +982,229 @@ namespace Sidebar
 			get
 			{
 				if (imgsrc != null) return imgsrc;
-				if (string.IsNullOrEmpty (Logo)) return null;
-				if (!File.Exists (Logo)) return null;
-				imgsrc = new BitmapImage (new Uri (Logo, UriKind.RelativeOrAbsolute));
-				return imgsrc;
+				var path = Logo;
+				if (string.IsNullOrEmpty (path) || !File.Exists (path)) return null;
+				try
+				{
+					var bmp = new BitmapImage ();
+					using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.Read))
+					{
+						bmp.BeginInit ();
+						bmp.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+						//bmp.CreateOptions = System.Windows.Media.Imaging.BitmapCreateOptions.IgnoreImageCache;
+						bmp.StreamSource = fs;
+						bmp.EndInit ();
+					}
+					bmp.Freeze ();
+					imgsrc = bmp;
+					return imgsrc;
+				}
+				catch
+				{
+					return null;
+				}
 			}
 		}
 	}
 	public class TileManager: IDisposable, INotifyPropertyChanged
 	{
-		public string BaseDir { get; }
-		public TileManager (string baseDir) { BaseDir = baseDir; StartWatching (); }
-		public TileManager () : this (AppDomain.CurrentDomain.BaseDirectory) { }
-
-		private FileSystemWatcher watcher;
-		private readonly object cacheLock = new object ();
-		private volatile bool disposed = false;
-		private Timer debounceTimer;
-		private const int DebounceDelay = 500;
-
-		// 快速查询用的字典缓存（Tiles 本身作为唯一权威列表）
-		private Dictionary<Guid, TileStorage> cacheById = new Dictionary<Guid, TileStorage> ();
-		private Dictionary<string, TileStorage> cacheByFullName = new Dictionary<string, TileStorage> (StringComparer.OrdinalIgnoreCase);
-		private Dictionary<string, TileStorage> cacheByFamilyName = new Dictionary<string, TileStorage> (StringComparer.OrdinalIgnoreCase);
-
-		/// <summary>所有已安装且有效的磁贴。</summary>
-		public ObservableCollection<TileStorage> Tiles { get; } = new ObservableCollection<TileStorage> ();
-		/// <summary>所有已安装磁贴中声明的应用（平铺）。</summary>
-		public ObservableCollection<TileApplicationStorage> Applications { get; } = new ObservableCollection<TileApplicationStorage> ();
-
-		#region 目录监视 / 防抖
-		private void StartWatching ()
+		public string [] Roots { get { return _roots; } }
+		private readonly string [] _roots;
+		private readonly MultiRootWatcher _watcher;
+		private readonly object _cacheLock = new object ();
+		private int _refreshing;
+		private int _pending;
+		private volatile bool _disposed;
+		private Dictionary<Guid, TileStorage> _cacheById = new Dictionary<Guid, TileStorage> ();
+		private Dictionary<string, TileStorage> _cacheByFullName = new Dictionary<string, TileStorage> (StringComparer.OrdinalIgnoreCase);
+		private Dictionary<string, TileStorage> _cacheByFamilyName = new Dictionary<string, TileStorage> (StringComparer.OrdinalIgnoreCase);
+		public ObservableCollection<TileStorage> Tiles { get; private set; }
+		public ObservableCollection<TileApplicationStorage> Applications { get; private set; }
+		public TileManager (params string [] roots)
 		{
-			string gadgetPath = GetGadgetFolder ();
-			if (!Directory.Exists (gadgetPath))
+			Tiles = new ObservableCollection<TileStorage> ();
+			Applications = new ObservableCollection<TileApplicationStorage> ();
+			_roots = roots != null
+				? Array.FindAll (roots, r => !string.IsNullOrWhiteSpace (r))
+				: new string [0];
+			_watcher = new MultiRootWatcher (_roots, TimeSpan.FromMilliseconds (500), OnWatched);
+			_watcher.Start ();
+			ForceRefresh ();
+		}
+		public TileManager () : this (DefaultRoots ()) { }
+		private static string [] DefaultRoots ()
+		{
+			return new string [] {
+			Path.Combine (ProgramFolder.GlobalFolder.FolderPath, "Gadgets"),
+			Path.Combine (ProgramFolder.CurrentUserFolder.FolderPath, "Gadgets"),
+		};
+		}
+		private void OnWatched () { ForceRefresh (); }
+		public void ForceRefresh ()
+		{
+			if (_disposed) return;
+			if (Interlocked.CompareExchange (ref _refreshing, 1, 0) != 0)
+			{
+				Interlocked.Exchange (ref _pending, 1);
 				return;
-			watcher = new FileSystemWatcher (gadgetPath) {
-				IncludeSubdirectories = false,
-				NotifyFilter = NotifyFilters.DirectoryName,
-				EnableRaisingEvents = false
-			};
-			watcher.Created += OnDirectoryChanged;
-			watcher.Deleted += OnDirectoryChanged;
-			watcher.Renamed += OnDirectoryRenamed;
-			watcher.EnableRaisingEvents = true;
-			RefreshCacheImmediate ();
+			}
+			Task.Factory.StartNew (RefreshLoop, CancellationToken.None,
+				TaskCreationOptions.None, TaskScheduler.Default);
 		}
-		private void OnDirectoryChanged (object sender, FileSystemEventArgs e) => RefreshCache ();
-		private void OnDirectoryRenamed (object sender, RenamedEventArgs e) => RefreshCache ();
-		private void RefreshCache ()
+		private void RefreshLoop ()
 		{
-			debounceTimer?.Dispose ();
-			debounceTimer = new Timer (_ => RefreshCacheImmediate (), null, DebounceDelay, Timeout.Infinite);
-		}
-		#endregion
-
-		#region 扫描 / 刷新
-		private List<Tuple<bool, string, TileStorage>> ScanAllTiles ()
-		{
-			var tileFolder = GetGadgetFolder ();
-			var ret = new List<Tuple<bool, string, TileStorage>> ();
 			try
 			{
-				if (!Directory.Exists (tileFolder))
-					return ret;
-				foreach (var s in Directory.EnumerateDirectories (tileFolder))
+				do
 				{
-					try
-					{
-						ret.Add (new Tuple<bool, string, TileStorage> (true, "", new TileStorage (s)));
-					}
-					catch (Exception e)
-					{
-						ret.Add (new Tuple<bool, string, TileStorage> (false, $"{Path.GetFileName (s)}: {e.Message}", null));
-					}
+					Interlocked.Exchange (ref _pending, 0);
+					if (_disposed) return;
+					try { RefreshCore (); }
+					catch { }
 				}
+				while (!_disposed && Interlocked.CompareExchange (ref _pending, 0, 0) != 0);
 			}
-			catch { }
-			return ret;
-		}
-		private string GetGadgetFolder () =>
-			Path.Combine (ProgramFolder.GlobalFolder.FolderPath, "Gadgets");
-
-		public void ForceRefresh () => RefreshCacheImmediate ();
-
-		private void RefreshCacheImmediate ()
-		{
-			var raw = ScanAllTiles ();
-			var valid = raw.Where (t => t.Item1 && t.Item3 != null).Select (t => t.Item3).ToList ();
-
-			// 同一 FamilyName 下保留 Version 最高的那个
-			var uniqueByFamily = new Dictionary<string, TileStorage> (StringComparer.OrdinalIgnoreCase);
-			foreach (var tile in valid)
+			finally
 			{
-				string key = tile.FamilyName?.Trim ();
-				if (string.IsNullOrEmpty (key))
-					continue;
-				TileStorage existing;
-				if (!uniqueByFamily.TryGetValue (key, out existing) ||
-					tile.Manifest.Identity.Version > existing.Manifest.Identity.Version)
-				{
-					uniqueByFamily [key] = tile;
-				}
+				Interlocked.Exchange (ref _refreshing, 0);
+				if (!_disposed && Interlocked.CompareExchange (ref _pending, 0, 0) != 0)
+					ForceRefresh ();
 			}
-
-			var desiredTiles = uniqueByFamily.Values
-				.OrderBy (t => t.FamilyName, StringComparer.OrdinalIgnoreCase)
-				.ToList ();
-
+		}
+		private void RefreshCore ()
+		{
+			var desiredTiles = ScanAllTiles ();
 			var desiredApps = new List<TileApplicationStorage> ();
 			foreach (var t in desiredTiles)
 				foreach (var item in t.Items)
 					desiredApps.Add (item);
-
-			// 更新查询字典
-			lock (cacheLock)
+			var newById = desiredTiles.ToDictionary (t => t.Manifest.Identity.Id);
+			var newByFull = desiredTiles.ToDictionary (t => t.Manifest.Identity.FullName, StringComparer.OrdinalIgnoreCase);
+			var newByFamily = desiredTiles.ToDictionary (t => t.FamilyName, StringComparer.OrdinalIgnoreCase);
+			UiDispatch.Run (() =>
 			{
-				cacheById = desiredTiles.ToDictionary (t => t.Manifest.Identity.Id);
-				cacheByFullName = desiredTiles.ToDictionary (t => t.Manifest.Identity.FullName, StringComparer.OrdinalIgnoreCase);
-				cacheByFamilyName = desiredTiles.ToDictionary (t => t.FamilyName, StringComparer.OrdinalIgnoreCase);
-			}
-
-			// 差异化更新两个集合
-			SyncCollection (Tiles, desiredTiles);
-			SyncCollection (Applications, desiredApps);
-
-			OnPropertyChanged (nameof (Tiles));
-			OnPropertyChanged (nameof (Applications));
-		}
-
-		/// <summary>
-		/// 用最小改动把 target 调整成 desired 的顺序和内容：
-		/// 1. 删除不在 desired 中的项；
-		/// 2. 按顺序对齐，已存在则 Move，不存在则 Insert。
-		/// T 需要正确实现 Equals / GetHashCode（TileStorage、TileApplicationStorage 已实现）。
-		/// </summary>
-		private static void SyncCollection<T> (ObservableCollection<T> target, IList<T> desired)
-		{
-			// 1. 移除不在期望集合中的项
-			if (target.Count > 0)
-			{
-				var desiredSet = new HashSet<T> (desired);
-				for (int i = target.Count - 1; i >= 0; i--)
+				if (_disposed) return;
+				lock (_cacheLock)
 				{
-					if (!desiredSet.Contains (target [i]))
-						target.RemoveAt (i);
+					_cacheById = newById;
+					_cacheByFullName = newByFull;
+					_cacheByFamilyName = newByFamily;
+				}
+				ObservableSync.Sync (
+					Tiles,
+					desiredTiles,
+					t => t.FamilyName,
+					StringComparer.OrdinalIgnoreCase,
+					TilesContentEqual);
+				ObservableSync.Sync (
+					Applications,
+					desiredApps,
+					a => a.UserModelId,
+					StringComparer.OrdinalIgnoreCase,
+					AppsContentEqual);
+				OnPropertyChanged (nameof (Tiles));
+				OnPropertyChanged (nameof (Applications));
+			});
+		}
+		private List<TileStorage> ScanAllTiles ()
+		{
+			var osVer = GetSystemVersion ();
+			var sysArch = GetSystemArchitecture ();
+			var candidates = new Dictionary<string, List<TileStorage>> (StringComparer.OrdinalIgnoreCase);
+			foreach (var root in _roots)
+			{
+				if (string.IsNullOrEmpty (root) || !Directory.Exists (root)) continue;
+				IEnumerable<string> subdirs;
+				try { subdirs = Directory.EnumerateDirectories (root); }
+				catch { continue; }
+				foreach (var dir in subdirs)
+				{
+					try
+					{
+						var t = new TileStorage (dir);
+						if (!IsTileCompatible (t, osVer, sysArch)) continue;
+						List<TileStorage> bucket;
+						if (!candidates.TryGetValue (t.FamilyName, out bucket))
+							candidates [t.FamilyName] = bucket = new List<TileStorage> ();
+						bucket.Add (t);
+					}
+					catch { }
 				}
 			}
-
-			// 2. 按期望顺序对齐
-			for (int i = 0; i < desired.Count; i++)
+			var result = new List<TileStorage> ();
+			foreach (var kv in candidates)
 			{
-				var item = desired [i];
-				if (i < target.Count && Equals (target [i], item))
-					continue;
-
-				int existing = target.IndexOf (item);
-				if (existing >= 0)
-					target.Move (existing, i);
-				else
-					target.Insert (i, item);
+				var best = kv.Value [0];
+				for (int i = 1; i < kv.Value.Count; i++)
+				{
+					if (kv.Value [i].Manifest.Identity.Version > best.Manifest.Identity.Version)
+						best = kv.Value [i];
+				}
+				result.Add (best);
 			}
+			return result;
 		}
-		#endregion
-
-		#region 查询
+		private bool IsTileCompatible (TileStorage t, Sidebar.Version osVer, ProcessorArchitecture sysArch)
+		{
+			var pkgArch = t.Manifest.Identity.ProcessorArchitecture;
+			if (!IsArchitectureCompatible (pkgArch, sysArch)) return false;
+			var pre = t.Manifest.Prerequisites;
+			if (pre == null) return true;
+			if (pre.OSMinVersion > osVer) return false;
+			if (pre.OSMaxVersion != null && osVer > pre.OSMaxVersion) return false;
+			return true;
+		}
+		private static bool TilesContentEqual (TileStorage a, TileStorage b)
+		{
+			if (ReferenceEquals (a, b)) return true;
+			if (a == null || b == null) return false;
+			if (a.Manifest == null || b.Manifest == null) return a.Manifest == b.Manifest;
+			if (a.Manifest.Identity == null || b.Manifest.Identity == null)
+				return a.Manifest.Identity == b.Manifest.Identity;
+			// 版本不同必然需要替换
+			if (a.Manifest.Identity.Version != b.Manifest.Identity.Version) return false;
+			// 展示相关属性：只比较真正影响 UI 的部分
+			if (!string.Equals (SafeName (a), SafeName (b), StringComparison.Ordinal)) return false;
+			if (!string.Equals (SafeLogo (a), SafeLogo (b), StringComparison.Ordinal)) return false;
+			return true;
+		}
+		private static string SafeName (TileStorage t)
+		{
+			try { return t.DisplayName ?? string.Empty; }
+			catch { return string.Empty; }
+		}
+		private static string SafeLogo (TileStorage t)
+		{
+			try { return t.Logo ?? string.Empty; }
+			catch { return string.Empty; }
+		}
+		private static bool AppsContentEqual (TileApplicationStorage a, TileApplicationStorage b)
+		{
+			if (ReferenceEquals (a, b)) return true;
+			if (a == null || b == null) return false;
+			return ReferenceEquals (a.Storage, b.Storage);
+		}
 		public TileStorage GetById (Guid id)
 		{
-			lock (cacheLock)
-			{
-				TileStorage t;
-				return cacheById.TryGetValue (id, out t) ? t : null;
-			}
+			TileStorage t;
+			lock (_cacheLock) _cacheById.TryGetValue (id, out t);
+			return t;
 		}
 		public TileStorage GetByFullName (string fullname)
 		{
-			lock (cacheLock)
-			{
-				TileStorage t;
-				return cacheByFullName.TryGetValue (fullname, out t) ? t : null;
-			}
+			TileStorage t;
+			lock (_cacheLock) _cacheByFullName.TryGetValue (fullname, out t);
+			return t;
 		}
 		public TileStorage GetByFamilyName (string familyName)
 		{
-			lock (cacheLock)
-			{
-				TileStorage t;
-				return cacheByFamilyName.TryGetValue (familyName, out t) ? t : null;
-			}
+			TileStorage t;
+			lock (_cacheLock) _cacheByFamilyName.TryGetValue (familyName, out t);
+			return t;
 		}
 		public TileStorage GetByIdentity (string name, string publisher)
 		{
-			var familyName = $"{name}_{PublisherIdHelper.GetPublisherId (publisher)}";
+			var familyName = string.Format ("{0}_{1}", name, PublisherIdHelper.GetPublisherId (publisher));
 			return GetByFamilyName (familyName);
 		}
 		public TileApplicationStorage GetApplicationByUserModelId (string aumid)
@@ -1145,43 +1213,23 @@ namespace Sidebar
 			return Applications.FirstOrDefault (a =>
 				string.Equals (a.UserModelId, aumid, StringComparison.OrdinalIgnoreCase));
 		}
-		#endregion
-
-		#region Dispose / 通知
-		public void Dispose ()
+		public void InstallPackage (string filePath, TilePackageWriteManager.ProgressCallback callback = null)
 		{
-			if (disposed) return;
-			disposed = true;
-			watcher?.Dispose ();
-			debounceTimer?.Dispose ();
+			InstallOrUpdateInternal (filePath, false, callback);
 		}
-		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged (string propertyName = null)
+		public void UpdatePackage (string filePath, TilePackageWriteManager.ProgressCallback callback = null)
 		{
-			PropertyChanged?.Invoke (this, new PropertyChangedEventArgs (propertyName));
+			InstallOrUpdateInternal (filePath, true, callback);
 		}
-		#endregion
-
-		#region 安装 / 更新
-		/// <summary>安装包（支持 .sgpkg 单包或 .sgpkgbundle 捆绑包）。</summary>
-		public void InstallPackage (string filePath, ProgressCallback callback = null)
-			=> InstallOrUpdateInternal (filePath, false, callback);
-
-		/// <summary>更新包（如果已安装则替换，未安装则安装）。</summary>
-		public void UpdatePackage (string filePath, ProgressCallback callback = null)
-			=> InstallOrUpdateInternal (filePath, true, callback);
-
 		private void InstallOrUpdateInternal (string filePath, bool isUpdate, TilePackageWriteManager.ProgressCallback callback)
 		{
 			if (string.IsNullOrEmpty (filePath))
 				throw new ArgumentNullException (nameof (filePath));
 			if (!File.Exists (filePath))
-				throw new FileNotFoundException ($"Package file not found: {filePath}");
-
+				throw new FileNotFoundException (string.Format ("Package file not found: {0}", filePath));
 			TilePackageBase package = TilePackageReadManager.GetPackage (filePath);
 			if (package == null)
 				throw new InvalidDataException ("Failed to load package.");
-
 			TilePackage targetPackage = null;
 			TileIdentity identity = null;
 			TilePackageBundle bundle = package as TilePackageBundle;
@@ -1190,9 +1238,6 @@ namespace Sidebar
 			{
 				ProcessorArchitecture currentArch = GetSystemArchitecture ();
 				TilePackage selected = null;
-				#region select package	
-
-				// 按 OSMinVersion 分组，同一个 OSMinVersion 下可能有多个 (arch, OSMaxVersion) 组合
 				var byMin = new SortedDictionary<Version, List<TilePackage>> (new ReverseVersionComparer ());
 				foreach (var p in bundle.Packages)
 				{
@@ -1202,22 +1247,16 @@ namespace Sidebar
 						byMin [min] = bucket = new List<TilePackage> ();
 					bucket.Add (p);
 				}
-
 				foreach (var kv in byMin)
 				{
-					// osMin 必须 <= 当前 OS
 					if (kv.Key > osVer)
 						continue;
-
-					// 过滤出 osMax 也满足的候选（osMax == null 表示无上限）
 					var candidates = kv.Value.Where (p => {
 						var max = p.Manifest.Prerequisites.OSMaxVersion;
 						return max == null || osVer <= max;
 					}).ToList ();
 					if (candidates.Count == 0)
 						continue;
-
-					// 优先架构精确匹配，其次 Neutral
 					var match = candidates.FirstOrDefault (
 						p => p.Manifest.Identity.ProcessorArchitecture == currentArch);
 					if (match == null)
@@ -1229,10 +1268,9 @@ namespace Sidebar
 						break;
 					}
 				}
-				#endregion
 				if (selected == null)
-					throw new InvalidOperationException (
-						$"No package in bundle supports the current system architecture ({currentArch}).");
+					throw new InvalidOperationException (string.Format (
+						"No package in bundle supports the current system architecture ({0}).", currentArch));
 				targetPackage = selected;
 				identity = targetPackage.Manifest.Identity;
 			}
@@ -1245,31 +1283,33 @@ namespace Sidebar
 			{
 				throw new InvalidDataException ("Unknown package type.");
 			}
-
 			var pre = targetPackage.Manifest.Prerequisites;
-			
 			if (pre.OSMinVersion > osVer)
-				throw new InvalidOperationException (
-					$"Package requires OS version >= {pre.OSMinVersion}, but current OS version is {osVer}.");
+				throw new InvalidOperationException (string.Format (
+					"Package requires OS version >= {0}, but current OS version is {1}.", pre.OSMinVersion, osVer));
 			if (pre.OSMaxVersion != null && osVer > pre.OSMaxVersion)
-				throw new InvalidOperationException (
-					$"Package requires OS version <= {pre.OSMaxVersion}, but current OS version is {osVer}.");
-
+				throw new InvalidOperationException (string.Format (
+					"Package requires OS version <= {0}, but current OS version is {1}.", pre.OSMaxVersion, osVer));
 			ProcessorArchitecture requiredArch = identity.ProcessorArchitecture;
 			ProcessorArchitecture systemArch = GetSystemArchitecture ();
 			if (!IsArchitectureCompatible (requiredArch, systemArch))
-				throw new InvalidOperationException (
-					$"Package architecture '{requiredArch}' is not compatible with the current system architecture '{systemArch}'.");
-
-			string gadgetRoot = GetGadgetFolder ();
+				throw new InvalidOperationException (string.Format (
+					"Package architecture '{0}' is not compatible with the current system architecture '{1}'.",
+					requiredArch, systemArch));
+			string gadgetRoot;
+			if (_roots.Length > 0)
+				gadgetRoot = _roots [_roots.Length - 1];
+			else
+				throw new InvalidOperationException ("No Gadgets root configured.");
+			Directory.CreateDirectory (gadgetRoot);
 			string familyName = identity.FamilyName;
 			string targetDir = Path.Combine (gadgetRoot, familyName);
 			bool exists = Directory.Exists (targetDir);
 			if (isUpdate && !exists)
 				isUpdate = false;
 			if (!isUpdate && exists)
-				throw new InvalidOperationException ($"Package with FamilyName '{familyName}' is already installed. Use UpdatePackage to replace.");
-
+				throw new InvalidOperationException (string.Format (
+					"Package with FamilyName '{0}' is already installed. Use UpdatePackage to replace.", familyName));
 			string backupDir = null;
 			if (exists)
 			{
@@ -1279,9 +1319,6 @@ namespace Sidebar
 			try
 			{
 				ExtractPackage (targetPackage.FileStream, targetDir, callback);
-				// 安装后立即构造 TileStorage 做一次验证：
-				// 会逐个检查 Manifest.Applications 里每个 Application.Executable 是否存在，
-				// 任何失败都会进入 catch，触发回滚。
 				var _ = new TileStorage (targetDir);
 				ForceRefresh ();
 			}
@@ -1291,7 +1328,8 @@ namespace Sidebar
 					DeleteDirectorySafe (targetDir);
 				if (backupDir != null && Directory.Exists (backupDir))
 					RestoreBackup (backupDir, targetDir);
-				throw new InvalidOperationException ($"Failed to {(isUpdate ? "update" : "install")} package: {ex.Message}", ex);
+				throw new InvalidOperationException (string.Format (
+					"Failed to {0} package: {1}", isUpdate ? "update" : "install", ex.Message), ex);
 			}
 			finally
 			{
@@ -1299,23 +1337,25 @@ namespace Sidebar
 					DeleteDirectorySafe (backupDir);
 			}
 		}
-		#endregion
-
-		#region 架构 / 版本 / 解压 / 备份
-		private ProcessorArchitecture GetSystemArchitecture () => ProcessorDetector.GetCurrentArchitecture ();
-		private Sidebar.Version GetSystemVersion () => new Version (
+		private ProcessorArchitecture GetSystemArchitecture ()
+		{
+			return ProcessorDetector.GetCurrentArchitecture ();
+		}
+		private Sidebar.Version GetSystemVersion ()
+		{
+			return new Version (
 				(ushort)Environment.OSVersion.Version.Major,
 				(ushort)Environment.OSVersion.Version.Minor,
 				(ushort)Environment.OSVersion.Version.Build,
-				(ushort)Environment.OSVersion.Version.Revision
-			);
+				(ushort)Environment.OSVersion.Version.Revision);
+		}
 		private bool IsArchitectureCompatible (ProcessorArchitecture packageArch, ProcessorArchitecture systemArch)
 		{
 			if (packageArch == ProcessorArchitecture.Neutral) return true;
 			if (packageArch == systemArch) return true;
 			return false;
 		}
-		private void ExtractPackage (ZipFile zip, string targetDir, ProgressCallback callback)
+		private void ExtractPackage (ZipFile zip, string targetDir, TilePackageWriteManager.ProgressCallback callback)
 		{
 			if (zip == null) throw new ArgumentNullException (nameof (zip));
 			if (string.IsNullOrEmpty (targetDir)) throw new ArgumentNullException (nameof (targetDir));
@@ -1338,7 +1378,7 @@ namespace Sidebar
 				}
 				File.SetLastWriteTime (destPath, entry.DateTime);
 				current++;
-				callback?.Invoke (current, total, (double)current / total);
+				if (callback != null) callback (current, total, (double)current / total);
 			}
 		}
 		private void BackupDirectory (string sourceDir, string backupDir)
@@ -1391,7 +1431,7 @@ namespace Sidebar
 			}
 			catch (OperationCanceledException)
 			{
-				throw new IOException ($"User cancelled deletion of directory: {dir}");
+				throw new IOException (string.Format ("User cancelled deletion of directory: {0}", dir));
 			}
 			catch
 			{
@@ -1403,7 +1443,7 @@ namespace Sidebar
 				}
 				catch (Exception innerEx)
 				{
-					throw new IOException ($"Failed to delete directory {dir}: {innerEx.Message}", innerEx);
+					throw new IOException (string.Format ("Failed to delete directory {0}: {1}", dir, innerEx.Message), innerEx);
 				}
 			}
 		}
@@ -1418,6 +1458,17 @@ namespace Sidebar
 			Uri relativeUri = baseUri.MakeRelativeUri (fullUri);
 			return Uri.UnescapeDataString (relativeUri.ToString ()).Replace ('/', '\\');
 		}
-		#endregion
+		public void Dispose ()
+		{
+			if (_disposed) return;
+			_disposed = true;
+			_watcher.Dispose ();
+		}
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged (string propertyName = null)
+		{
+			var h = PropertyChanged;
+			if (h != null) h (this, new PropertyChangedEventArgs (propertyName));
+		}
 	}
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SGInstaller.Properties
+namespace TileManager.Properties
 {
 
 

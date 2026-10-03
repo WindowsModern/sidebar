@@ -358,9 +358,9 @@ namespace WindowsModern.FeedTile
 					var cachedItems = JsonConvert.DeserializeObject<List<FeedItemData>> (json);
 					if (cachedItems != null && cachedItems.Count > 0)
 					{
-						if (Application.Current != null)
+						if (System.Windows.Application.Current != null)
 						{
-							Application.Current.Dispatcher.Invoke (new Action (() => {
+							System.Windows.Application.Current.Dispatcher.Invoke (new Action (() => {
 								AllItems.Clear ();
 								foreach (var item in cachedItems.Take (MAX_CACHE_ITEMS))
 									AllItems.Add (item);
@@ -550,9 +550,9 @@ namespace WindowsModern.FeedTile
 
 				var feedsList = allFeedsDict.Values.ToList ();
 
-				if (Application.Current != null)
+				if (System.Windows.Application.Current != null)
 				{
-					Application.Current.Dispatcher.Invoke (new Action (() => {
+					System.Windows.Application.Current.Dispatcher.Invoke (new Action (() => {
 						UpdateCollectionWithDiff (Feeds, feedsList, (old, newE) => old.Path == newE.Path);
 						UpdateCollectionWithDiff (AllItems, finalItems, (old, newE) => old.LocalId == newE.LocalId && old.Parent != null && newE.Parent != null && old.Parent.Path == newE.Parent.Path, true);
 					}));

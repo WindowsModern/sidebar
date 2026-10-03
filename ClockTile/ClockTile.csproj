@@ -82,12 +82,6 @@
     <Compile Include="FlyoutPanel.xaml.cs">
       <DependentUpon>FlyoutPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FormCalendar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="FormCalendar.Designer.cs">
-      <DependentUpon>FormCalendar.cs</DependentUpon>
-    </Compile>
     <Compile Include="NumberInputBox.xaml.cs">
       <DependentUpon>NumberInputBox.xaml</DependentUpon>
     </Compile>
@@ -196,11 +190,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FormCalendar.resx">
-      <DependentUpon>FormCalendar.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png">
@@ -323,8 +312,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if exist "$(TargetDir)Tile.dll" del "$(TargetDir)Tile.dll"
-move "$(TargetPath)" "$(TargetDir)Tile.dll"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

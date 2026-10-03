@@ -26,10 +26,7 @@ namespace Sidebar
 		private void LoadTileBase ()
 		{
 			Assembly assembly = Assembly.LoadFrom (Path.Combine (Storage.FolderPath, Application.Executable));
-			Type tileType = assembly.GetTypes ().FirstOrDefault (t => t.IsSubclassOf (typeof (TileBase)) && !t.IsAbstract);
-			if (tileType == null)
-				throw new InvalidOperationException ($"Cannot find tile \"{Manifest.Identity.FullName}\" class.");
-			Instance = (TileBase)Activator.CreateInstance (tileType);
+			Instance = (TileBase)SdkCompatible.GetTileInstance (assembly, Application.EntryPoint);
 			Instance.InitTileInstance (this);
 		}
 		public TileInstance (TileApplicationStorage application, UIElement container, ISidebarFeatures sidebar = null)
@@ -47,94 +44,6 @@ namespace Sidebar
 		{
 			LoadTileBase ();
 			Instance.OnInitialize ();
-		}
-	}
-	public class TileMgrItem: IEquatable <TileMgrItem>
-	{
-		public TileMgrItem (TileStorage storage) { Storage = storage; }
-		public TileStorage Storage { get; private set; }
-		public string Title
-		{
-			get
-			{
-				try
-				{
-					var name = Storage.Manifest.Properties.DisplayName;
-					return Storage.TileFolder.StringResources.SuitableResource (name, name); 
-				}
-				catch
-				{
-					return "";
-				}
-			}
-		}
-		public string Publisher
-		{
-			get
-			{
-				try
-				{
-					var name = Storage.Manifest.Properties.PublisherDisplayName;
-					return Storage.TileFolder.StringResources.SuitableResource (name, name);
-				}
-				catch
-				{
-					return "";
-				}
-			}
-		}
-		public Version Version
-		{
-			get
-			{
-				try
-				{
-					return Storage.Manifest.Identity.Version;
-				}
-				catch
-				{
-					return new Version ();
-				}
-			}
-		}
-		public string Description
-		{
-			get
-			{
-				try
-				{
-					var name = Storage.Manifest.Properties.Description;
-					return Storage.TileFolder.StringResources.SuitableResource (name, name);
-				}
-				catch
-				{
-					return "";
-				}
-			}
-		}
-		public string Logo
-		{
-			get
-			{
-				try
-				{
-					var logo = Storage.Manifest.Properties.Logo;
-					var logores = Storage.TileFolder.FileResources.SuitableResource (logo, logo) ?? logo;
-					var fullpath = Path.Combine (Storage.FolderPath, logores);
-					if (File.Exists (fullpath)) return fullpath;
-					fullpath = Path.Combine (Storage.FolderPath, logo);
-					if (File.Exists (fullpath)) return fullpath;
-					else return "";
-				}
-				catch
-				{
-					return "";
-				}
-			}
-		}
-		public bool Equals (TileMgrItem other)
-		{
-			return Storage?.Manifest?.Identity?.FamilyName?.NNormalize () == other?.Storage?.Manifest?.Identity?.FamilyName?.NNormalize ();
 		}
 	}
 	public class TileContext: ITileContext, IDisposable
@@ -217,18 +126,6 @@ namespace Sidebar
 			FlyoutUI = null;
 			FlyoutWindow = null;
 			IsFlyoutShow = false;
-		}
-	}
-	public abstract class TileVisualInfo
-	{
-		public virtual ImageSource TileLogo { get; }
-		public virtual string TileTitle { get; }
-		public virtual UIElement TileElement { get; }
-		public override bool Equals (object obj)
-		{
-			if (obj is TileVisualInfo) return TileElement == (obj as TileVisualInfo)?.TileElement;
-			else if (obj is UIElement) return TileElement == obj;
-			else return base.Equals (obj);
 		}
 	}
 	public class SidebarContext: ISidebarContext

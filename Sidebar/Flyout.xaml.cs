@@ -22,8 +22,8 @@ namespace Sidebar
 	/// </summary>
 	public partial class Flyout: Window, IWindowInterop, IWin32WindowInterop, IFlyoutToolMembers
 	{
-		Tile tileComp = null;
-		public Flyout (Tile tile)
+		TileControl tileComp = null;
+		public Flyout (TileControl tile)
 		{
 			InitializeComponent ();
 			tileComp = tile;
@@ -108,7 +108,6 @@ namespace Sidebar
 			//return;
 			try { if (IsLoaded && !isclosing) Dispatcher.BeginInvoke (new Action (() => Close ()), DispatcherPriority.Background); } catch { }
 		}
-		internal TopOptions HeaderOptions => FlyoutHeader;
 		bool isclosing = false;
 		private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e)
 		{
@@ -229,10 +228,6 @@ namespace Sidebar
 			TransToNewHeight (FlyoutContent, _lastTileContentHeight ?? 0).ContinueWith (task => FixPosition (), TaskScheduler.FromCurrentSynchronizationContext ());
 			_lastTileContentHeight = FlyoutContent.ActualHeight;
 		}
-		public ContextMenu FlyoutContextMenu
-		{
-			get { return FlyoutHeader.ContextMenu; }
-			set { FlyoutHeader.ContextMenu = value; }
-		}
+		public ContextMenu FlyoutContextMenu { get; set; }
 	}
 }

@@ -120,4 +120,114 @@
 	<data name="FindEntryPoints" xml:space="preserve"><value>查找入口点</value></data>
 	<data name="FoundEntryPoints" xml:space="preserve"><value>已找到入口点</value></data>
 	<data name="OsMaxUnbounded" xml:space="preserve"><value>支持所有未来版本</value></data>
+
+	<data name="TabImportLegacyTile" xml:space="preserve"><value>导入旧版磁贴</value></data>
+
+	<!-- Import Legacy Tile -->
+	<data name="LegacyTileSource" xml:space="preserve"><value>旧版磁贴源：</value></data>
+	<data name="LegacyTileSourceHint" xml:space="preserve"><value>支持：.dll / .zip / .sgpkg / .sgpkgbundle</value></data>
+	<data name="Analyze" xml:space="preserve"><value>分析</value></data>
+	<data name="Analyzing" xml:space="preserve"><value>正在分析：</value></data>
+	<data name="NoTileSubclassFound" xml:space="preserve"><value>未找到 TileLib.BaseTile / Applications.Sidebar.Tile 的子类。</value></data>
+	<data name="LegacyTileInfoFormat" xml:space="preserve"><value>SDK：{0}   入口点：{1}   文件数：{2}</value></data>
+	<data name="LegacyTileSourceFilter" xml:space="preserve"><value>旧版磁贴源 (*.dll;*.zip;*.sgpkg;*.sgpkgbundle)|*.dll;*.zip;*.sgpkg;*.sgpkgbundle|所有文件 (*.*)|*.*</value></data>
+
+	<data name="AddFolder" xml:space="preserve"><value>添加目录...</value></data>
+	<data name="ImportFolder" xml:space="preserve"><value>导入目录...</value></data>
+	<data name="CreateFolder" xml:space="preserve"><value>创建目录...</value></data>
+	<data name="RenameItem" xml:space="preserve"><value>重命名...</value></data>
+	<data name="MoveItem" xml:space="preserve"><value>移动到...</value></data>
+
+	<data name="Confirm" xml:space="preserve"><value>确认</value></data>
+	<data name="Ok" xml:space="preserve"><value>确定</value></data>
+	<data name="Cancel" xml:space="preserve"><value>取消</value></data>
+	<data name="FmtKeyValue" xml:space="preserve"><value>{0}：{1}</value></data>
+
+	<data name="MsgSelectFileToReplace" xml:space="preserve"><value>请选择要替换的文件。</value></data>
+	<data name="FmtDeleteFileConfirm" xml:space="preserve"><value>删除“{0}”？</value></data>
+	<data name="FmtDeleteFolderConfirm" xml:space="preserve"><value>删除目录“{0}”及其中的 {1} 个文件？</value></data>
+	<data name="FmtPathAlreadyExists" xml:space="preserve"><value>已存在同名文件或目录：{0}</value></data>
+	<data name="PromptFolderName" xml:space="preserve"><value>目录名：</value></data>
+	<data name="PromptNewName" xml:space="preserve"><value>新名称：</value></data>
+	<data name="PromptMoveTo" xml:space="preserve"><value>移动到：</value></data>
+	<data name="FmtFilesExistOverwrite" xml:space="preserve"><value>以下文件已存在，是否覆盖？
+
+{0}</value></data>
+	<data name="FmtPathsExistOverwrite" xml:space="preserve"><value>以下路径已存在，是否覆盖其中的文件？
+
+{0}</value></data>
+	<data name="FmtAndMoreCount" xml:space="preserve"><value>……另有 {0} 个</value></data>
+	<data name="FmtFolderCreated" xml:space="preserve"><value>已创建目录：{0}</value></data>
+	<data name="FmtRenamedTo" xml:space="preserve"><value>已重命名为：{0}</value></data>
+	<data name="FmtMovedTo" xml:space="preserve"><value>已移动到：{0}</value></data>
+	<data name="FmtFolderIsEmpty" xml:space="preserve"><value>目录为空：{0}</value></data>
+	<data name="FmtFolderOpDone" xml:space="preserve"><value>目录处理完成：+{0}，跳过 {1}，失败 {2}</value></data>
+	<data name="FmtAddedSkipped" xml:space="preserve"><value>已添加：{0}，跳过：{1}</value></data>
+	<data name="FmtDroppedFilesAndDirs" xml:space="preserve"><value>已拖入：{0} 个文件，{1} 个目录</value></data>
+	<data name="FmtAddedCount" xml:space="preserve"><value>已添加：{0}</value></data>
+	<data name="MsgNameEmpty" xml:space="preserve"><value>名称不能为空。</value></data>
+	<data name="MsgNameHasWhitespace" xml:space="preserve"><value>名称前后不能有空白。</value></data>
+	<data name="MsgNameDotOrDotDot" xml:space="preserve"><value>名称不能是 . 或 ..</value></data>
+	<data name="MsgNameInvalidChars" xml:space="preserve"><value>名称不能包含下列字符：/ \ : * ? " &lt; &gt; |</value></data>
+	<data name="RootDirDisplay" xml:space="preserve"><value>/（根）</value></data>
+
+	<data name="Type" xml:space="preserve"><value>类型</value></data>
+	<data name="PublisherId" xml:space="preserve"><value>发布者 ID</value></data>
+	<data name="FamilyName" xml:space="preserve"><value>系列名</value></data>
+	<data name="FullName" xml:space="preserve"><value>全名</value></data>
+	<data name="UnboundedVersion" xml:space="preserve"><value>（无上限）</value></data>
+	<data name="SubPackage" xml:space="preserve"><value>子包</value></data>
+	<data name="Application" xml:space="preserve"><value>应用</value></data>
+	<data name="FmtSubPackageHeader" xml:space="preserve"><value>子包：{0}</value></data>
+	<data name="FmtApplicationHeader" xml:space="preserve"><value>应用：{0}</value></data>
+	<data name="FmtApplicationsCount" xml:space="preserve"><value>应用（{0}）</value></data>
+	<data name="FmtRootFilesCount" xml:space="preserve"><value>/（{0} 个文件）</value></data>
+	<data name="FmtDirSuffix" xml:space="preserve"><value>{0}/（目录）</value></data>
+	<data name="FmtBytesSuffix" xml:space="preserve"><value>{0} · {1} 字节</value></data>
+
+	<data name="MsgSelectManifestFile" xml:space="preserve"><value>请选择一个有效的清单文件。</value></data>
+	<data name="MsgLoaded" xml:space="preserve"><value>已加载。</value></data>
+	<data name="FmtLoadFailed" xml:space="preserve"><value>加载失败：{0}</value></data>
+	<data name="FmtManifestVersionUnsupported" xml:space="preserve"><value>清单版本 {0} 不受支持，仅支持版本 2 或更高。</value></data>
+
+	<data name="TabLocaleResources" xml:space="preserve"><value>本地化资源</value></data>
+	<data name="TabPathResources" xml:space="preserve"><value>文件资源</value></data>
+	<data name="AddLocaleResource" xml:space="preserve"><value>添加资源</value></data>
+	<data name="RemoveLocaleResource" xml:space="preserve"><value>删除资源</value></data>
+	<data name="AddLocaleLanguage" xml:space="preserve"><value>添加语言</value></data>
+	<data name="RemoveLocaleLanguage" xml:space="preserve"><value>删除语言</value></data>
+	<data name="LocaleResourceName" xml:space="preserve"><value>资源名称</value></data>
+	<data name="LocaleLanguage" xml:space="preserve"><value>语言</value></data>
+	<data name="LocaleValue" xml:space="preserve"><value>值</value></data>
+	<data name="AddPathResource" xml:space="preserve"><value>添加资源</value></data>
+	<data name="RemovePathResource" xml:space="preserve"><value>删除资源</value></data>
+	<data name="AddPathScale" xml:space="preserve"><value>添加比例</value></data>
+	<data name="RemovePathScale" xml:space="preserve"><value>删除比例</value></data>
+	<data name="PathResourceName" xml:space="preserve"><value>资源名称</value></data>
+	<data name="PathScale" xml:space="preserve"><value>DPI 比例</value></data>
+	<data name="PathValue" xml:space="preserve"><value>路径</value></data>
+	<data name="ResourceEmptyName" xml:space="preserve"><value>资源名不能为空。</value></data>
+	<data name="ResourceDupName" xml:space="preserve"><value>重复的资源名：{0}</value></data>
+	<data name="ResourceEmptyLanguage" xml:space="preserve"><value>资源“{0}”中语言名不能为空。</value></data>
+	<data name="ResourceDupLanguage" xml:space="preserve"><value>资源“{0}”中有重复语言：{1}</value></data>
+	<data name="ResourceEmptyScale" xml:space="preserve"><value>资源“{0}”中 DPI 比例必须为正数。</value></data>
+	<data name="ResourceDupScale" xml:space="preserve"><value>资源“{0}”中有重复 DPI 比例：{1}</value></data>
+	<data name="ResourceInfoLocale" xml:space="preserve"><value>资源数：{0}，当前选中含语言数：{1}</value></data>
+	<data name="ResourceInfoPath" xml:space="preserve"><value>资源数：{0}，当前选中含比例数：{1}</value></data>
+
+	<data name="TabResourceFileEditor" xml:space="preserve"><value>资源文件编辑器</value></data>
+	<data name="ResourceFile" xml:space="preserve"><value>资源文件：</value></data>
+	<data name="NewLocaleResource" xml:space="preserve"><value>新建本地化文件</value></data>
+	<data name="NewPathResource" xml:space="preserve"><value>新建文件资源</value></data>
+	<data name="MsgNoDataToSave" xml:space="preserve"><value>没有可保存的资源。</value></data>
+	<data name="MsgDiscardChanges" xml:space="preserve"><value>放弃当前内容？</value></data>
+	<data name="MsgResourceFileKindUnknown" xml:space="preserve"><value>无法判断资源文件类型，将按本地化文件处理。</value></data>
+	<data name="MsgResourceFileSaved" xml:space="preserve"><value>已保存：{0}</value></data>
+	<data name="FmtResourceFileStatus" xml:space="preserve"><value>类型：{0} · 本地化：{1} · 文件：{2}</value></data>
+
+	<data name="FmtLocaleResourcesCount" xml:space="preserve"><value>本地化资源（{0}）</value></data>
+	<data name="FmtPathResourcesCount" xml:space="preserve"><value>文件资源（{0}）</value></data>
+	<data name="KindSingle" xml:space="preserve"><value>单包</value></data>
+	<data name="KindBundle" xml:space="preserve"><value>捆绑包</value></data>
+	<data name="FmtPackageSummary" xml:space="preserve"><value>{0} · {1} 个子包</value></data>
 </root>

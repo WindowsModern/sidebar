@@ -83,7 +83,7 @@ namespace WindowsModern.FeedTile
 				UpdateLayout ();
 				Tile.SidebarFeatures.Request (new SidebarRequest (Tile.TileInstance) {
 					RequestName = "ResizeIgnoreAutoSize",
-					RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Manifest?.VisualElements?.RailStyle?.DefaultHeight ?? 97.0)
+					RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Application?.VisualElements?.Tile?.DefaultHeight ?? 97.0)
 				});
 			}
 			RefreshDisplay (false);
@@ -268,7 +268,7 @@ namespace WindowsModern.FeedTile
 						{
 							Tile.SidebarFeatures.Request (new SidebarRequest (Tile.TileInstance) {
 								RequestName = "ResizeIgnoreAutoSize",
-								RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Manifest?.VisualElements?.RailStyle?.DefaultHeight ?? 97.0)
+								RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Application?.VisualElements?.Tile?.DefaultHeight ?? 97.0)
 							});
 						}
 						break;
@@ -278,7 +278,7 @@ namespace WindowsModern.FeedTile
 						{
 							Tile.SidebarFeatures.Request (new SidebarRequest (Tile.TileInstance) {
 								RequestName = "ResizeIgnoreAutoSize",
-								RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Manifest?.VisualElements?.RailStyle?.DefaultHeight ?? 97.0)
+								RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Application?.VisualElements?.Tile?.DefaultHeight ?? 97.0)
 							});
 						}
 						ApplyAutoSizeItemsPerPage ();
@@ -307,7 +307,7 @@ namespace WindowsModern.FeedTile
 				{
 					Tile.SidebarFeatures.Request (new SidebarRequest (Tile.TileInstance) {
 						RequestName = "ResizeIgnoreAutoSize",
-						RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Manifest?.VisualElements?.RailStyle?.DefaultHeight ?? 97.0)
+						RequestDatas = Tile.Options.AutoSizeTile ? double.NaN : (Tile.TileInstance?.Application?.VisualElements?.Tile?.DefaultHeight ?? 97.0)
 					});
 				}
 			}
@@ -527,7 +527,7 @@ namespace WindowsModern.FeedTile
 				if (Tile.Options.TileConfig.AutoSize && !Tile.Options.AutoSizeTile)
 				{
 					UpdateLayout ();
-					double targetHeight = Tile.TileInstance?.Manifest?.VisualElements?.RailStyle?.DefaultHeight ?? 97.0;
+					double targetHeight = Tile.TileInstance?.Application?.VisualElements?.Tile?.DefaultHeight ?? 97.0;
 					Tile.SidebarFeatures.Request (new SidebarRequest (Tile.TileInstance) {
 						RequestName = "ResizeIgnoreAutoSize",
 						RequestDatas = targetHeight

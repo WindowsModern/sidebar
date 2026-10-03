@@ -88,11 +88,83 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Add Folder... 的本地化字符串。
+        /// </summary>
+        public static string AddFolder {
+            get {
+                return ResourceManager.GetString("AddFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add Language 的本地化字符串。
+        /// </summary>
+        public static string AddLocaleLanguage {
+            get {
+                return ResourceManager.GetString("AddLocaleLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add Resource 的本地化字符串。
+        /// </summary>
+        public static string AddLocaleResource {
+            get {
+                return ResourceManager.GetString("AddLocaleResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add Resource 的本地化字符串。
+        /// </summary>
+        public static string AddPathResource {
+            get {
+                return ResourceManager.GetString("AddPathResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add Scale 的本地化字符串。
+        /// </summary>
+        public static string AddPathScale {
+            get {
+                return ResourceManager.GetString("AddPathScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 This package is already version 2. Nothing to do. 的本地化字符串。
         /// </summary>
         public static string AlreadyV2 {
             get {
                 return ResourceManager.GetString("AlreadyV2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Analyze 的本地化字符串。
+        /// </summary>
+        public static string Analyze {
+            get {
+                return ResourceManager.GetString("Analyze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Analyzing:  的本地化字符串。
+        /// </summary>
+        public static string Analyzing {
+            get {
+                return ResourceManager.GetString("Analyzing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Application 的本地化字符串。
+        /// </summary>
+        public static string Application {
+            get {
+                return ResourceManager.GetString("Application", resourceCulture);
             }
         }
         
@@ -169,6 +241,15 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Cancel 的本地化字符串。
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Can Pin Bottom 的本地化字符串。
         /// </summary>
         public static string CanPinBottom {
@@ -183,6 +264,15 @@ namespace SGPkgMgr.Localization {
         public static string Clear {
             get {
                 return ResourceManager.GetString("Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Confirm 的本地化字符串。
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
             }
         }
         
@@ -264,6 +354,15 @@ namespace SGPkgMgr.Localization {
         public static string CopySubtree {
             get {
                 return ResourceManager.GetString("CopySubtree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Create Folder... 的本地化字符串。
+        /// </summary>
+        public static string CreateFolder {
+            get {
+                return ResourceManager.GetString("CreateFolder", resourceCulture);
             }
         }
         
@@ -358,6 +457,15 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 FamilyName 的本地化字符串。
+        /// </summary>
+        public static string FamilyName {
+            get {
+                return ResourceManager.GetString("FamilyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 File Name 的本地化字符串。
         /// </summary>
         public static string FileName {
@@ -430,11 +538,267 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Added: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtAddedCount {
+            get {
+                return ResourceManager.GetString("FmtAddedCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Added: {0}, skipped: {1} 的本地化字符串。
+        /// </summary>
+        public static string FmtAddedSkipped {
+            get {
+                return ResourceManager.GetString("FmtAddedSkipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 ...and {0} more 的本地化字符串。
+        /// </summary>
+        public static string FmtAndMoreCount {
+            get {
+                return ResourceManager.GetString("FmtAndMoreCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Application: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtApplicationHeader {
+            get {
+                return ResourceManager.GetString("FmtApplicationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Applications ({0}) 的本地化字符串。
+        /// </summary>
+        public static string FmtApplicationsCount {
+            get {
+                return ResourceManager.GetString("FmtApplicationsCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} · {1} bytes 的本地化字符串。
+        /// </summary>
+        public static string FmtBytesSuffix {
+            get {
+                return ResourceManager.GetString("FmtBytesSuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Delete &apos;{0}&apos;? 的本地化字符串。
+        /// </summary>
+        public static string FmtDeleteFileConfirm {
+            get {
+                return ResourceManager.GetString("FmtDeleteFileConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Delete folder &apos;{0}&apos; and all {1} file(s)? 的本地化字符串。
+        /// </summary>
+        public static string FmtDeleteFolderConfirm {
+            get {
+                return ResourceManager.GetString("FmtDeleteFolderConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0}/ (directory) 的本地化字符串。
+        /// </summary>
+        public static string FmtDirSuffix {
+            get {
+                return ResourceManager.GetString("FmtDirSuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Dropped: {0} file(s), {1} folder(s) 的本地化字符串。
+        /// </summary>
+        public static string FmtDroppedFilesAndDirs {
+            get {
+                return ResourceManager.GetString("FmtDroppedFilesAndDirs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The following files already exist. Overwrite?
+        ///
+        ///{0} 的本地化字符串。
+        /// </summary>
+        public static string FmtFilesExistOverwrite {
+            get {
+                return ResourceManager.GetString("FmtFilesExistOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Folder created: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtFolderCreated {
+            get {
+                return ResourceManager.GetString("FmtFolderCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Folder is empty: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtFolderIsEmpty {
+            get {
+                return ResourceManager.GetString("FmtFolderIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Folder operation done: +{0}, skipped {1}, failed {2} 的本地化字符串。
+        /// </summary>
+        public static string FmtFolderOpDone {
+            get {
+                return ResourceManager.GetString("FmtFolderOpDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0}: {1} 的本地化字符串。
+        /// </summary>
+        public static string FmtKeyValue {
+            get {
+                return ResourceManager.GetString("FmtKeyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Load failed: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtLoadFailed {
+            get {
+                return ResourceManager.GetString("FmtLoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Locale Resources ({0}) 的本地化字符串。
+        /// </summary>
+        public static string FmtLocaleResourcesCount {
+            get {
+                return ResourceManager.GetString("FmtLocaleResourcesCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Manifest version {0} is not supported. Only version 2 or newer is supported. 的本地化字符串。
+        /// </summary>
+        public static string FmtManifestVersionUnsupported {
+            get {
+                return ResourceManager.GetString("FmtManifestVersionUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Moved to: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtMovedTo {
+            get {
+                return ResourceManager.GetString("FmtMovedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} · {1} package(s) 的本地化字符串。
+        /// </summary>
+        public static string FmtPackageSummary {
+            get {
+                return ResourceManager.GetString("FmtPackageSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 A file or folder with the same name already exists: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtPathAlreadyExists {
+            get {
+                return ResourceManager.GetString("FmtPathAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Path Resources ({0}) 的本地化字符串。
+        /// </summary>
+        public static string FmtPathResourcesCount {
+            get {
+                return ResourceManager.GetString("FmtPathResourcesCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The following paths already exist. Overwrite the files?
+        ///
+        ///{0} 的本地化字符串。
+        /// </summary>
+        public static string FmtPathsExistOverwrite {
+            get {
+                return ResourceManager.GetString("FmtPathsExistOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Renamed to: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtRenamedTo {
+            get {
+                return ResourceManager.GetString("FmtRenamedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Type: {0} · Locale: {1} · Path: {2} 的本地化字符串。
+        /// </summary>
+        public static string FmtResourceFileStatus {
+            get {
+                return ResourceManager.GetString("FmtResourceFileStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 / ({0} files) 的本地化字符串。
+        /// </summary>
+        public static string FmtRootFilesCount {
+            get {
+                return ResourceManager.GetString("FmtRootFilesCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SubPackage: {0} 的本地化字符串。
+        /// </summary>
+        public static string FmtSubPackageHeader {
+            get {
+                return ResourceManager.GetString("FmtSubPackageHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Entry points found 的本地化字符串。
         /// </summary>
         public static string FoundEntryPoints {
             get {
                 return ResourceManager.GetString("FoundEntryPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 FullName 的本地化字符串。
+        /// </summary>
+        public static string FullName {
+            get {
+                return ResourceManager.GetString("FullName", resourceCulture);
             }
         }
         
@@ -466,6 +830,69 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Import Folder... 的本地化字符串。
+        /// </summary>
+        public static string ImportFolder {
+            get {
+                return ResourceManager.GetString("ImportFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Bundle 的本地化字符串。
+        /// </summary>
+        public static string KindBundle {
+            get {
+                return ResourceManager.GetString("KindBundle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Single 的本地化字符串。
+        /// </summary>
+        public static string KindSingle {
+            get {
+                return ResourceManager.GetString("KindSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SDK: {0}   EntryPoint: {1}   Files: {2} 的本地化字符串。
+        /// </summary>
+        public static string LegacyTileInfoFormat {
+            get {
+                return ResourceManager.GetString("LegacyTileInfoFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Legacy Tile Source: 的本地化字符串。
+        /// </summary>
+        public static string LegacyTileSource {
+            get {
+                return ResourceManager.GetString("LegacyTileSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Legacy tile sources (*.dll;*.zip;*.sgpkg;*.sgpkgbundle)|*.dll;*.zip;*.sgpkg;*.sgpkgbundle|All files (*.*)|*.* 的本地化字符串。
+        /// </summary>
+        public static string LegacyTileSourceFilter {
+            get {
+                return ResourceManager.GetString("LegacyTileSourceFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Supported: .dll / .zip / .sgpkg / .sgpkgbundle 的本地化字符串。
+        /// </summary>
+        public static string LegacyTileSourceHint {
+            get {
+                return ResourceManager.GetString("LegacyTileSourceHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Load 的本地化字符串。
         /// </summary>
         public static string Load {
@@ -480,6 +907,33 @@ namespace SGPkgMgr.Localization {
         public static string LoadPackageFirst {
             get {
                 return ResourceManager.GetString("LoadPackageFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Language 的本地化字符串。
+        /// </summary>
+        public static string LocaleLanguage {
+            get {
+                return ResourceManager.GetString("LocaleLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Resource Name 的本地化字符串。
+        /// </summary>
+        public static string LocaleResourceName {
+            get {
+                return ResourceManager.GetString("LocaleResourceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Value 的本地化字符串。
+        /// </summary>
+        public static string LocaleValue {
+            get {
+                return ResourceManager.GetString("LocaleValue", resourceCulture);
             }
         }
         
@@ -529,11 +983,155 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Move To... 的本地化字符串。
+        /// </summary>
+        public static string MoveItem {
+            get {
+                return ResourceManager.GetString("MoveItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Discard current content? 的本地化字符串。
+        /// </summary>
+        public static string MsgDiscardChanges {
+            get {
+                return ResourceManager.GetString("MsgDiscardChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Loaded. 的本地化字符串。
+        /// </summary>
+        public static string MsgLoaded {
+            get {
+                return ResourceManager.GetString("MsgLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Name cannot be &apos;.&apos; or &apos;..&apos;. 的本地化字符串。
+        /// </summary>
+        public static string MsgNameDotOrDotDot {
+            get {
+                return ResourceManager.GetString("MsgNameDotOrDotDot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Name cannot be empty. 的本地化字符串。
+        /// </summary>
+        public static string MsgNameEmpty {
+            get {
+                return ResourceManager.GetString("MsgNameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Name cannot have leading or trailing whitespace. 的本地化字符串。
+        /// </summary>
+        public static string MsgNameHasWhitespace {
+            get {
+                return ResourceManager.GetString("MsgNameHasWhitespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Name cannot contain any of: / \ : * ? &quot; &lt; &gt; | 的本地化字符串。
+        /// </summary>
+        public static string MsgNameInvalidChars {
+            get {
+                return ResourceManager.GetString("MsgNameInvalidChars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 There is no resource to save. 的本地化字符串。
+        /// </summary>
+        public static string MsgNoDataToSave {
+            get {
+                return ResourceManager.GetString("MsgNoDataToSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Could not determine the resource type. Treating as Locale file. 的本地化字符串。
+        /// </summary>
+        public static string MsgResourceFileKindUnknown {
+            get {
+                return ResourceManager.GetString("MsgResourceFileKindUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Saved: {0} 的本地化字符串。
+        /// </summary>
+        public static string MsgResourceFileSaved {
+            get {
+                return ResourceManager.GetString("MsgResourceFileSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Select a file to replace. 的本地化字符串。
+        /// </summary>
+        public static string MsgSelectFileToReplace {
+            get {
+                return ResourceManager.GetString("MsgSelectFileToReplace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Please select a valid manifest file. 的本地化字符串。
+        /// </summary>
+        public static string MsgSelectManifestFile {
+            get {
+                return ResourceManager.GetString("MsgSelectManifestFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Name 的本地化字符串。
         /// </summary>
         public static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 New Locale File 的本地化字符串。
+        /// </summary>
+        public static string NewLocaleResource {
+            get {
+                return ResourceManager.GetString("NewLocaleResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 New Path File 的本地化字符串。
+        /// </summary>
+        public static string NewPathResource {
+            get {
+                return ResourceManager.GetString("NewPathResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No TileLib.BaseTile / Applications.Sidebar.Tile subclass found. 的本地化字符串。
+        /// </summary>
+        public static string NoTileSubclassFound {
+            get {
+                return ResourceManager.GetString("NoTileSubclassFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 OK 的本地化字符串。
+        /// </summary>
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
             }
         }
         
@@ -610,11 +1208,65 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Resource Name 的本地化字符串。
+        /// </summary>
+        public static string PathResourceName {
+            get {
+                return ResourceManager.GetString("PathResourceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 DPI Scale 的本地化字符串。
+        /// </summary>
+        public static string PathScale {
+            get {
+                return ResourceManager.GetString("PathScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Path 的本地化字符串。
+        /// </summary>
+        public static string PathValue {
+            get {
+                return ResourceManager.GetString("PathValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Prerequisites 的本地化字符串。
         /// </summary>
         public static string Prerequisites {
             get {
                 return ResourceManager.GetString("Prerequisites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Folder name: 的本地化字符串。
+        /// </summary>
+        public static string PromptFolderName {
+            get {
+                return ResourceManager.GetString("PromptFolderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Move to: 的本地化字符串。
+        /// </summary>
+        public static string PromptMoveTo {
+            get {
+                return ResourceManager.GetString("PromptMoveTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 New name: 的本地化字符串。
+        /// </summary>
+        public static string PromptNewName {
+            get {
+                return ResourceManager.GetString("PromptNewName", resourceCulture);
             }
         }
         
@@ -642,6 +1294,15 @@ namespace SGPkgMgr.Localization {
         public static string PublisherDisplayName {
             get {
                 return ResourceManager.GetString("PublisherDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 PublisherId 的本地化字符串。
+        /// </summary>
+        public static string PublisherId {
+            get {
+                return ResourceManager.GetString("PublisherId", resourceCulture);
             }
         }
         
@@ -682,11 +1343,146 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Remove Language 的本地化字符串。
+        /// </summary>
+        public static string RemoveLocaleLanguage {
+            get {
+                return ResourceManager.GetString("RemoveLocaleLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Remove Resource 的本地化字符串。
+        /// </summary>
+        public static string RemoveLocaleResource {
+            get {
+                return ResourceManager.GetString("RemoveLocaleResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Remove Resource 的本地化字符串。
+        /// </summary>
+        public static string RemovePathResource {
+            get {
+                return ResourceManager.GetString("RemovePathResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Remove Scale 的本地化字符串。
+        /// </summary>
+        public static string RemovePathScale {
+            get {
+                return ResourceManager.GetString("RemovePathScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Rename... 的本地化字符串。
+        /// </summary>
+        public static string RenameItem {
+            get {
+                return ResourceManager.GetString("RenameItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Replace... 的本地化字符串。
         /// </summary>
         public static string ReplaceFile {
             get {
                 return ResourceManager.GetString("ReplaceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Duplicate language in resource &apos;{0}&apos;: {1} 的本地化字符串。
+        /// </summary>
+        public static string ResourceDupLanguage {
+            get {
+                return ResourceManager.GetString("ResourceDupLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Duplicate resource name: {0} 的本地化字符串。
+        /// </summary>
+        public static string ResourceDupName {
+            get {
+                return ResourceManager.GetString("ResourceDupName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Duplicate scale in resource &apos;{0}&apos;: {1} 的本地化字符串。
+        /// </summary>
+        public static string ResourceDupScale {
+            get {
+                return ResourceManager.GetString("ResourceDupScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Language name cannot be empty in resource &apos;{0}&apos;. 的本地化字符串。
+        /// </summary>
+        public static string ResourceEmptyLanguage {
+            get {
+                return ResourceManager.GetString("ResourceEmptyLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Resource name cannot be empty. 的本地化字符串。
+        /// </summary>
+        public static string ResourceEmptyName {
+            get {
+                return ResourceManager.GetString("ResourceEmptyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Scale must be positive in resource &apos;{0}&apos;. 的本地化字符串。
+        /// </summary>
+        public static string ResourceEmptyScale {
+            get {
+                return ResourceManager.GetString("ResourceEmptyScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Resource File: 的本地化字符串。
+        /// </summary>
+        public static string ResourceFile {
+            get {
+                return ResourceManager.GetString("ResourceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Resources: {0}, languages in selected: {1} 的本地化字符串。
+        /// </summary>
+        public static string ResourceInfoLocale {
+            get {
+                return ResourceManager.GetString("ResourceInfoLocale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Resources: {0}, scales in selected: {1} 的本地化字符串。
+        /// </summary>
+        public static string ResourceInfoPath {
+            get {
+                return ResourceManager.GetString("ResourceInfoPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 / (root) 的本地化字符串。
+        /// </summary>
+        public static string RootDirDisplay {
+            get {
+                return ResourceManager.GetString("RootDirDisplay", resourceCulture);
             }
         }
         
@@ -754,6 +1550,15 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 SubPackage 的本地化字符串。
+        /// </summary>
+        public static string SubPackage {
+            get {
+                return ResourceManager.GetString("SubPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 SubPackages 的本地化字符串。
         /// </summary>
         public static string SubPackages {
@@ -777,6 +1582,24 @@ namespace SGPkgMgr.Localization {
         public static string TabBundlePackage {
             get {
                 return ResourceManager.GetString("TabBundlePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Import Legacy Tile 的本地化字符串。
+        /// </summary>
+        public static string TabImportLegacyTile {
+            get {
+                return ResourceManager.GetString("TabImportLegacyTile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Locale Resources 的本地化字符串。
+        /// </summary>
+        public static string TabLocaleResources {
+            get {
+                return ResourceManager.GetString("TabLocaleResources", resourceCulture);
             }
         }
         
@@ -817,6 +1640,24 @@ namespace SGPkgMgr.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Path Resources 的本地化字符串。
+        /// </summary>
+        public static string TabPathResources {
+            get {
+                return ResourceManager.GetString("TabPathResources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Resource File Editor 的本地化字符串。
+        /// </summary>
+        public static string TabResourceFileEditor {
+            get {
+                return ResourceManager.GetString("TabResourceFileEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Create Single Package 的本地化字符串。
         /// </summary>
         public static string TabSinglePackage {
@@ -840,6 +1681,24 @@ namespace SGPkgMgr.Localization {
         public static string Tile {
             get {
                 return ResourceManager.GetString("Tile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Type 的本地化字符串。
+        /// </summary>
+        public static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 (unbounded) 的本地化字符串。
+        /// </summary>
+        public static string UnboundedVersion {
+            get {
+                return ResourceManager.GetString("UnboundedVersion", resourceCulture);
             }
         }
         

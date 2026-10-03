@@ -18,8 +18,8 @@ namespace Sidebar
 	/// </summary>
 	public partial class HideTilesContainWindow: Window
 	{
-		private MainWindow mainWnd = null;
-		public HideTilesContainWindow (MainWindow mainWnd)
+		private SidebarWindow mainWnd = null;
+		public HideTilesContainWindow (SidebarWindow mainWnd)
 		{
 			InitializeComponent ();
 			this.mainWnd = mainWnd;
@@ -39,7 +39,7 @@ namespace Sidebar
 				case "Width":
 					Width = App.CurrentUserConfig.Width;
 					OverflowTilesRegion.Width = App.CurrentUserConfig.Width;
-					foreach (Tile t in OverflowTilesRegion.Children)
+					foreach (TileControl t in OverflowTilesRegion.Children)
 					{
 						t.Width = App.CurrentUserConfig.Width;
 					}

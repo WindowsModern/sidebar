@@ -92,8 +92,8 @@ namespace WindowsModern.SlideshowTile
 				bitmap.CacheOption = BitmapCacheOption.None;
 				bitmap.EndInit ();
 				var whratio = bitmap.Width / bitmap.Height;
-				var flyoutWidth = Tile.TileInstance.Manifest.VisualElements.RailStyle.FlyoutWidth;
-				var flyoutHeight = Tile.TileInstance.Manifest.VisualElements.RailStyle.FlyoutHeight;
+				var flyoutWidth = Tile.TileInstance.Application.VisualElements.Flyout.FlyoutWidth;
+				var flyoutHeight = Tile.TileInstance.Application.VisualElements.Flyout.FlyoutHeight;
 				if (whratio > 1)
 				{
 					if (bitmap.Width > flyoutWidth)

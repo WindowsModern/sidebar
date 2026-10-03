@@ -6,13 +6,13 @@
 	xmlns:primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework"
 	xmlns:snt="clr-namespace:Sidebar;assembly=Native"
 	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	xmlns:pres="clr-namespace:Sidebar.Presentation"
 	Exit="Application_Exit"
 	Startup="Application_Startup">
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary>
-					<local:FilePathToImageConverter x:Key="ImgConv" />
 					<!--  Options  -->
 					<sys:Boolean x:Key="EnableBlur">True</sys:Boolean>
 					<sys:Boolean x:Key="EnableBlurForFlyout">false</sys:Boolean>
@@ -27,7 +27,7 @@
 						MV Boli, Myanmar Text, Javanese Text, Cambria Math
 					</FontFamily>
 					<!--  Global  -->
-					<SolidColorBrush x:Key="GlobalForegroundBrush" Color="{Binding ForegroundColor, Source={x:Static local:DwmThemeProvider.Instance}}" />
+					<SolidColorBrush x:Key="GlobalForegroundBrush" Color="{Binding ForegroundColor, Source={x:Static pres:DwmThemeProvider.Instance}}" />
 					<sys:Double x:Key="GlobalFontSize">10</sys:Double>
 					<sys:Double x:Key="GlobalNormalFontSize">10</sys:Double>
 					<sys:Double x:Key="GlobalNormalFontSizeSmall">9</sys:Double>
@@ -48,7 +48,7 @@
 							<Setter.Value>
 								<ControlTemplate TargetType="Control">
 									<Grid>
-										<Control Style="{DynamicResource SidebarBackgroundTemplate}" Tag="{Binding OpaqueThemeBrush, Source={x:Static local:DwmThemeProvider.Instance}}" />
+										<Control Style="{DynamicResource SidebarBackgroundTemplate}" Tag="{Binding OpaqueThemeBrush, Source={x:Static pres:DwmThemeProvider.Instance}}" />
 										<Rectangle Name="Background" Style="{DynamicResource Background}" />
 										<snt:Slice9Image Name="BackgroundImage1" Style="{DynamicResource BackgroundImageSlice9}" />
 										<Image Name="BackgroundImage" Style="{DynamicResource BackgroundImage}" />
@@ -71,7 +71,7 @@
 					<Style x:Key="Background" TargetType="Rectangle">
 						<Setter Property="HorizontalAlignment" Value="Stretch" />
 						<Setter Property="VerticalAlignment" Value="Stretch" />
-						<Setter Property="Fill" Value="{Binding ThemeBrush, Source={x:Static local:DwmThemeProvider.Instance}}" />
+						<Setter Property="Fill" Value="{Binding ThemeBrush, Source={x:Static pres:DwmThemeProvider.Instance}}" />
 					</Style>
 					<Style x:Key="BackgroundImage" TargetType="Image">
 						<Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -138,10 +138,6 @@
 						x:Key="TileSplitterBottomBlankFillLighting"
 						BasedOn="{StaticResource TileSplitterBottomBlankFill}"
 						TargetType="Rectangle" />
-					<Style x:Key="TopOptionsPanel" TargetType="local:TopOptions">
-						<Setter Property="VerticalAlignment" Value="Top" />
-						<Setter Property="Height" Value="17" />
-					</Style>
 					<Style x:Key="TopOptionsPanelSplitter" TargetType="StackPanel">
 						<Setter Property="Margin" Value="0,17,0,0" />
 						<Setter Property="VerticalAlignment" Value="Top" />
@@ -287,12 +283,7 @@
 						<Setter Property="StrokeThickness" Value="1" />
 					</Style>
 					<Style x:Key="FlyoutBackgroundFill" TargetType="Rectangle">
-						<Setter Property="Fill" Value="{Binding ThemeBrush, Source={x:Static local:DwmThemeProvider.Instance}}" />
-					</Style>
-					<Style x:Key="FlyoutHeaderOptionsBar" TargetType="local:TopOptions">
-						<Setter Property="Height" Value="12" />
-						<Setter Property="Margin" Value="4,1,4,0" />
-						<Setter Property="MinHeight" Value="0" />
+						<Setter Property="Fill" Value="{Binding ThemeBrush, Source={x:Static pres:DwmThemeProvider.Instance}}" />
 					</Style>
 					<Style
 						x:Key="FlyoutHeaderOptionsIcon"
@@ -360,7 +351,7 @@
 					<Style x:Key="NotificationBaseBackground" TargetType="Border">
 						<Setter Property="Background" Value="#070707" />
 						<Setter Property="Background" Value="#20FFFFFF" />
-						<!-- <Setter Property="Background" Value="{Binding ThemeBrush, Source={x:Static local:DwmThemeProvider.Instance}}" /> -->
+						<!-- <Setter Property="Background" Value="{Binding ThemeBrush, Source={x:Static pres:DwmThemeProvider.Instance}}" /> -->
 						<Setter Property="CornerRadius" Value="5" />
 					</Style>
 					<Style x:Key="NotificationBackgroundImageSlice9" TargetType="snt:Slice9Image">
@@ -409,11 +400,11 @@
 							<Setter.Value>
 								<ControlTemplate TargetType="Button">
 									<TextBlock
-										x:Name="PART_TextBlock"
-										FontFamily="{DynamicResource GlobalFontFamily}"
-										FontSize="10"
-										Foreground="Black"
-										Text="{Binding Source='SIDEBAR_OPTIONS', Converter={x:Static local:StringResourceConverter.Instance}}">
+    x:Name="PART_TextBlock"
+    FontFamily="{DynamicResource GlobalFontFamily}"
+    FontSize="10"
+    Foreground="Black"
+    Text="{pres:StringResource SIDEBAR_OPTIONS}">
 										<TextBlock.Effect>
 											<DropShadowEffect
 												x:Name="PART_Glow"
@@ -1094,7 +1085,7 @@
 												</BeginStoryboard>
 											</DataTrigger.EnterActions>
 										</DataTrigger>
-										<DataTrigger Binding="{Binding Path=DisplayMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Calendar}}, Converter={x:Static local:CalendarModeToBooleanConverter.Instance}, FallbackValue=True}" Value="True">
+										<DataTrigger Binding="{Binding Path=DisplayMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Calendar}}, Converter={x:Static pres:CalendarModeToBooleanConverter.Instance}, FallbackValue=True}" Value="True">
 											<DataTrigger.EnterActions>
 												<BeginStoryboard>
 													<Storyboard>

@@ -105,7 +105,7 @@ namespace Sidebar
 			DwmSetWindowAttribute (hwnd, DWMWA_FLIP3D_POLICY, ref policy, sizeof (int));
 		}
 		public static bool IsElderWindows () { return Environment.OSVersion.Version.Major < 6; }
-		public static bool IsWindows10AndHigher () { return Environment.OSVersion.Version.Major > 10; }
+		public static bool IsWindows10AndHigher () { return Environment.OSVersion.Version.Major >= 10; }
 		public static bool IsNT6AndHigher () { return Environment.OSVersion.Version.Major >= 6; }
 		public static bool TryEnableBlur (IntPtr hwnd, bool enable)
 		{

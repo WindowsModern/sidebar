@@ -9,18 +9,28 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+		<WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
 			<Button Content="{x:Static loc:Strings.AddFiles}"
-                    Padding="10,2" Click="OnAdd" />
+                    Padding="10,2" Margin="0,0,6,6" Click="OnAdd" />
+			<Button Content="{x:Static loc:Strings.AddFolder}"
+                    Padding="10,2" Margin="0,0,6,6" Click="OnAddFolder" />
+			<Button Content="{x:Static loc:Strings.ImportFolder}"
+                    Padding="10,2" Margin="0,0,6,6" Click="OnImportFolder" />
+			<Button Content="{x:Static loc:Strings.CreateFolder}"
+                    Padding="10,2" Margin="0,0,6,6" Click="OnCreateFolder" />
 			<Button Content="{x:Static loc:Strings.ReplaceFile}"
-                    Padding="10,2" Margin="6,0,0,0" Click="OnReplace" />
+                    Padding="10,2" Margin="0,0,6,6" Click="OnReplace" />
+			<Button Content="{x:Static loc:Strings.RenameItem}"
+                    Padding="10,2" Margin="0,0,6,6" Click="OnRename" />
+			<Button Content="{x:Static loc:Strings.MoveItem}"
+                    Padding="10,2" Margin="0,0,6,6" Click="OnMove" />
 			<Button Content="{x:Static loc:Strings.DeleteFile}"
-                    Padding="10,2" Margin="6,0,0,0" Click="OnDelete" />
+                    Padding="10,2" Margin="0,0,6,6" Click="OnDelete" />
 			<Button Content="{x:Static loc:Strings.ExtractFile}"
-                    Padding="10,2" Margin="6,0,0,0" Click="OnExtract" />
+                    Padding="10,2" Margin="0,0,6,6" Click="OnExtract" />
 			<Button Content="{x:Static loc:Strings.Refresh}"
-                    Padding="10,2" Margin="6,0,0,0" Click="OnRefresh" />
-		</StackPanel>
+                    Padding="10,2" Margin="0,0,6,6" Click="OnRefresh" />
+		</WrapPanel>
 
 		<TreeView Grid.Row="1" x:Name="treeFiles"
                   AllowDrop="True"
@@ -30,7 +40,13 @@
 			<TreeView.ContextMenu>
 				<ContextMenu>
 					<MenuItem Header="{x:Static loc:Strings.AddFiles}" Click="OnAdd" />
+					<MenuItem Header="{x:Static loc:Strings.AddFolder}" Click="OnAddFolder" />
+					<MenuItem Header="{x:Static loc:Strings.ImportFolder}" Click="OnImportFolder" />
+					<MenuItem Header="{x:Static loc:Strings.CreateFolder}" Click="OnCreateFolder" />
+					<Separator />
 					<MenuItem Header="{x:Static loc:Strings.ReplaceFile}" Click="OnReplace" />
+					<MenuItem Header="{x:Static loc:Strings.RenameItem}" Click="OnRename" />
+					<MenuItem Header="{x:Static loc:Strings.MoveItem}" Click="OnMove" />
 					<MenuItem Header="{x:Static loc:Strings.DeleteFile}" Click="OnDelete" />
 					<MenuItem Header="{x:Static loc:Strings.ExtractFile}" Click="OnExtract" />
 				</ContextMenu>

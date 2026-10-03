@@ -1,0 +1,162 @@
+﻿<Window x:Class="TileManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TileManager"
+        xmlns:pres="clr-namespace:Sidebar.Presentation"
+        mc:Ignorable="d"
+        Title="{pres:StringResource TILEMGR_WINTITLE}"
+        Height="600" Width="550"
+        FontFamily="{DynamicResource GlobalFontFamily}">
+	<Window.Resources>
+		<FontFamily x:Key="GlobalFontFamily">
+			Microsoft YaHei, Segoe UI, Ebrima, Nirmala, Gadugi, Segoe UI Emoji, Segoe UI Symbol,
+						Meiryo, Leelawadee, Microsoft JhengHei, Malgun Gothic, Estrangelo Edessa, Microsoft Himalaya,
+						Microsoft New Tai Lue, Microsoft PhagsPa, Microsoft Tai Le, Microsoft Yi Baiti, Mongolian Baiti,
+						MV Boli, Myanmar Text, Javanese Text, Cambria Math
+		</FontFamily>
+		<Style TargetType="Button">
+			<Setter Property="Padding" Value="10,2"></Setter>
+		</Style>
+		<Style TargetType="ComboBox">
+			<Setter Property="Padding" Value="2,2"></Setter>
+		</Style>
+	</Window.Resources>
+	<Grid>
+		<TabControl Margin="10">
+			<TabItem Header="{pres:StringResource TILEMGR_TAB_PINNED}">
+				<DockPanel Margin="10">
+					<DockPanel DockPanel.Dock="Top" Margin="0,0,0,3">
+						<TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,3,0" Text="{pres:StringResource TILEMGR_PIN_A_TILE}"/>
+						<Button Name="ButtonAddToBottom" Click="ButtonAddToBottom_Click" DockPanel.Dock="Right" Margin="3,0,0,0" Content="{pres:StringResource TILEMGR_BTN_PIN_BOTTOM}"/>
+						<Button Name="ButtonAddToTop" Click="ButtonAddToTop_Click" DockPanel.Dock="Right" Margin="3,0" Content="{pres:StringResource TILEMGR_BTN_PIN_TOP}"/>
+						<ComboBox Name="SelectPinTile" Margin="3,0" DockPanel.Dock="Left">
+							<ComboBox.ItemContainerStyle>
+								<Style TargetType="ComboBoxItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+								</Style>
+							</ComboBox.ItemContainerStyle>
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<Image Source="{Binding LogoImage}" Width="16" Height="16" Margin="0,0,6,0" Stretch="Uniform"/>
+										<TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+									</StackPanel>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+					</DockPanel>
+					<WrapPanel Margin="0,3" DockPanel.Dock="Top" Orientation="Horizontal">
+						<Button Name="ButtonUnpin" Click="ButtonUnpin_Click" Margin="0,0,3,0" Content="{pres:StringResource TILEMGR_BTN_UNPIN}"/>
+						<Button Name="ButtonPinToTop" Click="ButtonPinToTop_Click" Margin="3,0" Content="{pres:StringResource TILEMGR_BTN_PIN_TOP}"/>
+						<Button Name="ButtonPinToBottom" Click="ButtonPinToBottom_Click" Margin="3,0" Content="{pres:StringResource TILEMGR_BTN_PIN_BOTTOM}"/>
+						<Button Name="ButtonPinnedMoveUp" Click="ButtonPinnedMoveUp_Click" Margin="3,0" Content="{pres:StringResource TILEMGR_BTN_MOVEUP}"/>
+						<Button Name="ButtonPinnedMoveDown" Click="ButtonPinnedMoveDown_Click" Margin="3,0,0,0" Content="{pres:StringResource TILEMGR_BTN_MOVEDOWN}"/>
+						<Button Name="ButtonRemoveInvalid" Click="ButtonRemoveInvalid_Click" Margin="3,0,0,0" Content="{pres:StringResource TILEMGR_BTN_REMOVE_INVALID}"/>
+					</WrapPanel>
+					<ListView Name="ListPinnedTiles" DockPanel.Dock="Bottom" Margin="0,3,0,0" SelectionMode="Extended">
+						<ListView.View>
+							<GridView>
+								<GridViewColumn Header="" Width="30">
+									<GridViewColumn.CellTemplate>
+										<DataTemplate>
+											<Grid Width="16" Height="16">
+												<Image x:Name="img" Source="{Binding LogoImage}" Width="16" Height="16" Stretch="Uniform" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"/>
+												<TextBlock x:Name="fallback" Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+											</Grid>
+											<DataTemplate.Triggers>
+												<DataTrigger Binding="{Binding LogoImage}" Value="{x:Null}">
+													<Setter TargetName="img" Property="Visibility" Value="Collapsed"/>
+													<Setter TargetName="fallback" Property="Visibility" Value="Visible"/>
+												</DataTrigger>
+											</DataTemplate.Triggers>
+										</DataTemplate>
+									</GridViewColumn.CellTemplate>
+								</GridViewColumn>
+								<GridViewColumn Header="{pres:StringResource TILEMGR_COL_DISPLAYNAME}" DisplayMemberBinding="{Binding DisplayName}" Width="Auto"/>
+								<GridViewColumn Header="{pres:StringResource TILEMGR_COL_PINNED_LOCATION}" DisplayMemberBinding="{Binding PinnedLocationDisplay}" Width="Auto"/>
+								<GridViewColumn Header="{pres:StringResource TILEMGR_COL_EXISTS}" Width="Auto">
+									<GridViewColumn.CellTemplate>
+										<DataTemplate>
+											<TextBlock x:Name="mark" Text="✓" Foreground="Green" HorizontalAlignment="Center" FontWeight="Bold"/>
+											<DataTemplate.Triggers>
+												<DataTrigger Binding="{Binding Exists}" Value="False">
+													<Setter TargetName="mark" Property="Text" Value="✗"/>
+													<Setter TargetName="mark" Property="Foreground" Value="Red"/>
+												</DataTrigger>
+											</DataTemplate.Triggers>
+										</DataTemplate>
+									</GridViewColumn.CellTemplate>
+								</GridViewColumn>
+								<GridViewColumn Header="{pres:StringResource TILEMGR_COL_USERMODELID}" DisplayMemberBinding="{Binding UserModelId}" Width="100"/>
+							</GridView>
+						</ListView.View>
+					</ListView>
+				</DockPanel>
+			</TabItem>
+			<TabItem Header="{pres:StringResource TILEMGR_INSTALLEDTILES}">
+				<Grid Margin="10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="150" MinWidth="80"></ColumnDefinition>
+						<ColumnDefinition Width="Auto"></ColumnDefinition>
+						<ColumnDefinition Width="*" MinWidth="80"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<DockPanel Grid.Column="0">
+						<WrapPanel Margin="0,0,0,3" DockPanel.Dock="Top">
+							<Button Name="ButtonInstallTile" Click="ButtonInstallTile_Click" Margin="0,0,3,0" Content="{pres:StringResource TILEMGR_BTN_INSTALL}"/>
+							<Button Name="ButtonRemoveTile" Click="ButtonRemoveTile_Click" Margin="3,0,0,0" Content="{pres:StringResource TILEMGR_BTN_REMOVE}"/>
+						</WrapPanel>
+						<Button Name="ButtonGetTiles" Click="ButtonGetTiles_Click" Margin="0,3,0,0" DockPanel.Dock="Bottom" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Padding="0">
+							<TextBlock>
+								<Hyperlink>
+									<Run Text="{pres:StringResource TILEMGR_GET_MORE_TILES }"></Run>
+								</Hyperlink>
+							</TextBlock>
+						</Button>
+						<ListView Name="ListInstalledTiles" Margin="0,3">
+							<ListView.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<Image Source="{Binding LogoImage}" Width="30" Height="30" Margin="0,0,6,0" Stretch="Uniform" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"/>
+										<TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+									</StackPanel>
+								</DataTemplate>
+							</ListView.ItemTemplate>
+						</ListView>
+					</DockPanel>
+					<GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"/>
+					<FlowDocumentScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" IsSelectionEnabled="True">
+						<FlowDocument FontSize="12" PagePadding="10" FontFamily="{DynamicResource GlobalFontFamily}">
+							<Paragraph>
+								<Figure HorizontalAnchor="ColumnRight" VerticalAnchor="ParagraphTop" WrapDirection="Both" Width="80" Height="80" Margin="0,0,10,0">
+									<BlockUIContainer>
+										<Image Source="{Binding SelectedItem.LogoImage, ElementName=ListInstalledTiles}" Width="64" Height="64" Stretch="Uniform" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"/>
+									</BlockUIContainer>
+								</Figure>
+								<LineBreak/>
+								<Run Text="{Binding SelectedItem.DisplayName, ElementName=ListInstalledTiles, Mode=OneWay}" FontSize="18" />
+								<LineBreak/>
+								<LineBreak/>
+								<Run Text="{Binding SelectedItem.Publisher, ElementName=ListInstalledTiles, Mode=OneWay}"/>
+								<LineBreak/>
+								<Run Text="{Binding SelectedItem.Manifest.Identity.Version, ElementName=ListInstalledTiles, Mode=OneWay}"/>
+							</Paragraph>
+							<Paragraph Margin="0,8,0,0">
+								<Run Text="{Binding SelectedItem.Description, ElementName=ListInstalledTiles, Mode=OneWay}"/>
+							</Paragraph>
+							<BlockUIContainer Margin="0,8,0,0">
+								<Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,1" Margin="0,4,0,4"/>
+							</BlockUIContainer>
+							<Paragraph Margin="0,8,0,0" TextAlignment="Left" Foreground="{x:Static SystemColors.GrayTextBrush}">
+								<Run Text="{pres:StringResource TILEMGR_STORAGE_LOCATION}"/>
+								<LineBreak/>
+								<Run Text="{Binding SelectedItem.FolderPath, ElementName=ListInstalledTiles, Mode=OneWay}"/>
+							</Paragraph>
+						</FlowDocument>
+					</FlowDocumentScrollViewer>
+				</Grid>
+			</TabItem>
+		</TabControl>
+	</Grid>
+</Window>

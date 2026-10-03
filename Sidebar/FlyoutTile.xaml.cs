@@ -24,14 +24,14 @@ namespace Sidebar
 		{
 			InitializeComponent ();
 		}
-		public Tile Tile
+		public TileControl Tile
 		{
 			get
 			{
 				if (TileTemplateContainer.Children.Count <= 0) return null;
 				else
 				{
-					return TileTemplateContainer.Children [0] as Tile;
+					return TileTemplateContainer.Children [0] as TileControl;
 				}
 			}
 			set

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SGInstaller.Properties
+namespace TileManager.Properties
 {
 
 
@@ -44,7 +44,7 @@ namespace SGInstaller.Properties
 			{
 				if ((resourceMan == null))
 				{
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager ("SGInstaller.Properties.Resources", typeof (Resources).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager ("TileManager.Properties.Resources", typeof (Resources).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;

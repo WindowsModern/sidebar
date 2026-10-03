@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 namespace Sidebar
@@ -13,7 +14,7 @@ namespace Sidebar
 	/// 内部状态受 _sync 保护；事件在锁外触发。
 	/// 约定：本类应在 UI 线程使用；若源可能从后台线程变化，请自行调度到 UI 线程再触发。
 	/// </summary>
-	public class View<T>: IList<T>, INotifyCollectionChanged, IDisposable
+	public class View<T>: IList<T>, INotifyCollectionChanged, IDisposable, IList, ICollection, IBindingList, IListSource
 	{
 		private readonly object _sync = new object ();
 		private readonly object _handlersLock = new object ();
@@ -69,6 +70,22 @@ namespace Sidebar
 		public bool IsReadOnly
 		{
 			get { lock (_sync) return _source == null || _source.IsReadOnly; }
+		}
+		public bool IsFixedSize => false;
+		public object SyncRoot => _sync;
+		public bool IsSynchronized => false;
+		object System.Collections.IList.this [int index]
+		{
+			get { return this [index]; }
+			set
+			{
+				if (value == null && default (T) != null)
+					throw new ArgumentNullException (nameof (value));
+				if (value != null && !(value is T))
+					throw new ArgumentException (
+						$"Value must be assignable to {typeof (T).FullName}.", nameof (value));
+				this [index] = value == null ? default (T) : (T)value;
+			}
 		}
 		public T this [int index]
 		{
@@ -329,6 +346,7 @@ namespace Sidebar
 			if (incc != null)
 				incc.CollectionChanged -= OnSourceCollectionChanged;
 			lock (_handlersLock) _handlers.Clear ();
+			ClearFormsWhenDispose ();
 		}
 		private void OnSourceCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -385,19 +403,246 @@ namespace Sidebar
 		}
 		protected void RaiseRaw (NotifyCollectionChangedEventArgs e)
 		{
-			NotifyCollectionChangedEventHandler [] snapshot;
+			NotifyCollectionChangedEventHandler [] snapshot = null;
 			lock (_handlersLock)
 			{
-				if (_handlers.Count == 0) return;
-				snapshot = new NotifyCollectionChangedEventHandler [_handlers.Count];
-				_handlers.CopyTo (snapshot);
+				if (_handlers.Count > 0)
+					snapshot = _handlers.ToArray ();
 			}
-			for (int i = 0; i < snapshot.Length; i++)
+			if (snapshot != null)
 			{
-				try { snapshot [i] (this, e); }
-				catch { }
+				for (int i = 0; i < snapshot.Length; i++)
+				{
+					snapshot [i] (this, e);
+				}
+			}
+			ScheduleListChanged ();
+		}
+		public int Add (object value)
+		{
+			if (value == null && default (T) != null)
+				throw new ArgumentNullException (nameof (value));
+			if (value != null && !(value is T))
+				throw new ArgumentException (
+					$"Value must be assignable to {typeof (T).FullName}.", nameof (value));
+			int idx = Count;
+			Add (value == null ? default (T) : (T)value);
+			return idx;
+		}
+		public bool Contains (object value)
+		{
+			if (value == null)
+				return default (T) == null && Contains (default (T));
+			return value is T && Contains ((T)value);
+		}
+		public int IndexOf (object value)
+		{
+			if (value == null)
+				return default (T) == null ? IndexOf (default (T)) : -1;
+			return value is T ? IndexOf ((T)value) : -1;
+		}
+		public void Insert (int index, object value)
+		{
+			if (value == null && default (T) != null)
+				throw new ArgumentNullException (nameof (value));
+			if (value != null && !(value is T))
+				throw new ArgumentException (
+					$"Value must be assignable to {typeof (T).FullName}.", nameof (value));
+			Insert (index, value == null ? default (T) : (T)value);
+		}
+		public void Remove (object value)
+		{
+			if (value == null)
+			{
+				if (default (T) == null) Remove (default (T));
+				return;
+			}
+			if (value is T) Remove ((T)value);
+		}
+		public void CopyTo (Array array, int index)
+		{
+			if (array == null) throw new ArgumentNullException (nameof (array));
+			if (index < 0) throw new ArgumentOutOfRangeException (nameof (index));
+			var n = Count;
+			if (array.Length - index < n) throw new ArgumentException ("Target array is too small.", nameof (array));
+			for (int i = 0; i < n; i++) array.SetValue (this [i], index + i);
+		}
+		#region IBindingList
+		private bool _allowNew = true;
+		private bool _allowEdit = true;
+		private bool _allowRemove = true;
+		private static readonly bool _hasDefaultCtor =
+			typeof (T).IsValueType || typeof (T).GetConstructor (Type.EmptyTypes) != null;
+		public bool AllowNew
+		{
+			get
+			{
+				lock (_sync)
+				{
+					if (!_allowNew) return false;
+					if (_source == null || _source.IsReadOnly) return false;
+					if (_cast != null) return false;
+					if (!_hasDefaultCtor) return false;
+					return true;
+				}
+			}
+			set { lock (_sync) _allowNew = value; }
+		}
+		public bool AllowEdit
+		{
+			get
+			{
+				lock (_sync)
+					return _allowEdit && _source != null && !_source.IsReadOnly;
+			}
+			set { lock (_sync) _allowEdit = value; }
+		}
+		public bool AllowRemove
+		{
+			get
+			{
+				lock (_sync)
+					return _allowRemove && _source != null && !_source.IsReadOnly;
+			}
+			set { lock (_sync) _allowRemove = value; }
+		}
+		public bool SupportsChangeNotification => true;
+		public bool SupportsSearching => false;
+		public bool SupportsSorting => false;
+		public bool IsSorted => false;
+		public ListSortDirection SortDirection => ListSortDirection.Ascending;
+		public PropertyDescriptor SortProperty => null;
+		public event ListChangedEventHandler ListChanged;
+		public object AddNew ()
+		{
+			T item;
+			lock (_sync)
+			{
+				if (!AllowNew)
+					throw new NotSupportedException (
+						"AddNew is not supported by this view (read-only, filtered, or T has no parameterless constructor).");
+				item = Activator.CreateInstance<T> ();
+			}
+			Add (item);
+			return item;
+		}
+		public void ApplySort (PropertyDescriptor property, ListSortDirection direction)
+		{
+			throw new NotSupportedException ("Sorting is not supported.");
+		}
+		public void RemoveSort ()
+		{
+			throw new NotSupportedException ("Sorting is not supported.");
+		}
+		public int Find (PropertyDescriptor property, object key)
+		{
+			throw new NotSupportedException ("Searching is not supported.");
+		}
+		void IBindingList.AddIndex (PropertyDescriptor property) { }
+		void IBindingList.RemoveIndex (PropertyDescriptor property) { }
+		#endregion
+		bool IListSource.ContainsListCollection => false;
+		System.Collections.IList IListSource.GetList () => this;
+		#region WinForms ListChanged 调度字段
+		private SynchronizationContext _winFormsContext;
+		private System.Windows.Forms.Timer _listChangedTimer;
+		private readonly object _listChangedTimerLock = new object ();
+		private int _listChangedScheduled;  // 0=idle, 1=scheduled
+											/// <summary>
+											/// 由 WinForms 宿主在 UI 线程调用一次，注册 UI 同步上下文。
+											/// 注册后 ListChanged 会 Post 到该上下文，并在 50ms 内防抖。
+											/// 未注册时 ListChanged 退化为同步触发（兼容 WPF 场景）。
+											/// </summary>
+		public void AttachWinFormsContext (SynchronizationContext context)
+		{
+			if (context == null) throw new ArgumentNullException (nameof (context));
+			_winFormsContext = context;
+		}
+		private void ScheduleListChanged ()
+		{
+			if (ListChanged == null) return;
+			var ctx = _winFormsContext;
+			if (ctx == null)
+			{
+				RaiseListChangedNow ();
+				return;
+			}
+			if (Interlocked.CompareExchange (ref _listChangedScheduled, 1, 0) != 0)
+				return;
+			try
+			{
+				ctx.Post (_ => OnWinFormsListChangedTick (), null);
+			}
+			catch (Exception ex)
+			{
+				Interlocked.Exchange (ref _listChangedScheduled, 0);
+				System.Diagnostics.Debug.WriteLine ("[ScheduleListChanged] " + ex);
 			}
 		}
+		private void OnWinFormsListChangedTick ()
+		{
+			lock (_listChangedTimerLock)
+			{
+				if (_disposed != 0)
+				{
+					Interlocked.Exchange (ref _listChangedScheduled, 0);
+					return;
+				}
+				if (_listChangedTimer == null)
+				{
+					_listChangedTimer = new System.Windows.Forms.Timer { Interval = 50 };
+					_listChangedTimer.Tick += (s, e) => {
+						_listChangedTimer.Stop ();
+						Interlocked.Exchange (ref _listChangedScheduled, 0);
+						RaiseListChangedNow ();
+					};
+				}
+				_listChangedTimer.Stop ();
+				_listChangedTimer.Start ();
+			}
+		}
+		private void RaiseListChangedNow ()
+		{
+			var lc = ListChanged;
+			if (lc == null) return;
+			var args = new ListChangedEventArgs (ListChangedType.Reset, -1);
+			try { lc (this, args); } catch { }
+		}
+		private void ClearFormsWhenDispose ()
+		{
+			lock (_listChangedTimerLock)
+			{
+				if (_listChangedTimer != null)
+				{
+					try { _listChangedTimer.Stop (); } catch { }
+					try { _listChangedTimer.Dispose (); } catch { }
+					_listChangedTimer = null;
+				}
+			}
+			Interlocked.Exchange (ref _listChangedScheduled, 0);
+			ListChanged = null;
+		}
+		#endregion
+		#region 链式变换
+		/// <summary>
+		/// 返回一个新的 View&lt;T&gt;，只保留满足 predicate 的元素（带源索引）。
+		/// 新视图订阅本视图的 CollectionChanged，源变化自动同步。
+		/// 新视图不拥有源，调用方负责按需 Dispose。
+		/// </summary>
+		public View<T> Where (Func<T, int, bool> predicate)
+		{
+			if (predicate == null) throw new ArgumentNullException (nameof (predicate));
+			return new View<T> (this, predicate);
+		}
+		/// <summary>
+		/// 返回一个新的 View&lt;T&gt;，只保留满足 predicate 的元素。
+		/// </summary>
+		public View<T> Where (Func<T, bool> predicate)
+		{
+			if (predicate == null) throw new ArgumentNullException (nameof (predicate));
+			return new View<T> (this, (item, _) => predicate (item));
+		}
+		#endregion
 	}
 	/// <summary>
 	/// 只读/可写投影视图。继承自 View&lt;U&gt;，因此具备完整的 IList&lt;U&gt; 语义。

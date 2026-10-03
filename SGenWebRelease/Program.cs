@@ -80,7 +80,7 @@ namespace SGenWebRelease
 								var pre = m.Prerequisites;
 								prer = new {
 									osMinVersion = pre.OSMinVersion.Expression,
-									osMaxVersionTested = pre.OSMaxVersionTested.Expression
+									osMaxVersion = pre.OSMaxVersion?.Expression
 								};
 								var logo = aread.FileResources?.SuitableResource (pro.Logo, pro.Logo, 100) ?? pro.Logo;
 								logoImg = aread.ExtractFile (logo);
@@ -116,7 +116,7 @@ namespace SGenWebRelease
 								var pre = am.Prerequisites;
 								prer = new {
 									osMinVersion = bread.Packages.Select (p => p.Manifest.Prerequisites.OSMinVersion).Min ().Expression,
-									osMaxVersionTested = pre.OSMaxVersionTested.Expression
+									osMaxVersion = bread.Packages.Select (p => p.Manifest.Prerequisites.OSMaxVersion).Max ()?.Expression,
 								};
 								var logo = bread.FileResources?.SuitableResource (pro.Logo, pro.Logo, 100) ?? pro.Logo;
 								logoImg = subpkg.ExtractFile (logo);

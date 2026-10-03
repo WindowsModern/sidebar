@@ -21,6 +21,16 @@
 	<data name="TabSinglePackage" xml:space="preserve"><value>Create Single Package</value></data>
 	<data name="TabBundlePackage" xml:space="preserve"><value>Create Bundle Package</value></data>
 	<data name="TabPackageConverter" xml:space="preserve"><value>V1 → V2 Converter</value></data>
+	<data name="TabImportLegacyTile" xml:space="preserve"><value>Import Legacy Tile</value></data>
+
+	<!-- Import Legacy Tile -->
+	<data name="LegacyTileSource" xml:space="preserve"><value>Legacy Tile Source:</value></data>
+	<data name="LegacyTileSourceHint" xml:space="preserve"><value>Supported: .dll / .zip / .sgpkg / .sgpkgbundle</value></data>
+	<data name="Analyze" xml:space="preserve"><value>Analyze</value></data>
+	<data name="Analyzing" xml:space="preserve"><value>Analyzing: </value></data>
+	<data name="NoTileSubclassFound" xml:space="preserve"><value>No TileLib.BaseTile / Applications.Sidebar.Tile subclass found.</value></data>
+	<data name="LegacyTileInfoFormat" xml:space="preserve"><value>SDK: {0}   EntryPoint: {1}   Files: {2}</value></data>
+	<data name="LegacyTileSourceFilter" xml:space="preserve"><value>Legacy tile sources (*.dll;*.zip;*.sgpkg;*.sgpkgbundle)|*.dll;*.zip;*.sgpkg;*.sgpkgbundle|All files (*.*)|*.*</value></data>
 
 	<!-- Common -->
 	<data name="Browse" xml:space="preserve"><value>Browse...</value></data>
@@ -128,4 +138,107 @@
 	<data name="FindEntryPoints" xml:space="preserve"><value>Find Entry Points</value></data>
 	<data name="FoundEntryPoints" xml:space="preserve"><value>Entry points found</value></data>
 	<data name="OsMaxUnbounded" xml:space="preserve"><value>Support all future versions</value></data>
+
+	<data name="AddFolder" xml:space="preserve"><value>Add Folder...</value></data>
+	<data name="ImportFolder" xml:space="preserve"><value>Import Folder...</value></data>
+	<data name="CreateFolder" xml:space="preserve"><value>Create Folder...</value></data>
+	<data name="RenameItem" xml:space="preserve"><value>Rename...</value></data>
+	<data name="MoveItem" xml:space="preserve"><value>Move To...</value></data>
+
+	<!-- Dialogs -->
+	<data name="Confirm" xml:space="preserve"><value>Confirm</value></data>
+	<data name="Ok" xml:space="preserve"><value>OK</value></data>
+	<data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+	<data name="FmtKeyValue" xml:space="preserve"><value>{0}: {1}</value></data>
+
+	<!-- PackageFilesView -->
+	<data name="MsgSelectFileToReplace" xml:space="preserve"><value>Select a file to replace.</value></data>
+	<data name="FmtDeleteFileConfirm" xml:space="preserve"><value>Delete '{0}'?</value></data>
+	<data name="FmtDeleteFolderConfirm" xml:space="preserve"><value>Delete folder '{0}' and all {1} file(s)?</value></data>
+	<data name="FmtPathAlreadyExists" xml:space="preserve"><value>A file or folder with the same name already exists: {0}</value></data>
+	<data name="PromptFolderName" xml:space="preserve"><value>Folder name:</value></data>
+	<data name="PromptNewName" xml:space="preserve"><value>New name:</value></data>
+	<data name="PromptMoveTo" xml:space="preserve"><value>Move to:</value></data>
+	<data name="FmtFilesExistOverwrite" xml:space="preserve"><value>The following files already exist. Overwrite?
+
+{0}</value></data>
+	<data name="FmtPathsExistOverwrite" xml:space="preserve"><value>The following paths already exist. Overwrite the files?
+
+{0}</value></data>
+	<data name="FmtAndMoreCount" xml:space="preserve"><value>...and {0} more</value></data>
+	<data name="FmtFolderCreated" xml:space="preserve"><value>Folder created: {0}</value></data>
+	<data name="FmtRenamedTo" xml:space="preserve"><value>Renamed to: {0}</value></data>
+	<data name="FmtMovedTo" xml:space="preserve"><value>Moved to: {0}</value></data>
+	<data name="FmtFolderIsEmpty" xml:space="preserve"><value>Folder is empty: {0}</value></data>
+	<data name="FmtFolderOpDone" xml:space="preserve"><value>Folder operation done: +{0}, skipped {1}, failed {2}</value></data>
+	<data name="FmtAddedSkipped" xml:space="preserve"><value>Added: {0}, skipped: {1}</value></data>
+	<data name="FmtDroppedFilesAndDirs" xml:space="preserve"><value>Dropped: {0} file(s), {1} folder(s)</value></data>
+	<data name="FmtAddedCount" xml:space="preserve"><value>Added: {0}</value></data>
+	<data name="MsgNameEmpty" xml:space="preserve"><value>Name cannot be empty.</value></data>
+	<data name="MsgNameHasWhitespace" xml:space="preserve"><value>Name cannot have leading or trailing whitespace.</value></data>
+	<data name="MsgNameDotOrDotDot" xml:space="preserve"><value>Name cannot be '.' or '..'.</value></data>
+	<data name="MsgNameInvalidChars" xml:space="preserve"><value>Name cannot contain any of: / \ : * ? " &lt; &gt; |</value></data>
+	<data name="RootDirDisplay" xml:space="preserve"><value>/ (root)</value></data>
+
+	<!-- PackageReaderView 报告树 -->
+	<data name="Type" xml:space="preserve"><value>Type</value></data>
+	<data name="PublisherId" xml:space="preserve"><value>PublisherId</value></data>
+	<data name="FamilyName" xml:space="preserve"><value>FamilyName</value></data>
+	<data name="FullName" xml:space="preserve"><value>FullName</value></data>
+	<data name="UnboundedVersion" xml:space="preserve"><value>(unbounded)</value></data>
+	<data name="SubPackage" xml:space="preserve"><value>SubPackage</value></data>
+	<data name="Application" xml:space="preserve"><value>Application</value></data>
+	<data name="FmtSubPackageHeader" xml:space="preserve"><value>SubPackage: {0}</value></data>
+	<data name="FmtApplicationHeader" xml:space="preserve"><value>Application: {0}</value></data>
+	<data name="FmtApplicationsCount" xml:space="preserve"><value>Applications ({0})</value></data>
+	<data name="FmtRootFilesCount" xml:space="preserve"><value>/ ({0} files)</value></data>
+	<data name="FmtDirSuffix" xml:space="preserve"><value>{0}/ (directory)</value></data>
+	<data name="FmtBytesSuffix" xml:space="preserve"><value>{0} · {1} bytes</value></data>
+
+	<!-- ManifestEditorView 等 -->
+	<data name="MsgSelectManifestFile" xml:space="preserve"><value>Please select a valid manifest file.</value></data>
+	<data name="MsgLoaded" xml:space="preserve"><value>Loaded.</value></data>
+	<data name="FmtLoadFailed" xml:space="preserve"><value>Load failed: {0}</value></data>
+	<data name="FmtManifestVersionUnsupported" xml:space="preserve"><value>Manifest version {0} is not supported. Only version 2 or newer is supported.</value></data>
+
+	<data name="TabLocaleResources" xml:space="preserve"><value>Locale Resources</value></data>
+	<data name="TabPathResources" xml:space="preserve"><value>Path Resources</value></data>
+	<data name="AddLocaleResource" xml:space="preserve"><value>Add Resource</value></data>
+	<data name="RemoveLocaleResource" xml:space="preserve"><value>Remove Resource</value></data>
+	<data name="AddLocaleLanguage" xml:space="preserve"><value>Add Language</value></data>
+	<data name="RemoveLocaleLanguage" xml:space="preserve"><value>Remove Language</value></data>
+	<data name="LocaleResourceName" xml:space="preserve"><value>Resource Name</value></data>
+	<data name="LocaleLanguage" xml:space="preserve"><value>Language</value></data>
+	<data name="LocaleValue" xml:space="preserve"><value>Value</value></data>
+	<data name="AddPathResource" xml:space="preserve"><value>Add Resource</value></data>
+	<data name="RemovePathResource" xml:space="preserve"><value>Remove Resource</value></data>
+	<data name="AddPathScale" xml:space="preserve"><value>Add Scale</value></data>
+	<data name="RemovePathScale" xml:space="preserve"><value>Remove Scale</value></data>
+	<data name="PathResourceName" xml:space="preserve"><value>Resource Name</value></data>
+	<data name="PathScale" xml:space="preserve"><value>DPI Scale</value></data>
+	<data name="PathValue" xml:space="preserve"><value>Path</value></data>
+	<data name="ResourceEmptyName" xml:space="preserve"><value>Resource name cannot be empty.</value></data>
+	<data name="ResourceDupName" xml:space="preserve"><value>Duplicate resource name: {0}</value></data>
+	<data name="ResourceEmptyLanguage" xml:space="preserve"><value>Language name cannot be empty in resource '{0}'.</value></data>
+	<data name="ResourceDupLanguage" xml:space="preserve"><value>Duplicate language in resource '{0}': {1}</value></data>
+	<data name="ResourceEmptyScale" xml:space="preserve"><value>Scale must be positive in resource '{0}'.</value></data>
+	<data name="ResourceDupScale" xml:space="preserve"><value>Duplicate scale in resource '{0}': {1}</value></data>
+	<data name="ResourceInfoLocale" xml:space="preserve"><value>Resources: {0}, languages in selected: {1}</value></data>
+	<data name="ResourceInfoPath" xml:space="preserve"><value>Resources: {0}, scales in selected: {1}</value></data>
+
+	<data name="TabResourceFileEditor" xml:space="preserve"><value>Resource File Editor</value></data>
+	<data name="ResourceFile" xml:space="preserve"><value>Resource File:</value></data>
+	<data name="NewLocaleResource" xml:space="preserve"><value>New Locale File</value></data>
+	<data name="NewPathResource" xml:space="preserve"><value>New Path File</value></data>
+	<data name="MsgNoDataToSave" xml:space="preserve"><value>There is no resource to save.</value></data>
+	<data name="MsgDiscardChanges" xml:space="preserve"><value>Discard current content?</value></data>
+	<data name="MsgResourceFileKindUnknown" xml:space="preserve"><value>Could not determine the resource type. Treating as Locale file.</value></data>
+	<data name="MsgResourceFileSaved" xml:space="preserve"><value>Saved: {0}</value></data>
+	<data name="FmtResourceFileStatus" xml:space="preserve"><value>Type: {0} · Locale: {1} · Path: {2}</value></data>
+
+	<data name="FmtLocaleResourcesCount" xml:space="preserve"><value>Locale Resources ({0})</value></data>
+	<data name="FmtPathResourcesCount" xml:space="preserve"><value>Path Resources ({0})</value></data>
+	<data name="KindSingle" xml:space="preserve"><value>Single</value></data>
+	<data name="KindBundle" xml:space="preserve"><value>Bundle</value></data>
+	<data name="FmtPackageSummary" xml:space="preserve"><value>{0} · {1} package(s)</value></data>
 </root>

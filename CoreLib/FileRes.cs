@@ -57,10 +57,10 @@ namespace Sidebar
 				newer.Add (dpiScale);
 				list = newer;
 			}
-			foreach (var i in list)
+			foreach (var key in this.Keys.ToList ())
 			{
-				string _ = null;
-				if (!ContainsKey (i)) this.TryRemove (i, out _);
+				string _;
+				if (!list.Contains (key)) this.TryRemove (key, out _);
 				if (Count <= 2) return;
 			}
 		}

@@ -22,13 +22,13 @@
 			<TextBlock Text="{x:Static loc:Strings.Package}" Margin="0,0,6,0" />
 			<TextBox Grid.Column="1" x:Name="txtPackagePath" VerticalAlignment="Center" />
 			<Button Grid.Column="2" Content="{x:Static loc:Strings.Browse}"
-            Margin="6,0,0,0" Padding="10,2" Click="OnBrowse" />
+                    Margin="6,0,0,0" Padding="10,2" Click="OnBrowse" />
 			<Button Grid.Column="3" Content="{x:Static loc:Strings.Load}"
-            Margin="6,0,0,0" Padding="10,2" Click="OnLoad" />
+                    Margin="6,0,0,0" Padding="10,2" Click="OnLoad" />
 			<Button Grid.Column="4" Content="{x:Static loc:Strings.FindEntryPoints}"
-            Margin="6,0,0,0" Padding="10,2" Click="OnFindEntryPoints" />
+                    Margin="6,0,0,0" Padding="10,2" Click="OnFindEntryPoints" />
 			<Button Grid.Column="5" Content="{x:Static loc:Strings.SaveAs}"
-            Margin="6,0,0,0" Padding="10,2" Click="OnSaveAs" />
+                    Margin="6,0,0,0" Padding="10,2" Click="OnSaveAs" />
 		</Grid>
 
 		<Grid Grid.Row="1" Margin="0,0,0,6">
@@ -38,7 +38,7 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock x:Name="txtStatus" Foreground="#606060" VerticalAlignment="Center" />
 			<ProgressBar Grid.Column="1" x:Name="progress" Width="220" Height="16"
-                 VerticalAlignment="Center" Visibility="Collapsed" />
+                         VerticalAlignment="Center" Visibility="Collapsed" />
 		</Grid>
 
 		<TabControl Grid.Row="2" x:Name="tabRoot">
@@ -51,6 +51,16 @@
 			<!-- ========== 单包：文件 ========== -->
 			<TabItem x:Name="tabSingleFiles" Header="{x:Static loc:Strings.Files}">
 				<views:PackageFilesView x:Name="singleFilesView" />
+			</TabItem>
+
+			<!-- ========== 单包：Locale.xml ========== -->
+			<TabItem x:Name="tabSingleLocale" Header="{x:Static loc:Strings.TabLocaleResources}">
+				<views:LocaleResourceEditorView x:Name="singleLocaleEditor" />
+			</TabItem>
+
+			<!-- ========== 单包：Path.xml ========== -->
+			<TabItem x:Name="tabSinglePath" Header="{x:Static loc:Strings.TabPathResources}">
+				<views:PathResourceEditorView x:Name="singlePathEditor" />
 			</TabItem>
 
 			<!-- ========== Bundle：捆绑属性 ========== -->
@@ -118,6 +128,12 @@
 						</TabItem>
 						<TabItem Header="{x:Static loc:Strings.Files}">
 							<views:PackageFilesView x:Name="slotFilesView" />
+						</TabItem>
+						<TabItem Header="{x:Static loc:Strings.TabLocaleResources}">
+							<views:LocaleResourceEditorView x:Name="subLocaleEditor" />
+						</TabItem>
+						<TabItem Header="{x:Static loc:Strings.TabPathResources}">
+							<views:PathResourceEditorView x:Name="subPathEditor" />
 						</TabItem>
 					</TabControl>
 				</Grid>

@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace Sidebar
 {
 	[ComVisible (true)]
-	public struct Version: IComparable<Version>, IEquatable<Version>, IXmlSerializable
+	public struct Version: IComparable<Version>, IEquatable<Version>, IXmlSerializable, IComparable
 	{
 		// Backing fields
 		private ushort major;
@@ -265,6 +265,12 @@ namespace Sidebar
 		public void WriteXml (XmlWriter writer)
 		{
 			writer.WriteString (this.ToString ());
+		}
+		public int CompareTo (object obj)
+		{
+			if (obj is ulong) return CompareTo ((ulong)obj);
+			else if (obj is Version) return CompareTo ((Version)obj);
+			else return -1;
 		}
 	}
 	public class VersionComparer: IComparer<Version>, IComparer

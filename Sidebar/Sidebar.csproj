@@ -105,7 +105,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoHideScrollBar.cs" />
-    <Compile Include="Config.cs" />
     <Compile Include="ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
@@ -126,9 +125,6 @@
       <DependentUpon>HideTilesContainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="IEHelper.cs" />
-    <Compile Include="ManagerWindow.xaml.cs">
-      <DependentUpon>ManagerWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Notification.xaml.cs">
       <DependentUpon>Notification.xaml</DependentUpon>
     </Compile>
@@ -142,30 +138,14 @@
     <Compile Include="TestPage.xaml.cs">
       <DependentUpon>TestPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tile.xaml.cs">
-      <DependentUpon>Tile.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TileCompatibility.cs" />
     <Compile Include="TileControl.xaml.cs">
       <DependentUpon>TileControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="TileInstance.cs" />
-    <Compile Include="TileItemControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TileManageForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TileManageForm.Designer.cs">
-      <DependentUpon>TileManageForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="TilePropertiesForm.xaml.cs">
       <DependentUpon>TilePropertiesForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TopOptions.xaml.cs">
-      <DependentUpon>TopOptions.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UIConventer.cs" />
     <Compile Include="WinForm.cs" />
     <None Include="packages.config" />
     <None Include="Signature.pfx" />
@@ -193,24 +173,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ManagerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Notification.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <!--<Page Include="Themes\Slate\Theme.xaml">
@@ -417,7 +385,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Locale.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Resource Include="Resources\Left.png" />
     <Resource Include="Resources\Right.png" />
@@ -695,19 +664,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tile.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="TileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TilePropertiesForm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TopOptions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -744,9 +705,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="TileManageForm.resx">
-      <DependentUpon>TileManageForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -763,6 +721,10 @@
     <ProjectReference Include="..\Native\Native.csproj">
       <Project>{52309125-e452-4d6f-8672-a49d8b52b2d9}</Project>
       <Name>Native</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDKCompatible\SDKCompatible.csproj">
+      <Project>{07ac822f-5020-458c-8d35-bd49ba7ad8dc}</Project>
+      <Name>SDKCompatible</Name>
     </ProjectReference>
     <ProjectReference Include="..\TileClient\TileClient.csproj">
       <Project>{e06095f3-687a-41fe-8c6a-50c719d7444a}</Project>

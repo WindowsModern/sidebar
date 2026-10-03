@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:SGPkgMgr.Views"
         xmlns:loc="clr-namespace:SGPkgMgr.Localization"
-		xmlns:metro="http://schemas.codeplex.com/elysium/theme"
+        xmlns:metro="http://schemas.codeplex.com/elysium/theme"
         Title="{x:Static loc:Strings.AppTitle}"
         Height="760" Width="1080"
         WindowStartupLocation="CenterScreen"
@@ -11,6 +11,9 @@
 	<TabControl Margin="6">
 		<TabItem Header="{x:Static loc:Strings.TabManifestEditor}">
 			<views:ManifestEditorView />
+		</TabItem>
+		<TabItem Header="{x:Static loc:Strings.TabResourceFileEditor}">
+			<views:ResourceFileEditorView />
 		</TabItem>
 		<TabItem Header="{x:Static loc:Strings.TabPackageReader}">
 			<views:PackageReaderView />
@@ -26,6 +29,9 @@
 		</TabItem>
 		<TabItem Header="{x:Static loc:Strings.TabPackageConverter}">
 			<views:PackageConverterView />
+		</TabItem>
+		<TabItem Header="{x:Static loc:Strings.TabImportLegacyTile}">
+			<views:ImportLegacyTileView />
 		</TabItem>
 	</TabControl>
 </Window>
