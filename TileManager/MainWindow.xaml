@@ -89,7 +89,7 @@
 										</DataTemplate>
 									</GridViewColumn.CellTemplate>
 								</GridViewColumn>
-								<GridViewColumn Header="{pres:StringResource TILEMGR_COL_USERMODELID}" DisplayMemberBinding="{Binding UserModelId}" Width="100"/>
+								<GridViewColumn Header="{pres:StringResource TILEMGR_COL_USERMODELID}" DisplayMemberBinding="{Binding UserModelId}" Width="300"/>
 							</GridView>
 						</ListView.View>
 					</ListView>

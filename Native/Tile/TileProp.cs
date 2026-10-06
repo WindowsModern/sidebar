@@ -10,32 +10,6 @@ using Sidebar.Properties;
 namespace Sidebar
 {
 	[ComVisible (true)]
-	[Obsolete (DescRes.NeverUse, false)]
-	public enum TileType
-	{
-		Content,
-		/// <summary>
-		/// 该磁贴仅能容纳其他磁贴。因此，不需要在以 Windows 8.x 模式时提供样式
-		/// </summary>
-		Container
-	}
-	[ComVisible (true)]
-	[Obsolete (DescRes.NeverUse, false)]
-	public enum TileSize
-	{
-		Small,
-		Medium,
-		Wide,
-		Large
-	}
-	[ComVisible (true)]
-	[Obsolete (DescRes.NeverUse, false)]
-	public enum TileForegroundColor
-	{
-		Dark = 0x000000,
-		Light = 0xFFFFFF
-	}
-	[ComVisible (true)]
 	public enum TileOverflow
 	{
 		[LocalizedDescription ("TileOverflow_Auto", typeof (Resources))]
@@ -45,10 +19,7 @@ namespace Sidebar
 		[LocalizedDescription ("TileOverflow_Scroll", typeof (Resources))]
 		Scroll,
 		[LocalizedDescription ("TileOverflow_Scale", typeof (Resources))]
-		Scale,
-		[LocalizedDescription ("TileOverflow_Resize", typeof (Resources))]
-		[Obsolete (DescRes.NeverUse, false)]
-		Resize 
+		Scale
 	}
 	[ComVisible (true)]
 	public enum TileHostEvent

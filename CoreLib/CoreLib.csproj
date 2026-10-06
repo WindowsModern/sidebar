@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Signature.pfx</AssemblyOriginatorKeyFile>
@@ -75,7 +75,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell.cs" />
     <Compile Include="Themes.cs" />
-    <Compile Include="TileConfig.cs" />
     <Compile Include="TileManager.cs" />
     <Compile Include="TilePackaging.cs" />
     <Compile Include="WPFExt.cs" />

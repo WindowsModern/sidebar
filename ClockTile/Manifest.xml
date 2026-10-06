@@ -11,7 +11,7 @@
     <OSMinVersion>5.1.2600.0</OSMinVersion>
   </Prerequisites>
   <Applications>
-    <Application Id="App" Executable="WindowsModern.ClockTile.dll" HasFlyout="true" HasProperties="true">
+    <Application Id="App" Executable="WindowsModern.ClockTile.dll" EntryPoint="ClockTile.Tile" HasFlyout="true" HasProperties="true">
       <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="Assets\SmallLogo.png">
         <Tile MinHeight="20" MaxHeight="200" DefaultHeight="60" CanPinBottom="true" Overflow="Hidden" />
         <Flyout FlyoutWidth="493" FlyoutHeight="303" FlyoutCanResize="false" />

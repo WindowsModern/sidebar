@@ -11,8 +11,8 @@
     <OSMinVersion>5.1.2600.0</OSMinVersion>
   </Prerequisites>
   <Applications>
-    <Application Id="App" Executable="WindowsModern.TrayTile.dll" HasFlyout="true" HasProperties="false">
-      <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="Logo.ico">
+    <Application Id="App" Executable="WindowsModern.TrayTile.dll" EntryPoint="WindowsModern.TrayTile.Tile" HasFlyout="true" HasProperties="false">
+      <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="SmallIcon.png">
         <Tile MinHeight="32" MaxHeight="128" DefaultHeight="32" CanPinBottom="true" Overflow="Scroll" />
         <Flyout FlyoutWidth="147" FlyoutHeight="79" FlyoutCanResize="true" />
       </VisualElements>

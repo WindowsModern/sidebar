@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Sidebar.Styles">
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="Utilities.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Sidebar.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Tile.xaml"></ResourceDictionary>
+	</ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

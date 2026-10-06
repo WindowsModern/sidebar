@@ -14,27 +14,61 @@ namespace Sidebar
 {
 	public class TileInstance: ITileRuntime
 	{
-		public ITileConfig Config { get; private set; }
-		public ITileManifest Manifest { get; private set; }
-		public IProgramFolder Region { get; private set; }
+		public TileConfig Config { get; private set; }
+		public TileManifest Manifest { get; private set; }
+		public ProgramFolder Region { get; private set; }
 		public UIElement TileUI { get; set; }
 		public TileStorage Storage { get; private set; }
 		public TileBase Instance { get; private set; }
-		public IProgramFolder UserRegion { get; private set; }
+		public ProgramFolder UserRegion { get; private set; }
 		public ISidebarFeatures Features { get; private set; }
 		public ITileApplication Application { get; private set; }
+		public string UserModelId { get; private set; }
+		ITileManifest ITileRuntime.Manifest => Manifest;
+		IProgramFolder ITileRuntime.Region => Region;
+		ITileConfig ITileRuntime.Config => Config;
+		IProgramFolder ITileRuntime.UserRegion => UserRegion;
+		UIElement ITileRuntime.TileUI => TileUI;
+		ISidebarFeatures ITileRuntime.Features => Features;
+		ITileApplication ITileRuntime.Application => Application;
 		private void LoadTileBase ()
 		{
 			Assembly assembly = Assembly.LoadFrom (Path.Combine (Storage.FolderPath, Application.Executable));
 			Instance = (TileBase)SdkCompatible.GetTileInstance (assembly, Application.EntryPoint);
 			Instance.InitTileInstance (this);
 		}
+		private static void PreloadAllDlls (string root)
+		{
+			if (string.IsNullOrEmpty (root) || !Directory.Exists (root)) return;
+			var pending = new Stack<string> ();
+			pending.Push (root);
+			while (pending.Count > 0)
+			{
+				string dir = pending.Pop ();
+				string [] files = null;
+				try { files = Directory.GetFiles (dir, "*.dll"); } catch { }
+				if (files != null)
+				{
+					foreach (var f in files)
+					{
+						try { Assembly.LoadFrom (f); } catch { }
+					}
+				}
+				string [] subs = null;
+				try { subs = Directory.GetDirectories (dir); } catch { }
+				if (subs != null)
+				{
+					foreach (var s in subs) pending.Push (s);
+				}
+			}
+		}
 		public TileInstance (TileApplicationStorage application, UIElement container, ISidebarFeatures sidebar = null)
 		{
+			UserModelId = application.UserModelId;
 			Storage = application.Storage;
 			Region = application.Storage.TileFolder;
 			UserRegion = application.AppCurrentUserFolder;
-			Config = new TileConfig (UserRegion);
+			Config = new TileConfig (UserRegion, application.UserModelId);
 			Manifest = Storage.Manifest;
 			TileUI = container;
 			Features = sidebar;

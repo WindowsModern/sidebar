@@ -17,6 +17,7 @@ using ImageSource = System.Windows.Media.ImageSource;
 using BitmapImage = System.Windows.Media.Imaging.BitmapImage;
 using System.Threading.Tasks;
 using AnyDiff;
+using System.Globalization;
 
 namespace Sidebar
 {
@@ -283,25 +284,25 @@ namespace Sidebar
 	public class TileVisualElementTile: ITileVisualElementTile, IXmlSerializable
 	{
 		[XmlAttribute ("MinHeight")]
-		public int MinHeight { get; set; }
+		public double MinHeight { get; set; }
 		[XmlAttribute ("MaxHeight")]
-		public int MaxHeight { get; set; }
+		public double MaxHeight { get; set; }
 		[XmlAttribute ("DefaultHeight")]
-		public int DefaultHeight { get; set; }
+		public double DefaultHeight { get; set; }
 		[XmlAttribute ("CanPinBottom")]
 		public bool CanPinBottom { get; set; }
 		[XmlAttribute ("Overflow")]
 		public TileOverflow Overflow { get; set; }
-		public TileVisualElementTile (int minHeight, int maxHeight, int dfHeight, bool canPin, TileOverflow overflow) { MinHeight = minHeight; MaxHeight = maxHeight; DefaultHeight = dfHeight; CanPinBottom = canPin; Overflow = overflow; }
+		public TileVisualElementTile (double minHeight, double maxHeight, double dfHeight, bool canPin, TileOverflow overflow) { MinHeight = minHeight; MaxHeight = maxHeight; DefaultHeight = dfHeight; CanPinBottom = canPin; Overflow = overflow; }
 		private TileVisualElementTile () { }
 		public XmlSchema GetSchema () => null;
 		public void ReadXml (XmlReader reader)
 		{
 			reader.MoveToContent ();
 			string v;
-			v = reader.GetAttribute ("MinHeight"); if (v != null) MinHeight = int.Parse (v);
-			v = reader.GetAttribute ("MaxHeight"); if (v != null) MaxHeight = int.Parse (v);
-			v = reader.GetAttribute ("DefaultHeight"); if (v != null) DefaultHeight = int.Parse (v);
+			v = reader.GetAttribute ("MinHeight"); if (v != null) MinHeight = double.Parse (v);
+			v = reader.GetAttribute ("MaxHeight"); if (v != null) MaxHeight = double.Parse (v);
+			v = reader.GetAttribute ("DefaultHeight"); if (v != null) DefaultHeight = double.Parse (v);
 			v = reader.GetAttribute ("CanPinBottom"); if (v != null) CanPinBottom = bool.Parse (v);
 			v = reader.GetAttribute ("Overflow"); if (v != null) Overflow = (TileOverflow)Enum.Parse (typeof (TileOverflow), v);
 			reader.Skip ();
@@ -319,20 +320,20 @@ namespace Sidebar
 	public class TileVisualElementFlyout: ITileVisualElementFlyout, IXmlSerializable
 	{
 		[XmlAttribute ("FlyoutWidth")]
-		public int FlyoutWidth { get; set; }
+		public double FlyoutWidth { get; set; }
 		[XmlAttribute ("FlyoutHeight")]
-		public int FlyoutHeight { get; set; }
+		public double FlyoutHeight { get; set; }
 		[XmlAttribute ("FlyoutCanResize")]
 		public bool FlyoutCanResize { get; set; }
-		public TileVisualElementFlyout (int width, int height, bool canResize) { FlyoutWidth = width; FlyoutHeight = height; FlyoutCanResize = canResize; }
+		public TileVisualElementFlyout (double width, double height, bool canResize) { FlyoutWidth = width; FlyoutHeight = height; FlyoutCanResize = canResize; }
 		private TileVisualElementFlyout () { }
 		public XmlSchema GetSchema () => null;
 		public void ReadXml (XmlReader reader)
 		{
 			reader.MoveToContent ();
 			string v;
-			v = reader.GetAttribute ("FlyoutWidth"); if (v != null) FlyoutWidth = int.Parse (v);
-			v = reader.GetAttribute ("FlyoutHeight"); if (v != null) FlyoutHeight = int.Parse (v);
+			v = reader.GetAttribute ("FlyoutWidth"); if (v != null) FlyoutWidth = double.Parse (v);
+			v = reader.GetAttribute ("FlyoutHeight"); if (v != null) FlyoutHeight = double.Parse (v);
 			v = reader.GetAttribute ("FlyoutCanResize"); if (v != null) FlyoutCanResize = bool.Parse (v);
 			reader.Skip ();
 		}
@@ -720,15 +721,15 @@ namespace Sidebar
 
 			// GridStyle 在版本 2 中已废弃，忽略。
 			var tile = new TileVisualElementTile (
-				ParseInt ((string)railEl?.Element ("MinHeight")),
-				ParseInt ((string)railEl?.Element ("MaxHeight")),
-				ParseInt ((string)railEl?.Element ("DefaultHeight")),
+				ParseDouble ((string)railEl?.Element ("MinHeight")),
+				ParseDouble ((string)railEl?.Element ("MaxHeight")),
+				ParseDouble ((string)railEl?.Element ("DefaultHeight")),
 				ParseBool ((string)railEl?.Element ("CanPinBottom")),
 				ParseOverflow ((string)railEl?.Element ("Overflow"))
 			);
 			var flyout = new TileVisualElementFlyout (
-				Math.Max (0, ParseInt ((string)railEl?.Element ("FlyoutWidth")) - 8),
-				Math.Max (0, ParseInt ((string)railEl?.Element ("FlyoutHeight")) - 21),
+				Math.Max (0, ParseDouble ((string)railEl?.Element ("FlyoutWidth")) - 8),
+				Math.Max (0, ParseDouble ((string)railEl?.Element ("FlyoutHeight")) - 21),
 				ParseBool ((string)railEl?.Element ("FlyoutCanResize"))
 			);
 			var visualElements = new TileVisualElements (
@@ -773,17 +774,30 @@ namespace Sidebar
 			if (Enum.TryParse (s, out a)) return a;
 			return ProcessorArchitecture.Neutral;
 		}
-		private static TileType ParseTileType (string s)
-		{
-			TileType t;
-			if (Enum.TryParse (s, out t)) return t;
-			return default (TileType);
-		}
 		private static TileOverflow ParseOverflow (string s)
 		{
 			TileOverflow o;
 			if (Enum.TryParse (s, out o)) return o;
 			return default (TileOverflow);
+		}
+		/// <summary>
+		/// 解析 XML 属性里的 double。兼容旧版整数字符串（"28"）和新版小数字符串（"28.5"）。
+		/// 使用 InvariantCulture，避免区域设置（如 fr-FR 的逗号）导致解析失败。
+		/// </summary>
+		public static double ParseDouble (string s)
+		{
+			if (string.IsNullOrWhiteSpace (s)) return 0;
+			double v;
+			if (double.TryParse (s, NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+				return v;
+			int end = 0;
+			while (end < s.Length && (char.IsDigit (s [end]) || s [end] == '.'
+				|| s [end] == '-' || s [end] == '+' || s [end] == 'e' || s [end] == 'E'))
+				end++;
+			if (end > 0 && double.TryParse (s.Substring (0, end),
+				NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+				return v;
+			return 0;
 		}
 		#endregion
 	}

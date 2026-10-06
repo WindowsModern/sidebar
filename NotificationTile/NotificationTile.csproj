@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Native">
-      <HintPath>..\..\..\..\..\Desktop\lh\Sidebar SDK\SDK Libs\Any CPU\Release\Native.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -50,9 +47,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TileClient">
-      <HintPath>..\..\..\..\..\Desktop\lh\Sidebar SDK\SDK Libs\Any CPU\Release\TileClient.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +123,16 @@
   <ItemGroup>
     <Folder Include="NotificationServer\ARM64\" />
     <Folder Include="NotificationServer\Itanium\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Native\Native.csproj">
+      <Project>{52309125-e452-4d6f-8672-a49d8b52b2d9}</Project>
+      <Name>Native</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TileClient\TileClient.csproj">
+      <Project>{e06095f3-687a-41fe-8c6a-50c719d7444a}</Project>
+      <Name>TileClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

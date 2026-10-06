@@ -11,7 +11,7 @@
     <OSMinVersion>5.1.2600.0</OSMinVersion>
   </Prerequisites>
   <Applications>
-    <Application Id="App" Executable="WindowsModern.UserTile.dll" HasFlyout="true" HasProperties="false">
+    <Application Id="App" Executable="WindowsModern.UserTile.dll" EntryPoint="WindowsModern.UserTile.Tile" HasFlyout="true" HasProperties="false">
       <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="SmallLogoGreen.ico">
         <Tile MinHeight="34" MaxHeight="100" DefaultHeight="32" CanPinBottom="true" Overflow="Auto" />
         <Flyout FlyoutWidth="292" FlyoutHeight="179" FlyoutCanResize="true" />

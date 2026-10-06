@@ -11,7 +11,7 @@
     <OSMinVersion>5.1.2600.0</OSMinVersion>
   </Prerequisites>
   <Applications>
-    <Application Id="App" Executable="WindowsModern.SearchTile.dll" HasFlyout="true" HasProperties="false">
+    <Application Id="App" Executable="WindowsModern.SearchTile.dll" EntryPoint="WindowsModern.SearchTile.Tile" HasFlyout="true" HasProperties="false">
       <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="Logo.png">
         <Tile MinHeight="41" MaxHeight="41" DefaultHeight="60" CanPinBottom="true" Overflow="Auto" />
         <Flyout FlyoutWidth="390" FlyoutHeight="78" FlyoutCanResize="false" />

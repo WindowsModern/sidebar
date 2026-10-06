@@ -11,7 +11,7 @@
     <OSMinVersion>5.1.2600.0</OSMinVersion>
   </Prerequisites>
   <Applications>
-    <Application Id="App" Executable="WindowsModern.QuickLaunchTile.dll" HasFlyout="true" HasProperties="false">
+    <Application Id="App" Executable="WindowsModern.QuickLaunchTile.dll" EntryPoint="WindowsModern.QuickLaunchTile.Tile" HasFlyout="true" HasProperties="false">
       <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="Logo.png">
         <Tile MinHeight="33" MaxHeight="120" DefaultHeight="32" CanPinBottom="true" Overflow="Scroll" />
         <Flyout FlyoutWidth="147" FlyoutHeight="79" FlyoutCanResize="true" />

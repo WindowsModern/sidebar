@@ -6,207 +6,35 @@
 	xmlns:local="clr-namespace:Sidebar"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:pst="clr-namespace:Sidebar.Presentation"
-	Title="Sidebar" Width="300" Height="300" AllowsTransparency="True"
+	Title="{pst:StringResource SIDEBAR_TITLE}" Width="150" Height="600" AllowsTransparency="True"
 	Background="Transparent" Opacity="1" ResizeMode="NoResize"
 	ShowInTaskbar="False" WindowStyle="None"
 	Closed="Window_Closed" Loaded="Window_Loaded"
 	mc:Ignorable="d">
-	<FrameworkElement.Resources>
-		<Style x:Key="SidebarBackground" TargetType="Control">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Control">
-						<Grid Background="Transparent">
-							<Border Background="{Binding ThemeBrush, Source={x:Static pst:DwmThemeProvider.Instance}}" />
-							<Border x:Name="SideBorder" BorderBrush="#53000000" BorderThickness="1,0,0,0" RenderTransformOrigin="0.5,0.5" />
-						</Grid>
-						<ControlTemplate.Triggers>
-							<DataTrigger Binding="{Binding IsReversed, Source={x:Static pst:SidebarUIConfig.Instance}}" Value="True">
-								<Setter TargetName="SideBorder" Property="BorderThickness" Value="0,0,1,0" />
-							</DataTrigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="SidebarOptionsTop" TargetType="Control">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Control">
-						<Grid Background="{TemplateBinding Background}">
-							<StackPanel Name="OptionsBar" Height="{TemplateBinding Height}" HorizontalAlignment="Right" VerticalAlignment="Center" ClipToBounds="True" Orientation="Horizontal">
-								<TextBlock x:Name="OptionsText" VerticalAlignment="Center" FontFamily="{DynamicResource GlobalFontFamily}" FontSize="10" Foreground="{DynamicResource GlobalForegroundBrush}" Opacity="0">Options</TextBlock>
-								<Grid Width="10" Height="6" Margin="2,7,2,0" VerticalAlignment="Top">
-									<Image x:Name="OptionsNormal" Opacity="1" RenderOptions.BitmapScalingMode="HighQuality" Source="Images\Sidebar\OptionsNormal.png" />
-									<Image x:Name="OptionsActive" Opacity="0" RenderOptions.BitmapScalingMode="HighQuality" Source="Images\Sidebar\OptionsHover.png" />
-								</Grid>
-							</StackPanel>
-						</Grid>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Trigger.EnterActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="OptionsText" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
-											<DoubleAnimation Storyboard.TargetName="OptionsNormal" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
-											<DoubleAnimation Storyboard.TargetName="OptionsActive" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.EnterActions>
-								<Trigger.ExitActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="OptionsText" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
-											<DoubleAnimation Storyboard.TargetName="OptionsNormal" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
-											<DoubleAnimation Storyboard.TargetName="OptionsActive" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.ExitActions>
-							</Trigger>
-							<DataTrigger Binding="{Binding IsReversed, Source={x:Static pst:SidebarUIConfig.Instance}}" Value="True">
-								<Setter TargetName="OptionsBar" Property="HorizontalAlignment" Value="Left" />
-								<Setter TargetName="OptionsBar" Property="FlowDirection" Value="RightToLeft" />
-							</DataTrigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="Height" Value="17" />
-			<Setter Property="VerticalAlignment" Value="Top" />
-		</Style>
-		<Style x:Key="SidebarOptionsSplliter" TargetType="Control">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Height" Value="4" />
-			<Setter Property="VerticalAlignment" Value="Top" />
-			<Setter Property="Margin" Value="0,17,0,0" />
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Control">
-						<Grid>
-							<Line Name="SplitterLine1" HorizontalAlignment="Stretch" Stretch="Fill" Stroke="#53000000" StrokeThickness="1" X1="0" X2="100" />
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="SidebarTilesRegion" TargetType="DockPanel">
-			<Setter Property="Margin" Value="0,19,0,0" />
-		</Style>
-		<ControlTemplate x:Key="AutoHideScrollViewer" TargetType="ScrollViewer">
-			<Grid Background="{TemplateBinding Background}">
-				<ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Margin="{TemplateBinding Padding}" CanContentScroll="{TemplateBinding CanContentScroll}" Content="{TemplateBinding Content}" />
-				<ScrollBar x:Name="PART_VerticalScrollBar" Width="6" Margin="0,0,2,8" HorizontalAlignment="Right" Orientation="Vertical" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Value="{TemplateBinding VerticalOffset}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Opacity="0" />
-				<ScrollBar x:Name="PART_HorizontalScrollBar" Height="6" Margin="0,0,8,2" VerticalAlignment="Bottom" Orientation="Horizontal" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}" Value="{TemplateBinding HorizontalOffset}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Opacity="0" />
-			</Grid>
-		</ControlTemplate>
-		<Style x:Key="SidebarPinnedTilesScrollControl" TargetType="ScrollViewer">
-			<Setter Property="Template" Value="{StaticResource AutoHideScrollViewer}"></Setter>
-			<Setter Property="local:AutoHideScrollBar.IsEnabled" Value="True"></Setter>
-			<Setter Property="DockPanel.Dock" Value="Top"></Setter>
-			<Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-			<Setter Property="HorizontalScrollBarVisibility" Value="Disabled"></Setter>
-			<Setter Property="VerticalScrollBarVisibility" Value="Auto"></Setter>
-		</Style>
-		<Style x:Key="SidebarTilesScrollControl" TargetType="ScrollViewer">
-			<Setter Property="Template" Value="{StaticResource AutoHideScrollViewer}"></Setter>
-			<Setter Property="local:AutoHideScrollBar.IsEnabled" Value="True"></Setter>
-			<Setter Property="DockPanel.Dock" Value="Bottom"></Setter>
-			<Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-			<Setter Property="HorizontalScrollBarVisibility" Value="Disabled"></Setter>
-			<Setter Property="VerticalScrollBarVisibility" Value="Auto"></Setter>
-		</Style>
-		<Style x:Key="SidebarPinnedTilesControl" TargetType="ItemsControl">
-			<Setter Property="DockPanel.Dock" Value="Top"></Setter>
-		</Style>
-		<Style x:Key="SidebarTilesControl" TargetType="ItemsControl">
-			<Setter Property="DockPanel.Dock" Value="Bottom"></Setter>
-		</Style>
-		<Style x:Key="SidebarHighlightSide" TargetType="Control">
-			<Setter Property="Visibility" Value="Collapsed"></Setter>
-		</Style>
-		<Style x:Key="SidebarTaskbarTrayBackground" TargetType="Control">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Control">
-						<Grid Background="Transparent">
-							<Border Background="{Binding ThemeBrush, Source={x:Static pst:DwmThemeProvider.Instance}}" />
-							<Border x:Name="SideBorder" BorderBrush="#53000000" BorderThickness="0,1,0,0" RenderTransformOrigin="0.5,0.5" />
-						</Grid>
-						<ControlTemplate.Triggers>
-							<DataTrigger Binding="{Binding IsReversed, Source={x:Static pst:SidebarUIConfig.Instance}}" Value="True">
-								<Setter TargetName="SideBorder" Property="BorderThickness" Value="0,0,0,1" />
-							</DataTrigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="SidebarMinRestoreButton" TargetType="Button">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button">
-						<Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-							<Image x:Name="Normal" Source="Images\Sidebar\FoldNormal.png" />
-							<Image x:Name="Hover" Source="Images\Sidebar\FoldLight.png" Opacity="0" />
-							<Image x:Name="Active" Source="Images\Sidebar\FoldPress.png" Opacity="0" />
-						</Grid>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Trigger.EnterActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.EnterActions>
-								<Trigger.ExitActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.ExitActions>
-							</Trigger>
-							<Trigger Property="IsPressed" Value="True">
-								<Trigger.EnterActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.EnterActions>
-								<Trigger.ExitActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.ExitActions>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="Width" Value="17" />
-			<Setter Property="Height" Value="17" />
-			<Setter Property="VerticalAlignment" Value="Center"></Setter>
-			<Setter Property="Margin" Value="11,0,13,0"></Setter>
-		</Style>
-		<Style x:Key="SidebarMinTaskbarTilesControl" TargetType="ItemsControl">
-			
-		</Style>
-	</FrameworkElement.Resources>
+	<Window.Resources>
+		<ContextMenu x:Key="SidebarContextMenu">
+			<MenuItem Name="MenuItemMinBar" Click="MenuItemMinBar_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_MINBAR}"></MenuItem>
+			<MenuItem Name="MenuItemProperties" Click="MenuItemProperties_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_PROP}"></MenuItem>
+			<MenuItem Name="MenuItemAddTiles" SubmenuOpened="MenuItemAddTiles_SubmenuOpened" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_ADDTILE}">
+				<MenuItem.Items>
+					<MenuItem Header="Loading..." IsEnabled="False" />
+				</MenuItem.Items>
+			</MenuItem>
+			<MenuItem Name="MenuItemGetMoreTiles" Click="MenuItemGetMoreTiles_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_STORE}"></MenuItem>
+			<Separator />
+			<MenuItem Name="MenuItemCancel" Click="MenuItemCancel_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_CANCEL}"></MenuItem>
+		</ContextMenu>
+	</Window.Resources>
 	<Grid>
 		<Grid Name="SidebarView">
 			<Control Style="{DynamicResource SidebarBackground}" />
 			<Grid>
-				<Control Style="{DynamicResource SidebarOptionsTop}" />
+				<Button Name="TopOptionsButton" Click="TopOptionsButton_Click" Style="{DynamicResource SidebarOptionsTop}" Focusable="False"/>
 				<Control Style="{DynamicResource SidebarOptionsSplliter}" />
 				<DockPanel Style="{DynamicResource SidebarTilesRegion}">
 					<ScrollViewer Name="ScrollPinnedTilesControl" Style="{DynamicResource SidebarPinnedTilesScrollControl}" />
 					<ItemsControl Name="PinnedTilesControl" Style="{DynamicResource SidebarPinnedTilesControl}" />
-					<ItemsControl Name="OverflowTilesRegion" />
+					<ItemsControl Name="OverflowTilesControl" />
 					<ScrollViewer Name="ScrollTilesControl" Style="{DynamicResource SidebarTilesScrollControl}" />
 					<ItemsControl Name="TilesControl" Style="{DynamicResource SidebarTilesControl}" />
 				</DockPanel>

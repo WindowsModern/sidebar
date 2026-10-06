@@ -27,13 +27,13 @@ namespace Sidebar.Presentation
 	{
 		private static readonly Lazy<SidebarUIConfig> _lazy = new Lazy<SidebarUIConfig> (() => new SidebarUIConfig (), LazyThreadSafetyMode.ExecutionAndPublication);
 		public static SidebarUIConfig Instance => _lazy.Value;
-		public bool IsReversed => DllMain.Config.Direction == SidebarDirection.Left;
+		public bool IsReversed => (DllMain.Config?.Direction ?? SidebarDirection.Right) == SidebarDirection.Left;
 		private readonly object _handleLock = new object ();
 		private readonly HashSet<PropertyChangedEventHandler> _handlers = new HashSet<PropertyChangedEventHandler> ();
 		private int _disposed;
 		public SidebarUIConfig ()
 		{
-			DllMain.Config.PropertyChanged += Config_PropertyChanged;
+			if (DllMain.Config != null) DllMain.Config.PropertyChanged += Config_PropertyChanged;
 		}
 		public event PropertyChangedEventHandler PropertyChanged
 		{

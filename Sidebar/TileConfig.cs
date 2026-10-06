@@ -3,40 +3,54 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows.Threading;
 using Microsoft.Win32.Init;
 
 namespace Sidebar
 {
 	public class TileConfig: ITileConfig
 	{
+		private string _userModelid = null;
 		private double _height = 0;
-		private bool _pinned = false;
 		private bool _autosize = true;
+		private DispatcherTimer _heightUpdateTimer = null;
 		public double Height
 		{
 			get { return _height; }
 			set
 			{
 				_height = value;
-				Ini ["Settings"] ["Height"] = value;
+				_heightUpdateTimer.Tick -= HeightUpdateTimer_Tick;
+				_heightUpdateTimer.Tick += HeightUpdateTimer_Tick;
+				_heightUpdateTimer?.Stop ();
+				_heightUpdateTimer?.Start ();
 				OnPropertyChanged ("Height");
 			}
+		}
+		private void HeightUpdateTimer_Tick (object sender, EventArgs e)
+		{
+			_heightUpdateTimer?.Stop ();
+			_heightUpdateTimer.Tick -= HeightUpdateTimer_Tick;
+			Ini ["Settings"] ["Height"] = _height;
 		}
 		public InitConfig Ini { get; }
 		public bool Pinned
 		{
-			get { return _pinned; }
+			get { return App.CurrentUserConfig.IsPinnedBottom (_userModelid); }
 			set
 			{
-				_pinned = value;
-				Ini ["Settings"] ["Pinned"] = value;
+				if (value) App.CurrentUserConfig.PinBottom (_userModelid);
+				else App.CurrentUserConfig.PinTop (_userModelid);
 				OnPropertyChanged ("Pinned");
 			}
+		}
+		public void NotifyPinned ()
+		{
+			OnPropertyChanged ("Pinned");
 		}
 		private void InitConfigValues ()
 		{
 			_height = Ini? ["Settings"]?.GetKey ("Height").ReadDouble (0) ?? 0;
-			_pinned = Ini? ["Settings"]?.GetKey ("Pinned").ReadBool (false) ?? false;
 			_autosize = Ini? ["Settings"]?.GetKey ("AutoSize").ReadBool (true) ?? true;
 		}
 		public XmlConfig Xml { get; }
@@ -55,14 +69,17 @@ namespace Sidebar
 		{
 			PropertyChanged?.Invoke (this, new PropertyChangedEventArgs (propertyName));
 		}
-		public TileConfig (InitConfig tileIni, XmlConfig tileXml)
+		public TileConfig (InitConfig tileIni, XmlConfig tileXml, string userModelId)
 		{
 			Ini = tileIni;
 			Xml = tileXml;
+			_userModelid = userModelId;
+			if (_heightUpdateTimer == null) _heightUpdateTimer = new DispatcherTimer ();
+			_heightUpdateTimer.Interval = TimeSpan.FromSeconds (0.05);
 			InitConfigValues ();
 		}
-		public TileConfig (IProgramFolder tileFolder) :
-			this (tileFolder.InitConfig, tileFolder.XmlConfig)
+		public TileConfig (IProgramFolder tileFolder, string userModelId) :
+			this (tileFolder.InitConfig, tileFolder.XmlConfig, userModelId)
 		{ }
 	}
 }

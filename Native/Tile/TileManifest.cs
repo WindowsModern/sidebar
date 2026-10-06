@@ -56,11 +56,11 @@ namespace Sidebar
 	public interface ITileVisualElementTile
 	{
 		[XmlAttribute ("MinHeight")]
-		int MinHeight { get; }
+		double MinHeight { get; }
 		[XmlAttribute ("MaxHeight")]
-		int MaxHeight { get; }
+		double MaxHeight { get; }
 		[XmlAttribute ("DefaultHeight")]
-		int DefaultHeight { get; }
+		double DefaultHeight { get; }
 		[XmlAttribute ("CanPinBottom")]
 		bool CanPinBottom { get; }
 		[XmlAttribute ("Overflow")]
@@ -71,9 +71,9 @@ namespace Sidebar
 	public interface ITileVisualElementFlyout
 	{
 		[XmlAttribute ("FlyoutWidth")]
-		int FlyoutWidth { get; }
+		double FlyoutWidth { get; }
 		[XmlAttribute ("FlyoutHeight")]
-		int FlyoutHeight { get; }
+		double FlyoutHeight { get; }
 		[XmlAttribute ("FlyoutCanResize")]
 		bool FlyoutCanResize { get; }
 	}

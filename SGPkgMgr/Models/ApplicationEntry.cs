@@ -15,13 +15,13 @@ namespace SGPkgMgr.Models
 		private bool _hasProperties = false;
 		private string _displayName = "";
 		private string _logo = "Icon.ico";
-		private int _minHeight = 28;
-		private int _maxHeight = 300;
-		private int _defaultHeight = 97;
+		private double _minHeight = 28;
+		private double _maxHeight = 300;
+		private double _defaultHeight = 97;
 		private bool _canPinBottom = true;
 		private TileOverflow _overflow = TileOverflow.Hidden;
-		private int _flyoutWidth = 378;
-		private int _flyoutHeight = 721;
+		private double _flyoutWidth = 378;
+		private double _flyoutHeight = 721;
 		private bool _flyoutCanResize = false;
 
 		public string Id { get { return _id; } set { _id = value; Raise ("Id"); } }
@@ -31,13 +31,13 @@ namespace SGPkgMgr.Models
 		public bool HasProperties { get { return _hasProperties; } set { _hasProperties = value; Raise ("HasProperties"); } }
 		public string DisplayName { get { return _displayName; } set { _displayName = value; Raise ("DisplayName"); } }
 		public string Logo { get { return _logo; } set { _logo = value; Raise ("Logo"); } }
-		public int MinHeight { get { return _minHeight; } set { _minHeight = value; Raise ("MinHeight"); } }
-		public int MaxHeight { get { return _maxHeight; } set { _maxHeight = value; Raise ("MaxHeight"); } }
-		public int DefaultHeight { get { return _defaultHeight; } set { _defaultHeight = value; Raise ("DefaultHeight"); } }
+		public double MinHeight { get { return _minHeight; } set { _minHeight = value; Raise ("MinHeight"); } }
+		public double MaxHeight { get { return _maxHeight; } set { _maxHeight = value; Raise ("MaxHeight"); } }
+		public double DefaultHeight { get { return _defaultHeight; } set { _defaultHeight = value; Raise ("DefaultHeight"); } }
 		public bool CanPinBottom { get { return _canPinBottom; } set { _canPinBottom = value; Raise ("CanPinBottom"); } }
 		public TileOverflow Overflow { get { return _overflow; } set { _overflow = value; Raise ("Overflow"); } }
-		public int FlyoutWidth { get { return _flyoutWidth; } set { _flyoutWidth = value; Raise ("FlyoutWidth"); } }
-		public int FlyoutHeight { get { return _flyoutHeight; } set { _flyoutHeight = value; Raise ("FlyoutHeight"); } }
+		public double FlyoutWidth { get { return _flyoutWidth; } set { _flyoutWidth = value; Raise ("FlyoutWidth"); } }
+		public double FlyoutHeight { get { return _flyoutHeight; } set { _flyoutHeight = value; Raise ("FlyoutHeight"); } }
 		public bool FlyoutCanResize { get { return _flyoutCanResize; } set { _flyoutCanResize = value; Raise ("FlyoutCanResize"); } }
 
 		public static ApplicationEntry FromModel (TileApplication app)

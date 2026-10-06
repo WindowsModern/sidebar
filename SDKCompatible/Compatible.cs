@@ -76,15 +76,7 @@ namespace Sidebar
 		}
 		private static T CreateInstance<T> (Type t) where T : class
 		{
-			if (t == null) return null;
-			try
-			{
-				return Activator.CreateInstance (t) as T;
-			}
-			catch
-			{
-				return null;
-			}
+			return Activator.CreateInstance (t) as T;
 		}
 		private static bool IsNativeTileType (Type t)
 		{

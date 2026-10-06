@@ -10,7 +10,7 @@
 
 	<UserControl.Resources>
 		<DataTemplate x:Key="TrayIconTemplate">
-			<ToggleButton Style="{DynamicResource TileIconItemForTrayTile}"
+			<Button Style="{DynamicResource TileIconItemForTrayTile}"
                           ToolTip="{Binding ToolTip}"
                           Tag="{Binding}"
 						  MouseEnter="ToggleButton_MouseEnter"
@@ -20,7 +20,7 @@
 							Click="ToggleButton_Click"
                           MouseDoubleClick="ToggleButton_MouseDoubleClick">
 				<Image Source="{Binding Icon}" Width="16" Height="16"/>
-			</ToggleButton>
+			</Button>
 		</DataTemplate>
 	</UserControl.Resources>
 

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Sidebar
 {
@@ -184,6 +187,81 @@ namespace Sidebar
 		{
 			var source = PresentationSource.FromVisual (window);
 			return source?.CompositionTarget?.TransformToDevice ?? Matrix.Identity;
+		}
+	}
+	public static class FrameworkElementAnimations
+	{
+		private const double MinAnimatableDelta = 5.0;
+		private static readonly TimeSpan DefaultDuration = TimeSpan.FromMilliseconds (500);
+		private sealed class AnimationToken { public int Value; }
+		private static readonly ConditionalWeakTable<FrameworkElement, AnimationToken> Tokens = new ConditionalWeakTable<FrameworkElement, AnimationToken> ();
+		public static Task<double> AnimeToNewHeight (this FrameworkElement fe, double targetHeight, double? originHeight = null, double? finalSetHeight = null, TimeSpan? duration = null)
+		{
+			if (fe == null) throw new ArgumentNullException ("fe");
+			var tcs = new TaskCompletionSource<double> ();
+			TimeSpan dur = duration ?? DefaultDuration;
+			if (dur < TimeSpan.Zero) dur = TimeSpan.Zero;
+			double currentHeight = fe.Height;
+			double actualHeight = fe.ActualHeight;
+			bool skipAnimation = IsCloseToTarget (currentHeight, targetHeight) || IsCloseToTarget (actualHeight, targetHeight);
+			if (skipAnimation)
+			{
+				fe.BeginAnimation (FrameworkElement.HeightProperty, null);
+				double finalValue = finalSetHeight ?? targetHeight;
+				fe.Height = finalValue;
+				tcs.TrySetResult (finalValue);
+				return tcs.Task;
+			}
+			double? from = originHeight;
+			if (!from.HasValue && double.IsNaN (currentHeight))
+				from = double.IsNaN (actualHeight) ? 0d : actualHeight;
+			int token = NextToken (fe);
+			var animation = new DoubleAnimation { To = targetHeight, Duration = new Duration (dur), FillBehavior = FillBehavior.HoldEnd };
+			if (from.HasValue) animation.From = from.Value;
+			EventHandler completedHandler = null;
+			completedHandler = (sender, args) => {
+				animation.Completed -= completedHandler;
+				if (!IsCurrentToken (fe, token)) return;
+				if (finalSetHeight.HasValue)
+				{
+					fe.BeginAnimation (FrameworkElement.HeightProperty, null);
+					fe.Height = finalSetHeight.Value;
+					tcs.TrySetResult (finalSetHeight.Value);
+				}
+				else
+				{
+					tcs.TrySetResult (fe.Height);
+				}
+			};
+			animation.Completed += completedHandler;
+			fe.BeginAnimation (FrameworkElement.HeightProperty, animation, HandoffBehavior.SnapshotAndReplace);
+			return tcs.Task;
+		}
+		private static bool IsCloseToTarget (double value, double target)
+		{
+			if (double.IsNaN (value) || double.IsNaN (target)) return false;
+			return Math.Abs (value - target) <= MinAnimatableDelta;
+		}
+		private static int NextToken (FrameworkElement fe)
+		{
+			AnimationToken t;
+			if (!Tokens.TryGetValue (fe, out t)) { t = new AnimationToken (); Tokens.Add (fe, t); }
+			unchecked { t.Value++; }
+			return t.Value;
+		}
+		private static bool IsCurrentToken (FrameworkElement fe, int token)
+		{
+			AnimationToken t;
+			return Tokens.TryGetValue (fe, out t) && t.Value == token;
+		}
+		public static bool IsHeightAnimating (this FrameworkElement fe)
+		{
+			if (fe == null) throw new ArgumentNullException ("fe");
+			var clock = fe.GetAnimationBaseValue (FrameworkElement.HeightProperty) as double?;
+			var current = fe.Height;
+			var baseValue = (double)fe.GetAnimationBaseValue (FrameworkElement.HeightProperty);
+			if (double.IsNaN (current) || double.IsNaN (baseValue)) return true;
+			return Math.Abs (current - baseValue) > double.Epsilon;
 		}
 	}
 }

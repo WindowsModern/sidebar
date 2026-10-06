@@ -9,13 +9,13 @@
 
 	<UserControl.Resources>
 		<DataTemplate x:Key="ItemTemplate">
-			<ToggleButton Style="{DynamicResource TileIconItemForQuickLaunchTile}"
+			<Button Style="{DynamicResource TileIconItemForQuickLaunchTile}"
                           ToolTip="{Binding Description}"
                           Command="{Binding LeftClickCommand}"
                           Tag="{Binding}"
                           MouseDoubleClick="ToggleButton_MouseDoubleClick">
 				<Image Source="{Binding IconSource}" Width="16" Height="16"/>
-			</ToggleButton>
+			</Button>
 		</DataTemplate>
 	</UserControl.Resources>
 
