@@ -6,8 +6,8 @@
              xmlns:local="clr-namespace:Sidebar"
 			 xmlns:pst="clr-namespace:Sidebar.Presentation"
 			 x:Name="RootTileElement"
-             mc:Ignorable="d" Background="Transparent"
-			 Loaded="RootTileElement_Loaded" Unloaded="RootTileElement_Unloaded"
+             mc:Ignorable="d" Background="Transparent" Visibility="Hidden"
+			 Loaded="RootTileElement_Loaded" Unloaded="RootTileElement_Unloaded" SizeChanged="RootTileElement_SizeChanged"
              d:DesignHeight="300" d:DesignWidth="300">
 	<UserControl.Resources>
 		<ControlTemplate x:Key="TileSplliterTemplate" TargetType="Control">
@@ -124,6 +124,17 @@
 		<Storyboard x:Key="TileShowFlyoutIconWhenLeave">
 			<DoubleAnimation Storyboard.TargetName="FlyoutIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15"/>
 		</Storyboard>
+		<Storyboard x:Key="TileFirstLoadAnimation" Completed="TileFirstLoadStoryboard_Completed">
+			<DoubleAnimation Storyboard.TargetName="RootTileElement" Storyboard.TargetProperty="Height" From="0" To="100" Duration="0:0:0.5" FillBehavior="Stop"/>
+			<DoubleAnimation Storyboard.TargetName="TileMainPanel" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" BeginTime="0:0:0.5"/>
+		</Storyboard>
+		<Storyboard x:Key="TileUnloadAnimation">
+			<DoubleAnimation Storyboard.TargetName="RootTileElement" Storyboard.TargetProperty="Height" To="0" Duration="0:0:0.5" BeginTime="0:0:0.25"/>
+			<DoubleAnimation Storyboard.TargetName="TileMainPanel" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5"/>
+		</Storyboard>
+		<Storyboard x:Key="TileHeightChangeAnimation" Completed="TileHeightChangeAnimation_Completed">
+			<DoubleAnimation Storyboard.TargetName="TileContentContainerControl" Storyboard.TargetProperty="Height" From="0" To="100" Duration="0:0:0.5" FillBehavior="Stop"/>
+		</Storyboard>
 	</UserControl.Resources>
 	<UserControl.Triggers>
 		<EventTrigger RoutedEvent="MouseEnter">
@@ -141,8 +152,8 @@
 	</UserControl.Triggers>
 	<Grid>
 		<DockPanel>
-			<Thumb Name="TileSplitterThumb" Style="{DynamicResource TileSplliter}"></Thumb>
-			<Grid Name="TileMainPanel">
+			<Thumb Name="TileSplitterThumb" Style="{DynamicResource TileSplliter}" DragStarted="TileSplitterThumb_DragStarted" DragDelta="TileSplitterThumb_DragDelta" DragCompleted="TileSplitterThumb_DragCompleted" PreviewMouseLeftButtonDown="TileSplitterThumb_PreviewMouseLeftButtonDown"></Thumb>
+			<Grid Name="TileMainPanel" Opacity="0">
 				<Control Style="{DynamicResource TileBackground}"></Control>
 				<DockPanel>
 					<Grid Style="{DynamicResource TileHeaderContainer}">
@@ -155,8 +166,8 @@
 					</Grid>
 					<Grid Name="TileContentControlContainer">
 						<Control Style="{DynamicResource TileContentBackground}"></Control>
-						<Grid Name="TileContentContainerControl" Style="{DynamicResource TileContentContainer}" SizeChanged="TileContentContainerControl_SizeChanged">
-							<Grid Name="TileContentContainer" VerticalAlignment="Stretch"></Grid>
+						<Grid Name="TileContentContainerControl" Style="{DynamicResource TileContentContainer}">
+							<Grid Name="TileContentContainer" SizeChanged="TileContentContainer_SizeChanged"></Grid>
 						</Grid>
 						<Control Style="{DynamicResource TileContentHighlight}" IsHitTestVisible="False"></Control>
 					</Grid>

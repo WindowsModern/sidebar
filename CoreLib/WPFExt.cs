@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace Sidebar
 {
@@ -189,79 +190,195 @@ namespace Sidebar
 			return source?.CompositionTarget?.TransformToDevice ?? Matrix.Identity;
 		}
 	}
-	public static class FrameworkElementAnimations
+	/// <summary>
+	/// SetTimeout 返回的句柄，用于 ClearTimeout 取消。
+	/// </summary>
+	public sealed class TimeoutHandle
 	{
-		private const double MinAnimatableDelta = 5.0;
-		private static readonly TimeSpan DefaultDuration = TimeSpan.FromMilliseconds (500);
-		private sealed class AnimationToken { public int Value; }
-		private static readonly ConditionalWeakTable<FrameworkElement, AnimationToken> Tokens = new ConditionalWeakTable<FrameworkElement, AnimationToken> ();
-		public static Task<double> AnimeToNewHeight (this FrameworkElement fe, double targetHeight, double? originHeight = null, double? finalSetHeight = null, TimeSpan? duration = null)
+		private Dispatcher _dispatcher;
+		private Action _action;
+		private DispatcherTimer _timer;
+		private DispatcherOperation _operation;
+		private volatile bool _cancelled;
+
+		internal TimeoutHandle (Dispatcher dispatcher, Action action)
 		{
-			if (fe == null) throw new ArgumentNullException ("fe");
-			var tcs = new TaskCompletionSource<double> ();
-			TimeSpan dur = duration ?? DefaultDuration;
-			if (dur < TimeSpan.Zero) dur = TimeSpan.Zero;
-			double currentHeight = fe.Height;
-			double actualHeight = fe.ActualHeight;
-			bool skipAnimation = IsCloseToTarget (currentHeight, targetHeight) || IsCloseToTarget (actualHeight, targetHeight);
-			if (skipAnimation)
+			_dispatcher = dispatcher;
+			_action = action;
+		}
+
+		internal void Start (TimeSpan delay, DispatcherPriority priority)
+		{
+			if (delay <= TimeSpan.Zero)
 			{
-				fe.BeginAnimation (FrameworkElement.HeightProperty, null);
-				double finalValue = finalSetHeight ?? targetHeight;
-				fe.Height = finalValue;
-				tcs.TrySetResult (finalValue);
-				return tcs.Task;
+				// 排到指定优先级队列：默认 Loaded，等布局/渲染处理完再执行
+				_operation = _dispatcher.BeginInvoke (priority, (Action)Execute);
 			}
-			double? from = originHeight;
-			if (!from.HasValue && double.IsNaN (currentHeight))
-				from = double.IsNaN (actualHeight) ? 0d : actualHeight;
-			int token = NextToken (fe);
-			var animation = new DoubleAnimation { To = targetHeight, Duration = new Duration (dur), FillBehavior = FillBehavior.HoldEnd };
-			if (from.HasValue) animation.From = from.Value;
-			EventHandler completedHandler = null;
-			completedHandler = (sender, args) => {
-				animation.Completed -= completedHandler;
-				if (!IsCurrentToken (fe, token)) return;
-				if (finalSetHeight.HasValue)
-				{
-					fe.BeginAnimation (FrameworkElement.HeightProperty, null);
-					fe.Height = finalSetHeight.Value;
-					tcs.TrySetResult (finalSetHeight.Value);
-				}
-				else
-				{
-					tcs.TrySetResult (fe.Height);
-				}
-			};
-			animation.Completed += completedHandler;
-			fe.BeginAnimation (FrameworkElement.HeightProperty, animation, HandoffBehavior.SnapshotAndReplace);
+			else
+			{
+				// DispatcherTimer 绑定到指定 Dispatcher，Tick 一定在 UI 线程触发
+				_timer = new DispatcherTimer (delay, priority, OnTick, _dispatcher);
+				_timer.Start ();
+			}
+		}
+
+		private void OnTick (object sender, EventArgs e)
+		{
+			Execute ();
+		}
+
+		private void Execute ()
+		{
+			if (_cancelled) return;
+			_cancelled = true;
+
+			var timer = _timer;
+			_timer = null;
+			if (timer != null)
+			{
+				timer.Stop ();
+				timer.Tick -= OnTick;
+			}
+			_operation = null;
+
+			var action = _action;
+			_action = null;
+			_dispatcher = null;
+
+			if (action != null) action ();
+		}
+
+		/// <summary>
+		/// 取消尚未执行的任务；重复调用无副作用。
+		/// </summary>
+		public void Cancel ()
+		{
+			if (_cancelled) return;
+			_cancelled = true;
+
+			var dispatcher = _dispatcher;
+			if (dispatcher == null) return;
+
+			if (dispatcher.CheckAccess ())
+			{
+				CancelCore ();
+			}
+			else
+			{
+				try { dispatcher.BeginInvoke (DispatcherPriority.Send, (Action)CancelCore); }
+				catch (TaskCanceledException) { /* Dispatcher 正在关闭 */ }
+			}
+		}
+
+		private void CancelCore ()
+		{
+			_action = null;
+
+			var op = _operation;
+			_operation = null;
+			if (op != null && op.Status == DispatcherOperationStatus.Pending)
+			{
+				try { op.Abort (); }
+				catch (InvalidOperationException) { /* 已经开始执行，忽略 */ }
+			}
+
+			var timer = _timer;
+			_timer = null;
+			if (timer != null)
+			{
+				timer.Stop ();
+				timer.Tick -= OnTick;
+			}
+
+			_dispatcher = null;
+		}
+
+		/// <summary>是否仍在等待执行。</summary>
+		public bool IsPending
+		{
+			get { return !_cancelled; }
+		}
+	}
+
+	public static class TimeoutExtensions
+	{
+		/// <summary>
+		/// 类似 JS 的 setTimeout。可对任意 DispatcherObject（Window、UserControl、控件等）调用。
+		/// </summary>
+		/// <param name="obj">作为计时上下文的 DispatcherObject。</param>
+		/// <param name="action">要执行的委托。</param>
+		/// <param name="delayMs">
+		/// 延迟毫秒数。0（或负数）表示"布局/渲染完成后再执行"，即排到消息队列尾部。
+		/// </param>
+		/// <param name="priority">
+		/// 队列优先级，默认 DispatcherPriority.Loaded —— 位于 Render 之后、Background 之前，
+		/// 正好在布局与渲染完成之后触发。
+		/// </param>
+		public static TimeoutHandle SetTimeout (this DispatcherObject obj, Action action,
+			int delayMs, DispatcherPriority priority = DispatcherPriority.Loaded)
+		{
+			if (obj == null) throw new ArgumentNullException ("obj");
+			if (action == null) throw new ArgumentNullException ("action");
+
+			var dispatcher = obj.Dispatcher;
+			if (dispatcher == null)
+				throw new InvalidOperationException ("DispatcherObject 尚未关联 Dispatcher。");
+
+			return dispatcher.SetTimeout (action, delayMs, priority);
+		}
+		/// <summary>无延迟重载，等价于 SetTimeout(action, 0)。</summary>
+		public static TimeoutHandle SetTimeout (this DispatcherObject obj, Action action)
+		{
+			return SetTimeout (obj, action, 0, DispatcherPriority.Loaded);
+		}
+		/// <summary>
+		/// 直接对 Dispatcher 调用的版本（不依赖某个元素）。
+		/// </summary>
+		public static TimeoutHandle SetTimeout (this Dispatcher dispatcher, Action action,
+			int delayMs, DispatcherPriority priority = DispatcherPriority.Loaded)
+		{
+			if (dispatcher == null) throw new ArgumentNullException ("dispatcher");
+			if (action == null) throw new ArgumentNullException ("action");
+
+			// 跨线程调用自动 marshal 回 UI 线程创建
+			if (!dispatcher.CheckAccess ())
+			{
+				return (TimeoutHandle)dispatcher.Invoke (
+					(Func<TimeoutHandle>)(() => dispatcher.SetTimeout (action, delayMs, priority)));
+			}
+
+			// Dispatcher 已关闭则不再排队
+			if (dispatcher.HasShutdownStarted || dispatcher.HasShutdownFinished)
+				return null;
+
+			var handle = new TimeoutHandle (dispatcher, action);
+			var delay = TimeSpan.FromMilliseconds (Math.Max (0, delayMs));
+			handle.Start (delay, priority);
+			return handle;
+		}
+		/// <summary>类似 JS 的 clearTimeout。</summary>
+		public static void ClearTimeout (this DispatcherObject obj, TimeoutHandle handle)
+		{
+			if (handle != null) handle.Cancel ();
+		}
+		/// <summary>类似 JS 的 clearTimeout（Dispatcher 版本）。</summary>
+		public static void ClearTimeout (this Dispatcher dispatcher, TimeoutHandle handle)
+		{
+			if (handle != null) handle.Cancel ();
+		}
+	}
+	public static class DispatcherExtensions
+	{
+		/// <summary>
+		/// 让出当前 Dispatcher 消息循环，等该优先级上的消息处理完后，返回的 Task 完成。
+		/// 需要在 UI 线程上调用。
+		/// </summary>
+		public static Task Yield (this Dispatcher dispatcher, DispatcherPriority priority)
+		{
+			if (dispatcher == null) throw new ArgumentNullException ("dispatcher");
+			var tcs = new TaskCompletionSource<object> ();
+			dispatcher.BeginInvoke (priority, new Action (() => tcs.TrySetResult (null)));
 			return tcs.Task;
-		}
-		private static bool IsCloseToTarget (double value, double target)
-		{
-			if (double.IsNaN (value) || double.IsNaN (target)) return false;
-			return Math.Abs (value - target) <= MinAnimatableDelta;
-		}
-		private static int NextToken (FrameworkElement fe)
-		{
-			AnimationToken t;
-			if (!Tokens.TryGetValue (fe, out t)) { t = new AnimationToken (); Tokens.Add (fe, t); }
-			unchecked { t.Value++; }
-			return t.Value;
-		}
-		private static bool IsCurrentToken (FrameworkElement fe, int token)
-		{
-			AnimationToken t;
-			return Tokens.TryGetValue (fe, out t) && t.Value == token;
-		}
-		public static bool IsHeightAnimating (this FrameworkElement fe)
-		{
-			if (fe == null) throw new ArgumentNullException ("fe");
-			var clock = fe.GetAnimationBaseValue (FrameworkElement.HeightProperty) as double?;
-			var current = fe.Height;
-			var baseValue = (double)fe.GetAnimationBaseValue (FrameworkElement.HeightProperty);
-			if (double.IsNaN (current) || double.IsNaN (baseValue)) return true;
-			return Math.Abs (current - baseValue) > double.Epsilon;
 		}
 	}
 }
