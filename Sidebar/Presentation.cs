@@ -10,6 +10,10 @@ using System.Windows.Markup;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
+using System.Windows.Threading;
+using Sidebar.Win32;
+
 namespace Sidebar.Presentation
 {
 	internal static class DllMain
@@ -80,6 +84,115 @@ namespace Sidebar.Presentation
 			if (Interlocked.Exchange (ref _disposed, 1) != 0) return;
 			DllMain.Config.PropertyChanged -= Config_PropertyChanged;
 			lock (_handleLock) _handlers.Clear ();
+		}
+	}
+	public sealed class SystemExplorerShell: INotifyPropertyChanged, IDisposable
+	{
+		private const string PersonalizeKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+		private const string AppsUseLightThemeValue = "AppsUseLightTheme";
+		private const string SystemUsesLightThemeValue = "SystemUsesLightTheme";
+		private static readonly Lazy<SystemExplorerShell> _lazy = new Lazy<SystemExplorerShell> (() => new SystemExplorerShell (), LazyThreadSafetyMode.ExecutionAndPublication);
+		public static SystemExplorerShell Instance => _lazy.Value;
+		private readonly object _handlersLock = new object ();
+		private readonly HashSet<PropertyChangedEventHandler> _handlers = new HashSet<PropertyChangedEventHandler> ();
+		private readonly Dispatcher _dispatcher;
+		private int _disposed;
+		private bool _isTaskbarTop;
+		private bool _isAppDarkMode;
+		private bool _isShellDarkMode;
+		public bool IsTaskbarTop => _isTaskbarTop;
+		public bool IsAppDarkMode => _isAppDarkMode;
+		public bool IsShellDarkMode => _isShellDarkMode;
+		public event PropertyChangedEventHandler PropertyChanged
+		{
+			add { if (value == null) return; lock (_handlersLock) _handlers.Add (value); }
+			remove { if (value == null) return; lock (_handlersLock) _handlers.Remove (value); }
+		}
+		private SystemExplorerShell ()
+		{
+			_dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+			Refresh ();
+			SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
+		}
+		private void OnUserPreferenceChanged (object sender, UserPreferenceChangedEventArgs e)
+		{
+			var d = _dispatcher;
+			if (d == null || d.HasShutdownStarted || d.HasShutdownFinished) return;
+			if (d.CheckAccess ()) Refresh ();
+			else
+			{
+				try { d.BeginInvoke (DispatcherPriority.Background, new Action (Refresh)); }
+				catch { }
+			}
+		}
+		public void Refresh ()
+		{
+			if (Interlocked.CompareExchange (ref _disposed, 0, 0) != 0) return;
+			RefreshTaskbarEdge ();
+			RefreshDarkMode ();
+		}
+		private void RefreshTaskbarEdge ()
+		{
+			bool value = false;
+			try { value = ExplorerShell.GetTaskbarEdge () == AppBarEdge.Top; }
+			catch { value = false; }
+			if (_isTaskbarTop == value) return;
+			_isTaskbarTop = value;
+			OnPropertyChanged (nameof (IsTaskbarTop));
+		}
+		private void RefreshDarkMode ()
+		{
+			bool appDark = ReadIsDarkMode (AppsUseLightThemeValue);
+			if (_isAppDarkMode != appDark)
+			{
+				_isAppDarkMode = appDark;
+				OnPropertyChanged (nameof (IsAppDarkMode));
+			}
+			bool shellDark = ReadIsDarkMode (SystemUsesLightThemeValue);
+			if (_isShellDarkMode != shellDark)
+			{
+				_isShellDarkMode = shellDark;
+				OnPropertyChanged (nameof (IsShellDarkMode));
+			}
+		}
+		private static bool ReadIsDarkMode (string valueName)
+		{
+			try
+			{
+				using (var key = Registry.CurrentUser.OpenSubKey (PersonalizeKeyPath, false))
+				{
+					if (key == null) return false;
+					object raw = key.GetValue (valueName);
+					if (raw == null) return false;
+					int value;
+					try { value = Convert.ToInt32 (raw); }
+					catch { return false; }
+					return value == 0;
+				}
+			}
+			catch { return false; }
+		}
+		private void OnPropertyChanged (string propertyName)
+		{
+			PropertyChangedEventHandler [] snapshot;
+			lock (_handlersLock)
+			{
+				if (_handlers.Count == 0) return;
+				snapshot = new PropertyChangedEventHandler [_handlers.Count];
+				_handlers.CopyTo (snapshot);
+			}
+			var args = new PropertyChangedEventArgs (propertyName);
+			foreach (var h in snapshot)
+			{
+				try { h?.Invoke (this, args); }
+				catch { }
+			}
+		}
+		public void Dispose ()
+		{
+			if (Interlocked.Exchange (ref _disposed, 1) != 0) return;
+			SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
+			lock (_handlersLock) _handlers.Clear ();
 		}
 	}
 	/// <summary>

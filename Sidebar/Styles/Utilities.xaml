@@ -3,7 +3,7 @@
 					xmlns:s="clr-namespace:System;assembly=mscorlib"
                     xmlns:local="clr-namespace:Sidebar"
 					xmlns:pst="clr-namespace:Sidebar.Presentation">
-	<s:Boolean x:Key="EnableBlur">True</s:Boolean>
+	<s:Boolean x:Key="EnableBlur">true</s:Boolean>
 	<s:Boolean x:Key="EnableBlurForFlyout">false</s:Boolean>
 	<s:Boolean x:Key="EnableBlurForDrag">false</s:Boolean>
 	<s:Boolean x:Key="EnableNotificationBlur">true</s:Boolean>

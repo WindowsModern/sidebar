@@ -121,8 +121,8 @@
       <DependentUpon>FlyoutTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Font.cs" />
-    <Compile Include="HideTilesContainWindow.xaml.cs">
-      <DependentUpon>HideTilesContainWindow.xaml</DependentUpon>
+    <Compile Include="HideTilesWindow.xaml.cs">
+      <DependentUpon>HideTilesWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="IEHelper.cs" />
     <Compile Include="Notification.xaml.cs">
@@ -170,7 +170,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HideTilesContainWindow.xaml">
+    <Page Include="HideTilesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

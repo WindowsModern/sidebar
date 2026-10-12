@@ -66,34 +66,87 @@ namespace Sidebar
 		/// 任务栏位置改变时触发（位置、大小、停靠边缘变化）。
 		/// </summary>
 		public static event EventHandler TaskbarPositionChanged;
+		private static readonly object _monitorLock = new object ();
 		private static TaskbarMonitorWindow _monitorWindow;
+		private static int _monitorRefCount;
 		/// <summary>
-		/// 开始监听任务栏位置改变。
-		/// 必须在 UI 线程上调用（例如窗体加载完成时）。
+		/// 当前是否正在监听任务栏位置改变。
 		/// </summary>
-		/// <exception cref="InvalidOperationException">如果已经启动监听。</exception>
-		public static void StartTaskbarMonitoring ()
+		public static bool IsTaskbarMonitoring
 		{
-			if (_monitorWindow != null)
-				throw new InvalidOperationException ("任务栏监听已经启动。");
-
-			_monitorWindow = new TaskbarMonitorWindow ();
-			_monitorWindow.TaskbarPosChanged += (s, e) =>
-			{
-				TaskbarPositionChanged?.Invoke (null, EventArgs.Empty);
-			};
-			_monitorWindow.CreateHandle (); // 创建隐藏窗口并开始接收消息
+			get { lock (_monitorLock) return _monitorWindow != null; }
 		}
 		/// <summary>
-		/// 停止监听任务栏位置改变。
+		/// 当前注册计数。为 0 表示未监听，大于 0 表示已监听且记录着有效注册次数。
+		/// </summary>
+		public static int TaskbarMonitoringRefCount
+		{
+			get { lock (_monitorLock) return _monitorRefCount; }
+		}
+		/// <summary>
+		/// 开始监听任务栏位置改变（计次）。
+		/// 必须在 UI 线程上调用（例如窗体加载完成时）。
+		/// 与 <see cref="StopTaskbarMonitoring"/> 一一对应；
+		/// 只有全部 Stop 之后才会真正注销。
+		/// </summary>
+		public static void StartTaskbarMonitoring ()
+		{
+			lock (_monitorLock)
+			{
+				_monitorRefCount++;
+				if (_monitorWindow != null) return;
+				var wnd = new TaskbarMonitorWindow ();
+				wnd.TaskbarPosChanged += OnTaskbarPosChanged;
+				try
+				{
+					wnd.CreateHandle (); // 创建隐藏窗口并开始接收消息
+				}
+				catch
+				{
+					wnd.TaskbarPosChanged -= OnTaskbarPosChanged;
+					try { wnd.DestroyHandle (); } catch { }
+					_monitorRefCount--;
+					throw;
+				}
+				_monitorWindow = wnd;
+			}
+		}
+		/// <summary>
+		/// 停止监听任务栏位置改变（计次）。
+		/// 只有注册计数归零时才会真正注销。
 		/// </summary>
 		public static void StopTaskbarMonitoring ()
 		{
-			if (_monitorWindow != null)
+			lock (_monitorLock)
 			{
-				_monitorWindow.DestroyHandle ();
-				_monitorWindow = null;
+				if (_monitorRefCount > 0)
+					_monitorRefCount--;
+				if (_monitorRefCount > 0) return;
+				DetachLocked ();
 			}
+		}
+		/// <summary>
+		/// 无条件完全注销：清空所有注册次数并真正停止监听。
+		/// </summary>
+		public static void StopAllTaskbarMonitoring ()
+		{
+			lock (_monitorLock)
+			{
+				_monitorRefCount = 0;
+				DetachLocked ();
+			}
+		}
+		private static void DetachLocked ()
+		{
+			if (_monitorWindow == null) return;
+			_monitorWindow.TaskbarPosChanged -= OnTaskbarPosChanged;
+			try { _monitorWindow.DestroyHandle (); }
+			catch { }
+			_monitorWindow = null;
+		}
+		private static void OnTaskbarPosChanged (object sender, EventArgs e)
+		{
+			TaskbarPositionChanged?.Invoke (null, EventArgs.Empty);
 		}
 	}
 	/// <summary>
@@ -191,7 +244,7 @@ namespace Sidebar
 			{
 				//first, hide tray by setting it's width to 0
 				GetWindowPlacement (trayHwnd, ref lpwndpl);
-				trayWndWidth = lpwndpl.rcNormalPosition.Width; //save original width of tray
+				if (lpwndpl.rcNormalPosition.Width > 0) trayWndWidth = lpwndpl.rcNormalPosition.Width; //save original width of tray
 				trayWndLeft = lpwndpl.rcNormalPosition.X; //save original left pos of tray
 														  //if (_hideTray)
 				MoveWindow (trayHwnd, lpwndpl.rcNormalPosition.X, lpwndpl.rcNormalPosition.Y, 0, lpwndpl.rcNormalPosition.Height, true);

@@ -166,6 +166,6 @@ namespace Sidebar
 	{
 		public SidebarDirection Direction { set; get; } = App.CurrentUserConfig.Direction;
 		public ITheme Theme { set; get; } = App.ThemeMgr.CurrentUserTheme;
-		public string ThemeName { set; get; } = App.ThemeMgr.CurrentUserTheme.ThemeName;
+		public string ThemeName { set; get; } = App.ThemeMgr.CurrentUserTheme?.ThemeName;
 	}
 }

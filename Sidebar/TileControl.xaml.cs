@@ -87,6 +87,7 @@ namespace Sidebar
 		{
 			InitializeComponent ();
 			tileContext = new TileContext (this, TileContentContainerControl);
+			VisualView = new TileVisualView (this);
 		}
 		public Task DestroyTileControl ()
 		{
@@ -108,6 +109,7 @@ namespace Sidebar
 				sb.Begin (this);
 			}, 0);
 			return tcs.Task.ContinueWith (_ => {
+				(Parent as Panel)?.Children?.Remove (this);
 				Instance?.Instance?.OnDestroy ();
 				tileContext?.Dispose ();
 				tileContext = null;
@@ -149,6 +151,7 @@ namespace Sidebar
 			}
 			return TileContentContainer;
 		}
+		public TileVisualView VisualView { get; set; }
 		#endregion
 		#region Pinned
 		public static readonly DependencyProperty IsPinnedProperty = DependencyProperty.Register (nameof (IsPinned), typeof (bool), typeof (TileControl), new FrameworkPropertyMetadata (false, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -175,8 +178,8 @@ namespace Sidebar
 			if (ret > maxh) ret = maxh;
 			return ret;
 		}
-		private bool IsOverflowAutoMode => AppStorage?.Infomation?.VisualElements?.Tile?.Overflow == TileOverflow.Auto;
-		private bool IsAutoMode => IsOverflowAutoMode || (Instance?.Config?.AutoSize ?? false);
+		public bool IsOverflowAutoMode => AppStorage?.Infomation?.VisualElements?.Tile?.Overflow == TileOverflow.Auto;
+		public bool IsAutoMode => IsOverflowAutoMode || (Instance?.Config?.AutoSize ?? false);
 		private void InitHeight ()
 		{
 			if (isfirstrun) return;
@@ -320,6 +323,58 @@ namespace Sidebar
 				sb.Begin ();
 			}
 		}
+		public double ContentActualHeight => TileContentContainerControl.ActualHeight;
+		public double BorderActualHeight => ActualHeight - ContentActualHeight;
+		public double? TargetHeightWhenAutoSize = null;
+		public double ContentMinHeight => AppStorage?.Infomation?.VisualElements?.Tile?.MinHeight ?? 10;
+		public double ContentMaxHeight => AppStorage?.Infomation?.VisualElements?.Tile?.MaxHeight ?? 32768;
+		#endregion
+		#region Context Menu
+		private void MenuItemAutoSize_Click (object sender, RoutedEventArgs e)
+		{
+			ToggleAutoSize ();
+		}
+		private void MenuItemPinnedBottom_Click (object sender, RoutedEventArgs e)
+		{
+			var host = Window.GetWindow (this) as SidebarWindow;
+			if (host == null) return;
+			if (MenuItemPinnedBottom.IsChecked) host.PinTileToBottom (this);
+			else host.PinTileToTop (this);
+		}
+		private void MenuItemMoveUp_Click (object sender, RoutedEventArgs e)
+		{
+			var host = Window.GetWindow (this) as SidebarWindow;
+			host?.MoveTileUp (this);
+		}
+		private void MenuItemMoveDown_Click (object sender, RoutedEventArgs e)
+		{
+			var host = Window.GetWindow (this) as SidebarWindow;
+			host?.MoveTileDown (this);
+		}
+		private void MenuItemProperties_Click (object sender, RoutedEventArgs e)
+		{
+
+		}
+		private void MenuItemRemove_Click (object sender, RoutedEventArgs e)
+		{
+			var host = Window.GetWindow (this) as SidebarWindow;
+			host?.RemoveTile (this);
+		}
+		private void TileContextMenu_Opened (object sender, RoutedEventArgs e)
+		{
+			if (Instance?.Config != null)
+			{
+				MenuItemAutoSize.IsChecked = Instance.Config.AutoSize;
+				MenuItemPinnedBottom.IsChecked = Instance.Config.Pinned;
+			}
+			MenuItemProperties.IsEnabled = AppStorage?.Infomation?.HasProperties ?? false;
+			var host = Window.GetWindow (this) as SidebarWindow;
+			MenuItemMoveUp.IsEnabled = host?.CanMoveTileUp (this) == true;
+			MenuItemMoveDown.IsEnabled = host?.CanMoveTileDown (this) == true;
+		}
+		#endregion
+		#region Overflow (Hide Tile)
+		public bool IsSizeHeightWhenOverflowed = false;
 		#endregion
 		private void RootTileElement_Loaded (object sender, RoutedEventArgs e)
 		{
@@ -332,6 +387,14 @@ namespace Sidebar
 		{
 			Instance?.Instance?.OnUnload ();
 		}
-	
+
+	}
+	public struct TileVisualView: ITileElement
+	{
+		private ITileElement ite;
+		public Panel ContentContainer => ite?.ContentContainer;
+		public string DisplayName => ite?.DisplayName;
+		public ImageSource Icon => ite?.Icon;
+		public TileVisualView (ITileElement _ite) { ite = _ite; }
 	}
 }

@@ -101,11 +101,13 @@
 		<Setter Property="HorizontalScrollBarVisibility" Value="Disabled"></Setter>
 		<Setter Property="VerticalScrollBarVisibility" Value="Auto"></Setter>
 	</Style>
-	<Style x:Key="SidebarPinnedTilesControl" TargetType="ItemsControl">
+	<Style x:Key="SidebarPinnedTilesControl" TargetType="StackPanel">
 		<Setter Property="DockPanel.Dock" Value="Bottom"></Setter>
+		<Setter Property="Orientation" Value="Vertical"></Setter>
 	</Style>
-	<Style x:Key="SidebarTilesControl" TargetType="ItemsControl">
+	<Style x:Key="SidebarTilesControl" TargetType="StackPanel">
 		<Setter Property="DockPanel.Dock" Value="Top"></Setter>
+		<Setter Property="Orientation" Value="Vertical"></Setter>
 	</Style>
 	<Style x:Key="SidebarHighlightSide" TargetType="Control">
 		<Setter Property="Visibility" Value="Collapsed"></Setter>
@@ -119,7 +121,7 @@
 						<Border x:Name="SideBorder" BorderBrush="#53000000" BorderThickness="0,1,0,0" RenderTransformOrigin="0.5,0.5" />
 					</Grid>
 					<ControlTemplate.Triggers>
-						<DataTrigger Binding="{Binding IsReversed, Source={x:Static pst:SidebarUIConfig.Instance}}" Value="True">
+						<DataTrigger Binding="{Binding IsTaskbarTop, Source={x:Static pst:SystemExplorerShell.Instance}}" Value="True">
 							<Setter TargetName="SideBorder" Property="BorderThickness" Value="0,0,0,1" />
 						</DataTrigger>
 					</ControlTemplate.Triggers>
@@ -179,6 +181,108 @@
 		<Setter Property="Margin" Value="11,0,13,0"></Setter>
 	</Style>
 	<Style x:Key="SidebarMinTaskbarTilesControl" TargetType="ItemsControl">
-
+		<Setter Property="Margin" Value="0,0,10,0"></Setter>
+		<Setter Property="ItemsPanel">
+			<Setter.Value>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal" />
+				</ItemsPanelTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<Button Tag="{Binding}" ToolTip="{Binding DisplayName}" Content="{Binding Icon}" Width="24">
+						<Button.Template>
+							<ControlTemplate TargetType="Button">
+								<Grid>
+									<Border x:Name="BackgroundActive" Opacity="0">
+										<Border.Background>
+											<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+												<GradientStop Offset="0" Color="Transparent" />
+												<GradientStop Offset="0.25" Color="#77000000" />
+												<GradientStop Offset="0.75" Color="#77000000" />
+												<GradientStop Offset="1" Color="Transparent" />
+											</LinearGradientBrush>
+										</Border.Background>
+									</Border>
+									<Border x:Name="BackgroundOuter" Margin="0,3" BorderThickness="1,0" Opacity="0">
+										<Border.BorderBrush>
+											<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+												<GradientStop Offset="0" Color="Transparent" />
+												<GradientStop Offset="0.25" Color="#66000000" />
+												<GradientStop Offset="0.75" Color="#66000000" />
+												<GradientStop Offset="1" Color="Transparent" />
+											</LinearGradientBrush>
+										</Border.BorderBrush>
+									</Border>
+									<Border x:Name="BackgroundInner" Margin="1,3" BorderThickness="1,0" Opacity="0">
+										<Border.BorderBrush>
+											<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+												<GradientStop Offset="0" Color="Transparent" />
+												<GradientStop Offset="0.25" Color="#CCFFFFFF" />
+												<GradientStop Offset="0.75" Color="#CCFFFFFF" />
+												<GradientStop Offset="1" Color="Transparent" />
+											</LinearGradientBrush>
+										</Border.BorderBrush>
+									</Border>
+									<Image Source="{TemplateBinding Content}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+									<Viewbox x:Name="BottonLight" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Opacity="0">
+										<Grid Width="20" Height="20" ClipToBounds="True">
+											<Ellipse Margin="3,15,3,-7">
+												<Ellipse.Fill>
+													<RadialGradientBrush Center="0.5,1" GradientOrigin="0.5,1" RadiusX="0.5" RadiusY="1">
+														<GradientStop Offset="0" Color="White" />
+														<GradientStop Offset="1" Color="#00FFFFFF" />
+													</RadialGradientBrush>
+												</Ellipse.Fill>
+											</Ellipse>
+										</Grid>
+									</Viewbox>
+								</Grid>
+								<ControlTemplate.Triggers>
+									<Trigger Property="IsMouseOver" Value="True">
+										<Trigger.EnterActions>
+											<BeginStoryboard>
+												<Storyboard>
+													<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+													<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+													<DoubleAnimation Storyboard.TargetName="BottonLight" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+												</Storyboard>
+											</BeginStoryboard>
+										</Trigger.EnterActions>
+										<Trigger.ExitActions>
+											<BeginStoryboard>
+												<Storyboard>
+													<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+													<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+													<DoubleAnimation Storyboard.TargetName="BottonLight" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+												</Storyboard>
+											</BeginStoryboard>
+										</Trigger.ExitActions>
+									</Trigger>
+									<Trigger Property="IsPressed" Value="True">
+										<Trigger.EnterActions>
+											<BeginStoryboard>
+												<Storyboard>
+													<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
+												</Storyboard>
+											</BeginStoryboard>
+										</Trigger.EnterActions>
+										<Trigger.ExitActions>
+											<BeginStoryboard>
+												<Storyboard>
+													<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
+												</Storyboard>
+											</BeginStoryboard>
+										</Trigger.ExitActions>
+									</Trigger>
+								</ControlTemplate.Triggers>
+							</ControlTemplate>
+						</Button.Template>
+					</Button>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 </ResourceDictionary>

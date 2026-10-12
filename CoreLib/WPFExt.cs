@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -379,6 +380,21 @@ namespace Sidebar
 			var tcs = new TaskCompletionSource<object> ();
 			dispatcher.BeginInvoke (priority, new Action (() => tcs.TrySetResult (null)));
 			return tcs.Task;
+		}
+	}
+	public static class RoomExtensions
+	{
+		public static double GetRemainingVertical (this StackPanel panel)
+		{
+			if (panel == null) return 0;
+			double used = 0;
+			foreach (UIElement child in panel.Children)
+			{
+				var fe = child as FrameworkElement;
+				if (fe == null) continue;
+				used += fe.ActualHeight + fe.Margin.Top + fe.Margin.Bottom;
+			}
+			return Math.Max (0, panel.ActualHeight - used);
 		}
 	}
 }

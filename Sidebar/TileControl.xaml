@@ -150,6 +150,20 @@
 			<BeginStoryboard Storyboard="{DynamicResource TileShowFlyoutIconWhenLeave}"/>
 		</EventTrigger>
 	</UserControl.Triggers>
+	<UserControl.ContextMenu>
+		<ContextMenu Name="TileContextMenu" Opened="TileContextMenu_Opened">
+			<Separator Name="MenuItemTileContextMenuItemSeparator" Visibility="Collapsed"></Separator>
+			<MenuItem Name="MenuItemAutoSize" IsCheckable="True" Click="MenuItemAutoSize_Click" Header="{pst:StringResource TILE_CONTEXTMENU_AUTOSIZE}"></MenuItem>
+			<Separator />
+			<MenuItem Name="MenuItemPinnedBottom" IsCheckable="True" Click="MenuItemPinnedBottom_Click" Header="{pst:StringResource TILE_CONTEXTMENU_PIN}"></MenuItem>
+			<Separator />
+			<MenuItem Name="MenuItemMoveUp" Click="MenuItemMoveUp_Click" Header="{pst:StringResource TILE_CONTEXTMENU_MOVEUP}"></MenuItem>
+			<MenuItem Name="MenuItemMoveDown" Click="MenuItemMoveDown_Click" Header="{pst:StringResource TILE_CONTEXTMENU_MOVEDOWN}"></MenuItem>
+			<Separator/>
+			<MenuItem Name="MenuItemProperties" Click="MenuItemProperties_Click" Header="{pst:StringResource TILE_CONTEXTMENU_PROP}"></MenuItem>
+			<MenuItem Name="MenuItemRemove" Click="MenuItemRemove_Click" Header="{pst:StringResource TILE_CONTEXTMENU_REMOVE}"></MenuItem>
+		</ContextMenu>
+	</UserControl.ContextMenu>
 	<Grid>
 		<DockPanel>
 			<Thumb Name="TileSplitterThumb" Style="{DynamicResource TileSplliter}" DragStarted="TileSplitterThumb_DragStarted" DragDelta="TileSplitterThumb_DragDelta" DragCompleted="TileSplitterThumb_DragCompleted" PreviewMouseLeftButtonDown="TileSplitterThumb_PreviewMouseLeftButtonDown"></Thumb>

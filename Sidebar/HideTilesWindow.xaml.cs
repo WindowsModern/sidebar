@@ -23,6 +23,11 @@ namespace Sidebar
 		{
 			InitializeComponent ();
 			this.mainWnd = mainWnd;
+#if DEBUG
+			Visibility = Visibility.Visible;
+			AllowsTransparency = true;
+			Background = new SolidColorBrush (Color.FromArgb (100, 0, 0, 0));
+#endif
 		}
 		private void Window_Loaded (object sender, RoutedEventArgs e)
 		{
@@ -63,7 +68,11 @@ namespace Sidebar
 		private void UpdatePosition ()
 		{
 			Top = mainWnd?.Top ?? 0;
+#if DEBUG
+			Left = (mainWnd?.Left ?? 0) - (mainWnd?.Width ?? 0);
+#else
 			Left = mainWnd?.Left ?? 0;
+#endif
 			Height = mainWnd?.Height ?? 480;
 		}
 	}

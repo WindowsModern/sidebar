@@ -16,16 +16,8 @@
 		</Style>
 	</Window.Resources>
 	<Grid>
-		<DockPanel Style="{DynamicResource MainPanel}">
-			<ScrollViewer HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-				<StackPanel Name="OverflowTilesRegion" Orientation="Vertical" Style="{DynamicResource TilesRegion}" VerticalAlignment="Top">
-					<StackPanel.Resources>
-						<!--<Style TargetType="local:Tile">
-							<Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
-						</Style>-->
-					</StackPanel.Resources>
-				</StackPanel>
-			</ScrollViewer>
-		</DockPanel>
+		<ScrollViewer HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+			<StackPanel Name="OverflowTilesRegion" Orientation="Vertical" Style="{DynamicResource SidebarTilesControl}" VerticalAlignment="Top"></StackPanel>
+		</ScrollViewer>
 	</Grid>
 </Window>

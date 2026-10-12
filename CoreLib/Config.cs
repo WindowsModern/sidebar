@@ -65,6 +65,7 @@ namespace Sidebar
 		private ObservableCollection<string> _pinnedTiles;
 		private ObservableCollection<string> _pinnedBottomTiles;
 		private bool _isAdjustingPinned = false;
+		private bool _isMinimum = false;
 		public SidebarDirection Direction
 		{
 			get { return _direction; }
@@ -78,7 +79,7 @@ namespace Sidebar
 					case SidebarDirection.Right: str = "Right"; break;
 				}
 				initConfig ["Settings"] ["Direction"] = str;
-				OnPropertyChanged ("Direction");
+				OnPropertyChanged (nameof (Direction));
 			}
 		}
 		public double Width
@@ -88,7 +89,7 @@ namespace Sidebar
 			{
 				_width = value;
 				initConfig ["Settings"] ["Width"] = value;
-				OnPropertyChanged ("Width");
+				OnPropertyChanged (nameof (Width));
 			}
 		}
 		public bool OverlapTaskbar
@@ -98,7 +99,7 @@ namespace Sidebar
 			{
 				_overlapTaskbar = value;
 				initConfig ["Settings"] ["OverlapTaskbar"] = value;
-				OnPropertyChanged ("OverlapTaskbar");
+				OnPropertyChanged (nameof (OverlapTaskbar));
 			}
 		}
 		public string Screen
@@ -111,14 +112,14 @@ namespace Sidebar
 				if (string.IsNullOrWhiteSpace (value))
 					value = "Primary";
 				initConfig ["Settings"] ["CurrentScreen"] = value;
-				OnPropertyChanged ("Screen");
+				OnPropertyChanged (nameof (Screen));
 				_screenInst = ScreenExtraMethods.GetScreen (value);
 			}
 		}
 		public Screen CurrentScreen
 		{
 			get { return _screenInst; }
-			set { Screen = value.DeviceName; OnPropertyChanged ("CurrentScreen"); }
+			set { Screen = value.DeviceName; OnPropertyChanged (nameof (CurrentScreen)); }
 		}
 		public bool Locked
 		{
@@ -127,7 +128,7 @@ namespace Sidebar
 			{
 				_locked = value;
 				initConfig ["Settings"] ["Locked"] = _locked;
-				OnPropertyChanged ("Locked");
+				OnPropertyChanged (nameof (Locked));
 			}
 		}
 		public string ThemeName
@@ -137,7 +138,7 @@ namespace Sidebar
 			{
 				_themeName = value;
 				initConfig ["Theme"] ["ThemeName"] = value;
-				OnPropertyChanged ("ThemeName");
+				OnPropertyChanged (nameof (ThemeName));
 			}
 		}
 		/// <summary>
@@ -171,7 +172,7 @@ namespace Sidebar
 			{
 				_topmost = value;
 				initConfig ["Settings"] ["Topmost"] = value;
-				OnPropertyChanged ("Topmost");
+				OnPropertyChanged (nameof (Topmost));
 			}
 		}
 		public bool OccupyWorkingArea
@@ -181,7 +182,7 @@ namespace Sidebar
 			{
 				_occupyWorkingArea = value;
 				initConfig ["Settings"] ["OccupyWorkingArea"] = value;
-				OnPropertyChanged ("OccupyWorkingArea");
+				OnPropertyChanged (nameof (OccupyWorkingArea));
 			}
 		}
 		public bool AutoRun
@@ -191,7 +192,7 @@ namespace Sidebar
 			{
 				_autorun = value;
 				initConfig ["Settings"] ["AutoRun"] = value;
-				OnPropertyChanged ("AutoRun");
+				OnPropertyChanged (nameof (AutoRun));
 			}
 		}
 		public bool CanScroll
@@ -204,6 +205,17 @@ namespace Sidebar
 				OnPropertyChanged (nameof (CanScroll));
 			}
 		}
+		public bool IsMinimum
+		{
+			get { return _isMinimum; }
+			set
+			{
+				_isMinimum = value;
+				initConfig ["Settings"] ["IsMinimum"] = value;
+				OnPropertyChanged (nameof (IsMinimum));
+			}
+		}
+		#region Pinned Tiles
 		/// <summary>
 		/// 查询指定 FamilyName 是否处于已固定状态（顶部或底部）。
 		/// </summary>
@@ -389,10 +401,7 @@ namespace Sidebar
 		/// 1. 从另一个表移除本次新增/替换进来的项（跨表唯一性，新加入为准）；
 		/// 2. 当前表内部去重（保留第一次出现）。
 		/// </summary>
-		private static void HandlePinnedChanged (
-			ObservableCollection<string> self,
-			ObservableCollection<string> other,
-			NotifyCollectionChangedEventArgs e)
+		private static void HandlePinnedChanged (ObservableCollection<string> self, ObservableCollection<string> other, NotifyCollectionChangedEventArgs e)
 		{
 			switch (e.Action)
 			{
@@ -455,10 +464,12 @@ namespace Sidebar
 			if (oldIndex == newIndex) return;
 			coll.Move (oldIndex, newIndex);
 		}
+		#endregion
 		private void InitConfigValues ()
 		{
+			var settings = initConfig? ["Settings"];
 			{
-				var gotted = initConfig? ["Settings"]?.GetKey ("Direction")?.ReadString ("right")?.NNormalize ();
+				var gotted = settings?.GetKey ("Direction")?.ReadString ("right")?.NNormalize ();
 				switch (gotted)
 				{
 					case "left": _direction = SidebarDirection.Left; break;
@@ -466,16 +477,17 @@ namespace Sidebar
 					case "right": _direction = SidebarDirection.Right; break;
 				}
 			}
-			_width = initConfig? ["Settings"]?.GetKey ("Width")?.ReadDouble (150) ?? 150;
-			_overlapTaskbar = initConfig? ["Settings"]?.GetKey ("OverlapTaskbar")?.ReadBool (false) ?? false;
-			_screen = initConfig? ["Settings"]?.GetKey ("CurrentScreen")?.ReadString ("Primary") ?? "Primary";
+			_width = settings?.GetKey ("Width")?.ReadDouble (150) ?? 150;
+			_overlapTaskbar = settings?.GetKey ("OverlapTaskbar")?.ReadBool (false) ?? false;
+			_screen = settings?.GetKey ("CurrentScreen")?.ReadString ("Primary") ?? "Primary";
 			_screenInst = ScreenExtraMethods.GetScreen (Screen);
-			_locked = initConfig? ["Settings"]?.GetKey ("Locked")?.ReadBool (false) ?? false;
+			_locked = settings?.GetKey ("Locked")?.ReadBool (false) ?? false;
 			_themeName = initConfig? ["Theme"]?.GetKey ("ThemeName").ReadString () ?? "";
-			_topmost = initConfig? ["Settings"]?.GetKey ("Topmost").ReadBool (false) ?? false;
-			_occupyWorkingArea = initConfig? ["Settings"]?.GetKey ("OccupyWorkingArea").ReadBool (false) ?? false;
-			_autorun = initConfig? ["Settings"]?.GetKey ("AutoRun").ReadBool (false) ?? false;
-			_canScroll = initConfig? ["Settings"]?.GetKey ("CanScroll").ReadBool (false) ?? false;
+			_topmost = settings?.GetKey ("Topmost").ReadBool (false) ?? false;
+			_occupyWorkingArea = settings?.GetKey ("OccupyWorkingArea").ReadBool (false) ?? false;
+			_autorun = settings?.GetKey ("AutoRun").ReadBool (false) ?? false;
+			_canScroll = settings?.GetKey ("CanScroll").ReadBool (false) ?? false;
+			_isMinimum = settings?.GetKey ("IsMinimum").ReadBool (false) ?? false;
 		}
 		public SidebarConfig (InitConfig ini, XmlConfig xml)
 		{
