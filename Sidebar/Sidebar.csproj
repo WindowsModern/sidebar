@@ -108,9 +108,6 @@
     <Compile Include="ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DragPlaceholder.xaml.cs">
-      <DependentUpon>DragPlaceholder.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DragWindow.xaml.cs">
       <DependentUpon>DragWindow.xaml</DependentUpon>
     </Compile>
@@ -143,6 +140,7 @@
     <Compile Include="TileControl.xaml.cs">
       <DependentUpon>TileControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DragManager.cs" />
     <Compile Include="TileInstance.cs" />
     <Compile Include="TilePropertiesForm.xaml.cs">
       <DependentUpon>TilePropertiesForm.xaml</DependentUpon>
@@ -151,10 +149,6 @@
     <None Include="packages.config" />
     <None Include="Signature.pfx" />
     <Page Include="ConfigWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DragPlaceholder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -655,6 +649,10 @@
       <SubType>Designer</SubType>
     </Content>
     <Page Include="Sidebar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\DragDrop.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

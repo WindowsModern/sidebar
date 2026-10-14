@@ -19,11 +19,12 @@ namespace Sidebar
 	public partial class HideTilesContainWindow: Window
 	{
 		private SidebarWindow mainWnd = null;
+		public SidebarWindow MainWindow { get { return mainWnd; } }
 		public HideTilesContainWindow (SidebarWindow mainWnd)
 		{
 			InitializeComponent ();
 			this.mainWnd = mainWnd;
-#if DEBUG
+#if false
 			Visibility = Visibility.Visible;
 			AllowsTransparency = true;
 			Background = new SolidColorBrush (Color.FromArgb (100, 0, 0, 0));
@@ -68,7 +69,7 @@ namespace Sidebar
 		private void UpdatePosition ()
 		{
 			Top = mainWnd?.Top ?? 0;
-#if DEBUG
+#if false
 			Left = (mainWnd?.Left ?? 0) - (mainWnd?.Width ?? 0);
 #else
 			Left = mainWnd?.Left ?? 0;

@@ -251,27 +251,21 @@ namespace Sidebar
 				if (t.NEquals (familyName)) return true;
 			return false;
 		}
-		/// <summary>
-		/// 固定到顶部。若已存在（任一表），先移除再插入到顶部表末尾。
-		/// </summary>
 		public void PinTop (string familyName)
 		{
 			if (string.IsNullOrWhiteSpace (familyName)) return;
 			EnsurePinnedLoaded ();
 			_pinnedBottomTiles.RemoveAll (familyName);
 			if (!ContainsNormalized (_pinnedTiles, familyName))
-				_pinnedTiles.Add (familyName);
+				_pinnedTiles.Insert (0, familyName);
 		}
-		/// <summary>
-		/// 固定到底部。若已存在（任一表），先移除再插入到底部表末尾。
-		/// </summary>
 		public void PinBottom (string familyName)
 		{
 			if (string.IsNullOrWhiteSpace (familyName)) return;
 			EnsurePinnedLoaded ();
 			_pinnedTiles.RemoveAll (familyName);
 			if (!ContainsNormalized (_pinnedBottomTiles, familyName))
-				_pinnedBottomTiles.Add (familyName);
+				_pinnedBottomTiles.Insert (0, familyName);
 		}
 		/// <summary>
 		/// 取消固定。会从两个表中删除。

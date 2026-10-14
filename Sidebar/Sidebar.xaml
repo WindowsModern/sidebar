@@ -8,132 +8,10 @@
 	xmlns:pst="clr-namespace:Sidebar.Presentation"
 	Title="{pst:StringResource SIDEBAR_TITLE}" Width="150" Height="600" AllowsTransparency="True"
 	Background="Transparent" Opacity="1" ResizeMode="NoResize"
-	ShowInTaskbar="False" WindowStyle="None"
+	ShowInTaskbar="False" WindowStyle="None" Focusable="False"
 	Closed="Window_Closed" Loaded="Window_Loaded" SourceInitialized="Window_SourceInitialized" SizeChanged="Window_SizeChanged" MouseDoubleClick="Window_MouseDoubleClick" MouseMove="Window_MouseMove"
 	mc:Ignorable="d">
 	<Window.Resources>
-		<Style x:Key="SidebarOverflowPartSplliter" TargetType="Control">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Height" Value="4" />
-			<Setter Property="VerticalAlignment" Value="Top" />
-			<Setter Property="Margin" Value="0,17,0,0" />
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Control">
-						<Grid>
-							<Line Name="SplitterLine1" HorizontalAlignment="Stretch" Stretch="Fill" Stroke="#53000000" StrokeThickness="1" X1="0" X2="100" />
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="SidebarOverflowTilesControl" TargetType="ItemsControl">
-			<Setter Property="ItemsPanel">
-				<Setter.Value>
-					<ItemsPanelTemplate>
-						<StackPanel Orientation="Vertical">
-							<Control Style="{DynamicResource SidebarOverflowPartSplliter}" />
-							<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft"></StackPanel>
-						</StackPanel>
-					</ItemsPanelTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="ItemTemplate">
-				<Setter.Value>
-					<DataTemplate>
-						<Button Tag="{Binding}" ToolTip="{Binding DisplayName}" Content="{Binding Icon}" Width="24" Height="24">
-							<Button.Template>
-								<ControlTemplate TargetType="Button">
-									<Grid>
-										<Border x:Name="BackgroundActive" Opacity="0">
-											<Border.Background>
-												<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-													<GradientStop Offset="0" Color="Transparent" />
-													<GradientStop Offset="0.25" Color="#77000000" />
-													<GradientStop Offset="0.75" Color="#77000000" />
-													<GradientStop Offset="1" Color="Transparent" />
-												</LinearGradientBrush>
-											</Border.Background>
-										</Border>
-										<Border x:Name="BackgroundOuter" Margin="0,3" BorderThickness="1,0" Opacity="0">
-											<Border.BorderBrush>
-												<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-													<GradientStop Offset="0" Color="Transparent" />
-													<GradientStop Offset="0.25" Color="#66000000" />
-													<GradientStop Offset="0.75" Color="#66000000" />
-													<GradientStop Offset="1" Color="Transparent" />
-												</LinearGradientBrush>
-											</Border.BorderBrush>
-										</Border>
-										<Border x:Name="BackgroundInner" Margin="1,3" BorderThickness="1,0" Opacity="0">
-											<Border.BorderBrush>
-												<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-													<GradientStop Offset="0" Color="Transparent" />
-													<GradientStop Offset="0.25" Color="#CCFFFFFF" />
-													<GradientStop Offset="0.75" Color="#CCFFFFFF" />
-													<GradientStop Offset="1" Color="Transparent" />
-												</LinearGradientBrush>
-											</Border.BorderBrush>
-										</Border>
-										<Image Source="{TemplateBinding Content}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-										<Viewbox x:Name="BottonLight" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Opacity="0">
-											<Grid Width="20" Height="20" ClipToBounds="True">
-												<Ellipse Margin="3,15,3,-7">
-													<Ellipse.Fill>
-														<RadialGradientBrush Center="0.5,1" GradientOrigin="0.5,1" RadiusX="0.5" RadiusY="1">
-															<GradientStop Offset="0" Color="White" />
-															<GradientStop Offset="1" Color="#00FFFFFF" />
-														</RadialGradientBrush>
-													</Ellipse.Fill>
-												</Ellipse>
-											</Grid>
-										</Viewbox>
-									</Grid>
-									<ControlTemplate.Triggers>
-										<Trigger Property="IsMouseOver" Value="True">
-											<Trigger.EnterActions>
-												<BeginStoryboard>
-													<Storyboard>
-														<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
-														<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
-														<DoubleAnimation Storyboard.TargetName="BottonLight" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
-													</Storyboard>
-												</BeginStoryboard>
-											</Trigger.EnterActions>
-											<Trigger.ExitActions>
-												<BeginStoryboard>
-													<Storyboard>
-														<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
-														<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
-														<DoubleAnimation Storyboard.TargetName="BottonLight" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
-													</Storyboard>
-												</BeginStoryboard>
-											</Trigger.ExitActions>
-										</Trigger>
-										<Trigger Property="IsPressed" Value="True">
-											<Trigger.EnterActions>
-												<BeginStoryboard>
-													<Storyboard>
-														<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
-													</Storyboard>
-												</BeginStoryboard>
-											</Trigger.EnterActions>
-											<Trigger.ExitActions>
-												<BeginStoryboard>
-													<Storyboard>
-														<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
-													</Storyboard>
-												</BeginStoryboard>
-											</Trigger.ExitActions>
-										</Trigger>
-									</ControlTemplate.Triggers>
-								</ControlTemplate>
-							</Button.Template>
-						</Button>
-					</DataTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
 		<ContextMenu x:Key="SidebarContextMenu">
 			<MenuItem Name="MenuItemMinBar" Click="MenuItemMinBar_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_MINBAR}"></MenuItem>
 			<MenuItem Name="MenuItemProperties" Click="MenuItemProperties_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_PROP}"></MenuItem>
@@ -159,7 +37,7 @@
 				<DockPanel Name="TilesContainer" Style="{DynamicResource SidebarTilesRegion}">
 					<ScrollViewer Name="ScrollPinnedTilesControl" Style="{DynamicResource SidebarPinnedTilesScrollControl}" />
 					<StackPanel Name="PinnedTilesControl" Style="{DynamicResource SidebarPinnedTilesControl}" />
-					<ItemsControl Name="OverflowTilesControl" Style="{DynamicResource SidebarOverflowTilesControl}"/>
+					<ItemsControl Name="OverflowTilesControl" Style="{DynamicResource SidebarOverflowTilesControl}" pst:ItemsControlAutoCollapseHelper.AutoCollapseWhenEmpty="True"/>
 					<ScrollViewer Name="ScrollTilesControl" Style="{DynamicResource SidebarTilesScrollControl}" />
 					<StackPanel Name="TilesControl" Style="{DynamicResource SidebarTilesControl}" />
 				</DockPanel>

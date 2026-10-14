@@ -49,9 +49,16 @@ namespace Sidebar
 			}
 			DWMAPI.EnableBlur (ref hwnd, IntPtr.Zero);
 		}
+		public bool IsDragHost { get; set; }
+		public void SetContent (UIElement content)
+		{
+			TileTemplateContainer.Children.Clear ();
+			if (content != null) TileTemplateContainer.Children.Add (content);
+		}
 		private void Window_Closed (object sender, EventArgs e)
 		{
-			App.ReleaseLargeResourcesAsync ();
+			if (!IsDragHost) App.ReleaseLargeResourcesAsync ();
 		}
+		public Thickness ContentMargin => TileTemplateContainer.Margin;
 	}
 }

@@ -303,6 +303,7 @@ namespace Sidebar
 		public event EventHandler PropertiesClosed;
 		public ITileConfig Config { get; private set; } = null;
 		public ISidebarFeatures Features { get; private set; }
+		public virtual ContextMenu ContextMenu { get; set; } = null;
 	}
 	[ComVisible (true)]
 	public class TileBaseEventRouter: IDisposable

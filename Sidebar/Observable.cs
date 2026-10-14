@@ -13,6 +13,10 @@ namespace Sidebar
 		{
 			_keySelector = keySelector;
 		}
+		public UniqueObservableCollection ()
+		{
+			_keySelector = item => item;
+		}
 		/// <summary>
 		/// 插入元素时，若已存在相同键的元素，则忽略本次插入（不触发任何事件）。
 		/// </summary>

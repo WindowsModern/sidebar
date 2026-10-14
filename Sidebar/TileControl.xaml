@@ -151,7 +151,7 @@
 		</EventTrigger>
 	</UserControl.Triggers>
 	<UserControl.ContextMenu>
-		<ContextMenu Name="TileContextMenu" Opened="TileContextMenu_Opened">
+		<ContextMenu Name="TileContextMenu" Opened="TileContextMenu_Opened" Closed="TileContextMenu_Closed">
 			<Separator Name="MenuItemTileContextMenuItemSeparator" Visibility="Collapsed"></Separator>
 			<MenuItem Name="MenuItemAutoSize" IsCheckable="True" Click="MenuItemAutoSize_Click" Header="{pst:StringResource TILE_CONTEXTMENU_AUTOSIZE}"></MenuItem>
 			<Separator />

@@ -13,6 +13,8 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Threading;
 using Sidebar.Win32;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace Sidebar.Presentation
 {
@@ -500,6 +502,77 @@ namespace Sidebar.Presentation
 		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			throw new NotSupportedException ();
+		}
+	}
+	public static class ItemsControlAutoCollapseHelper
+	{
+		public static readonly DependencyProperty AutoCollapseWhenEmptyProperty = DependencyProperty.RegisterAttached ( "AutoCollapseWhenEmpty", typeof (bool), typeof (ItemsControlAutoCollapseHelper), new PropertyMetadata (false, OnAutoCollapseWhenEmptyChanged));
+		public static bool GetAutoCollapseWhenEmpty (DependencyObject obj)
+		{
+			return (bool)obj.GetValue (AutoCollapseWhenEmptyProperty);
+		}
+		public static void SetAutoCollapseWhenEmpty (DependencyObject obj, bool value)
+		{
+			obj.SetValue (AutoCollapseWhenEmptyProperty, value);
+		}
+		private static void OnAutoCollapseWhenEmptyChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var itemsControl = d as ItemsControl;
+			if (itemsControl == null) return;
+			bool enable = (bool)e.NewValue;
+			if (enable)
+			{
+				DependencyPropertyDescriptor.FromProperty (ItemsControl.ItemsSourceProperty, typeof (ItemsControl))
+					.AddValueChanged (itemsControl, ItemsSource_Changed);
+				AttachCollectionListener (itemsControl);
+			}
+			else
+			{
+				DependencyPropertyDescriptor.FromProperty (ItemsControl.ItemsSourceProperty, typeof (ItemsControl))
+					.RemoveValueChanged (itemsControl, ItemsSource_Changed);
+				DetachCollectionListener (itemsControl);
+				itemsControl.Visibility = Visibility.Visible;
+			}
+		}
+		private static void ItemsSource_Changed (object sender, EventArgs e)
+		{
+			var itemsControl = sender as ItemsControl;
+			AttachCollectionListener (itemsControl);
+		}
+		private static readonly DependencyProperty TrackedCollectionProperty = DependencyProperty.RegisterAttached ( "TrackedCollection", typeof (INotifyCollectionChanged), typeof (ItemsControlAutoCollapseHelper));
+		private static void AttachCollectionListener (ItemsControl itemsControl)
+		{
+			DetachCollectionListener (itemsControl);
+
+			var itemsSource = itemsControl.ItemsSource as INotifyCollectionChanged;
+			if (itemsSource != null)
+			{
+				itemsSource.CollectionChanged += (s, args) => UpdateVisibility (itemsControl);
+				itemsControl.SetValue (TrackedCollectionProperty, itemsSource);
+			}
+
+			UpdateVisibility (itemsControl);
+		}
+		private static void DetachCollectionListener (ItemsControl itemsControl)
+		{
+			var oldCollection = itemsControl.GetValue (TrackedCollectionProperty) as INotifyCollectionChanged;
+			if (oldCollection != null)
+			{
+				oldCollection.CollectionChanged -= (s, args) => UpdateVisibility (itemsControl);
+				itemsControl.ClearValue (TrackedCollectionProperty);
+			}
+		}
+		private static void UpdateVisibility (ItemsControl ctrl)
+		{
+			var collection = ctrl.ItemsSource as IEnumerable;
+			if (collection == null)
+			{
+				ctrl.Visibility = Visibility.Collapsed;
+				return;
+			}
+			var enumerator = collection.GetEnumerator ();
+			bool hasItem = enumerator.MoveNext ();
+			ctrl.Visibility = hasItem ? Visibility.Visible : Visibility.Collapsed;
 		}
 	}
 }

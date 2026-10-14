@@ -82,15 +82,32 @@ namespace Sidebar
 			ctrl.Icon = tas.LogoImage;
 			return ctrl;
 		}
+		/// <summary>
+		/// 获取磁贴所属的 SidebarWindow。
+		/// 当磁贴位于溢出窗口（HideTilesContainWindow）时，Window.GetWindow 会返回
+		/// HideTilesContainWindow，此时回退到全局的 SidebarWindow.Current。
+		/// </summary>
+		private static SidebarWindow GetSidebarHost (DependencyObject element)
+		{
+			var window = Window.GetWindow (element);
+			var host = window as SidebarWindow;
+			if (host != null) return host;
+			var hidden = window as HideTilesContainWindow;
+			if (hidden != null) return hidden.MainWindow;
+			return SidebarWindow.Current;
+		}
+		private SidebarWindow SidebarHost => GetSidebarHost (this);
 		#endregion
 		public TileControl ()
 		{
 			InitializeComponent ();
 			tileContext = new TileContext (this, TileContentContainerControl);
 			VisualView = new TileVisualView (this);
+			InitTileDragDrop ();
 		}
 		public Task DestroyTileControl ()
 		{
+			DestroyTileDragDrop ();
 			var tcs = new TaskCompletionSource<object> ();
 			this.SetTimeout (() => {
 				Height = ActualHeight;
@@ -336,19 +353,19 @@ namespace Sidebar
 		}
 		private void MenuItemPinnedBottom_Click (object sender, RoutedEventArgs e)
 		{
-			var host = Window.GetWindow (this) as SidebarWindow;
+			var host = SidebarHost;
 			if (host == null) return;
 			if (MenuItemPinnedBottom.IsChecked) host.PinTileToBottom (this);
 			else host.PinTileToTop (this);
 		}
 		private void MenuItemMoveUp_Click (object sender, RoutedEventArgs e)
 		{
-			var host = Window.GetWindow (this) as SidebarWindow;
+			var host = SidebarHost;
 			host?.MoveTileUp (this);
 		}
 		private void MenuItemMoveDown_Click (object sender, RoutedEventArgs e)
 		{
-			var host = Window.GetWindow (this) as SidebarWindow;
+			var host = SidebarHost;
 			host?.MoveTileDown (this);
 		}
 		private void MenuItemProperties_Click (object sender, RoutedEventArgs e)
@@ -357,24 +374,126 @@ namespace Sidebar
 		}
 		private void MenuItemRemove_Click (object sender, RoutedEventArgs e)
 		{
-			var host = Window.GetWindow (this) as SidebarWindow;
+			var host = SidebarHost;
 			host?.RemoveTile (this);
 		}
 		private void TileContextMenu_Opened (object sender, RoutedEventArgs e)
 		{
+			InitTileContextMenuCustomItems ();
 			if (Instance?.Config != null)
 			{
 				MenuItemAutoSize.IsChecked = Instance.Config.AutoSize;
 				MenuItemPinnedBottom.IsChecked = Instance.Config.Pinned;
 			}
 			MenuItemProperties.IsEnabled = AppStorage?.Infomation?.HasProperties ?? false;
-			var host = Window.GetWindow (this) as SidebarWindow;
+			var host = SidebarHost;
 			MenuItemMoveUp.IsEnabled = host?.CanMoveTileUp (this) == true;
 			MenuItemMoveDown.IsEnabled = host?.CanMoveTileDown (this) == true;
+		}
+		private void InitTileContextMenuCustomItems ()
+		{
+			MenuItemTileContextMenuItemSeparator.Visibility = Visibility.Collapsed;
+			var tileMenu = Instance?.Instance?.ContextMenu;
+			if (tileMenu != null && tileMenu.Items.Count > 0)
+			{
+				MenuItemTileContextMenuItemSeparator.Visibility = Visibility.Visible;
+				for (int i = tileMenu.Items.Count - 1; i >= 0; i --)
+				{
+					var item = tileMenu.Items [i];
+					tileMenu.Items.RemoveAt (i);
+					TileContextMenu.Items.Insert (0, item);
+				}
+			}
+		}
+		private void TileContextMenu_Closed (object sender, RoutedEventArgs e)
+		{
+			var tileMenu = Instance?.Instance?.ContextMenu;
+			var seindex = TileContextMenu.Items.IndexOf (MenuItemTileContextMenuItemSeparator);
+			if (seindex > 0 && (tileMenu?.Items?.Count ?? 0) != seindex) for (var i = seindex - 1; i >= 0; i--)
+				{
+					var item = TileContextMenu.Items [i];
+					TileContextMenu.Items.RemoveAt (i);
+					tileMenu.Items.Insert (0, item);
+				}
 		}
 		#endregion
 		#region Overflow (Hide Tile)
 		public bool IsSizeHeightWhenOverflowed = false;
+		#endregion
+		#region Tile Drag/Drop
+		/// <summary>初始化磁贴拖拽手势。</summary>
+		private void InitTileDragDrop ()
+		{
+			PreviewMouseLeftButtonDown += TileDragDrop_PreviewMouseLeftButtonDown;
+			PreviewStylusDown += TileDragDrop_PreviewStylusDown;
+			PreviewTouchDown += TileDragDrop_PreviewTouchDown;
+			Stylus.SetIsPressAndHoldEnabled (this, false);
+			Stylus.SetIsFlicksEnabled (this, false);
+			Stylus.SetIsTapFeedbackEnabled (this, false);
+			Stylus.SetIsTouchFeedbackEnabled (this, false);
+		}
+		/// <summary>卸载磁贴拖拽手势。</summary>
+		private void DestroyTileDragDrop ()
+		{
+			PreviewMouseLeftButtonDown -= TileDragDrop_PreviewMouseLeftButtonDown;
+			PreviewStylusDown -= TileDragDrop_PreviewStylusDown;
+			PreviewTouchDown -= TileDragDrop_PreviewTouchDown;
+		}
+		private void TileDragDrop_PreviewMouseLeftButtonDown (object sender, MouseButtonEventArgs e)
+		{
+			if (e.StylusDevice != null) return;
+			if (IsInSplitter (e.OriginalSource as DependencyObject)) return;
+			SidebarWindow host = Window.GetWindow (this) as SidebarWindow;
+			if (host == null || host.DragManager == null) return;
+			if (host.IsTileDragging) return;
+			host.DragManager.TryStartPending (this, e);
+		}
+		private void TileDragDrop_PreviewStylusDown (object sender, StylusDownEventArgs e)
+		{
+			if (e.StylusDevice == null) return;
+			if (e.StylusDevice.TabletDevice != null && e.StylusDevice.TabletDevice.Type == TabletDeviceType.Touch) return;
+			if (IsInSplitter (e.OriginalSource as DependencyObject)) return;
+			SidebarWindow host = Window.GetWindow (this) as SidebarWindow;
+			if (host == null || host.DragManager == null) return;
+			if (host.IsTileDragging) return;
+			host.DragManager.TryStartPending (this, e);
+		}
+		private void TileDragDrop_PreviewTouchDown (object sender, TouchEventArgs e)
+		{
+			if (e.TouchDevice == null) return;
+			if (IsInSplitter (e.OriginalSource as DependencyObject)) return;
+			SidebarWindow host = Window.GetWindow (this) as SidebarWindow;
+			if (host == null || host.DragManager == null) return;
+			if (host.IsTileDragging) return;
+			host.DragManager.TryStartPending (this, e);
+		}
+		private bool IsInSplitter (DependencyObject src)
+		{
+			DependencyObject cur = src;
+			while (cur != null)
+			{
+				if (cur == TileSplitterThumb) return true;
+				cur = GetParentSafe (cur);
+			}
+			return false;
+		}
+		private static DependencyObject GetParentSafe (DependencyObject cur)
+		{
+			if (cur == null) return null;
+			if (cur is Visual) return VisualTreeHelper.GetParent (cur);
+			if (cur is System.Windows.Media.Media3D.Visual3D) return VisualTreeHelper.GetParent (cur);
+			return LogicalTreeHelper.GetParent (cur);
+		}
+		/// <summary>隐藏分隔条，用于拖拽期间避免视觉干扰。</summary>
+		internal void HideSplitter ()
+		{
+			TileSplitterThumb.Visibility = Visibility.Hidden;
+		}
+		/// <summary>恢复分隔条可见性。</summary>
+		internal void ShowSplitter ()
+		{
+			TileSplitterThumb.ClearValue (UIElement.VisibilityProperty);
+		}
 		#endregion
 		private void RootTileElement_Loaded (object sender, RoutedEventArgs e)
 		{
@@ -387,7 +506,6 @@ namespace Sidebar
 		{
 			Instance?.Instance?.OnUnload ();
 		}
-
 	}
 	public struct TileVisualView: ITileElement
 	{

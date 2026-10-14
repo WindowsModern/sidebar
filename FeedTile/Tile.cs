@@ -114,8 +114,40 @@ namespace WindowsModern.FeedTile
 			Options.PropertyChanged += Options_PropertyChanged;
 			RequestRefresh (debounceDelayMs: 0);
 			_refreshTimer = new Timer (_ => RequestRefresh (), null, TimeSpan.FromMinutes (30), TimeSpan.FromMinutes (30));
+			InitContextMenu ();
 		}
-
+		public override ContextMenu ContextMenu
+		{
+			get
+			{
+				try
+				{
+					var refreshItem = base.ContextMenu?.Items [0] as MenuItem;
+					if (refreshItem == null) return base.ContextMenu;
+					refreshItem.IsEnabled = !IsRefreshing;
+				}
+				catch { }
+				return base.ContextMenu;
+			}
+			set
+			{
+				base.ContextMenu = value;
+			}
+		}
+		private void InitContextMenu ()
+		{
+			var refreshItem = new MenuItem {
+				Header = TileFolder?.StringResources?.SuitableResource ("OPTIONS_REFRESH", "Refresh")
+			};
+			refreshItem.Click += MenuItemRefresh_Click;
+			var menu = new ContextMenu ();
+			menu.Items.Add (refreshItem);
+			ContextMenu = menu;
+		}
+		private void MenuItemRefresh_Click (object sender, RoutedEventArgs e)
+		{
+			RequestRefresh (debounceDelayMs: 0);
+		}
 		private void Options_PropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName)
@@ -130,6 +162,10 @@ namespace WindowsModern.FeedTile
 
 		public override void OnDestroy ()
 		{
+			if (ContextMenu != null)
+			{
+				(ContextMenu.Items [0] as MenuItem).Click -= MenuItemRefresh_Click;
+			}
 			// 停止定时器
 			_refreshTimer?.Dispose ();
 			_refreshTimer = null;

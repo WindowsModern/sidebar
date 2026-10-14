@@ -4,21 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sidebar" Closed="Window_Closed"
-        mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True" Style="{DynamicResource DragWindowStyle}" ShowInTaskbar="False"
+		xmlns:pst="clr-namespace:Sidebar.Presentation"
+        mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True" Style="{DynamicResource DragWindowWindow}" ShowInTaskbar="False"
         Title="DragWindow" Height="300" Width="300" MinWidth="50" SourceInitialized="Window_SourceInitialized">
-    <Grid>
-		<Grid Name="BackgroundPart">
-			<Rectangle Name="FlyoutBackgroundBlur" Fill="Transparent" IsHitTestVisible="False" SnapsToDevicePixels="True"></Rectangle>
-			<Rectangle Name="FlyoutBackgroundFill" Style="{DynamicResource FlyoutBackgroundFill}"></Rectangle>
-			<Rectangle Name="FlyoutBorderBehind" Style="{DynamicResource FlyoutBorderBehind}"></Rectangle>
-			<Image Name="FlyoutBackgroundImage" Style="{DynamicResource FlyoutBackgroundImage}"></Image>
-			<Rectangle Name="FlyoutBorder" Style="{DynamicResource FlyoutBorder}"></Rectangle>
-			<Rectangle Name="FlyoutBorder1" Style="{DynamicResource FlyoutBorder1}"></Rectangle>
-			<Rectangle Name="FlyoutBackgroundHighlight" Style="{DynamicResource FlyoutBackgroundHighlight}"></Rectangle>
-			<Rectangle Name="FlyoutBackgroundHighlight1" Style="{DynamicResource FlyoutBackgroundHighlight1}"></Rectangle>
-		</Grid>
-		<Grid Name="ForegroundPart">
-			<Grid Name="TileTemplateContainer" Margin="10,10,10,10"></Grid>
-		</Grid>
+	<Grid Style="{DynamicResource DragWindowClientArea}">
+		<Control Style="{DynamicResource DragWindowBackground}"></Control>
+		<Grid Name="TileTemplateContainer" Style="{DynamicResource DragWindowContentContainer}"></Grid>
+		<Control Style="{DynamicResource DragWindowHighlight}"></Control>
 	</Grid>
 </Window>

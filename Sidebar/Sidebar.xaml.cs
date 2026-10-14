@@ -29,13 +29,17 @@ namespace Sidebar
 	/// <summary>
 	/// Sidebar.xaml 的交互逻辑
 	/// </summary>
-	public partial class SidebarWindow: Window, ISidebarFeatures, IWin32WindowInterop, IWindowInterop
+	public partial class SidebarWindow: Window, ISidebarFeatures, IWin32WindowInterop, IWindowInterop, ITileReorderHost
 	{
 		public SidebarWindow ()
 		{
+			Current = this;
 			InitializeComponent ();
 			InitTilesList ();
 		}
+		#region Instance
+		public static SidebarWindow Current { get; private set; }
+		#endregion
 		#region Tile to Create/Remove/Move
 		private Dictionary<string, TileControl> tileCache = new Dictionary<string, TileControl> (NormalizedStringComparer.Instance);
 		private ObservableCollection<TileControl> tileOverflowList = new ObservableCollection<TileControl> ();
@@ -101,14 +105,14 @@ namespace Sidebar
 				var tile = panel.Children [i] as TileControl;
 				if (tile == null)
 				{
-					panel.Children.RemoveAt (i);
+					//panel.Children.RemoveAt (i);
 					continue;
 				}
 				string umid = tile.UserModelId;
 				if (string.IsNullOrEmpty (umid) || !ContainsNormalized (orderedUids, umid))
 				{
 					if (_pendingRemovals.Contains (umid)) continue;
-					panel.Children.RemoveAt (i);
+					//panel.Children.RemoveAt (i);
 				}
 			}
 			for (int i = 0; i < orderedUids.Count; i++)
@@ -269,7 +273,9 @@ namespace Sidebar
 				var p = TilesContainer.Parent as Panel;
 				var totalHeight = p.ActualHeight;
 				var tilesContainerHeight = totalHeight - TilesContainer.Margin.Top - TilesContainer.Margin.Bottom;
-				var nopinTilesHeight = tilesContainerHeight - PinnedTilesControl.ActualHeight - OverflowTilesControl.ActualHeight;
+				var nopinTilesHeight = tilesContainerHeight
+					- PinnedTilesControl.ActualHeight - PinnedTilesControl.Margin.Top - PinnedTilesControl.Margin.Bottom
+					- OverflowTilesControl.ActualHeight - OverflowTilesControl.Margin.Top - OverflowTilesControl.Margin.Bottom;
 				return nopinTilesHeight < 0 ? 0 : nopinTilesHeight;
 			}
 		}
@@ -298,6 +304,7 @@ namespace Sidebar
 			var cc = App.CurrentUserConfig;
 			if (cc == null) return false;
 			cc.PinBottom (userModelId);
+			RebuildOverflowList ();
 			return true;
 		}
 		public bool PinTileToTop (TileControl tile) => PinTileToTop (tile?.UserModelId);
@@ -307,6 +314,7 @@ namespace Sidebar
 			var cc = App.CurrentUserConfig;
 			if (cc == null) return false;
 			cc.PinTop (userModelId);
+			RebuildOverflowList ();
 			return true;
 		}
 		private bool MoveTileCore (string userModelId, int delta)
@@ -321,6 +329,7 @@ namespace Sidebar
 			int target = idx + delta;
 			if (target < 0 || target >= list.Count) return false;
 			list.Move (idx, target);
+			RebuildOverflowList ();
 			return true;
 		}
 		private bool CanMoveTileCore (string userModelId, int delta)
@@ -342,9 +351,11 @@ namespace Sidebar
 		{
 			hideTilesWindow?.Close ();
 			hideTilesWindow = new HideTilesContainWindow (this);
+			OverflowTilesControl.ItemsSource = tileOverflowVisualList;
 		}
 		private void DestroyOverflowArea ()
 		{
+			OverflowTilesControl.ItemsSource = null;
 			hideTilesWindow?.Close ();
 			hideTilesWindow = null;
 		}
@@ -358,7 +369,7 @@ namespace Sidebar
 			if (overflowUpdateTimer == null)
 			{
 				overflowUpdateTimer = new DispatcherTimer ();
-				overflowUpdateTimer.Interval = TimeSpan.FromMilliseconds (15);
+				overflowUpdateTimer.Interval = TimeSpan.FromMilliseconds (10);
 			}
 			overflowUpdateTimer.Stop ();
 			overflowUpdateTimer.Tick -= OverflowUpdateTimer_Tick;
@@ -373,7 +384,19 @@ namespace Sidebar
 		}
 		private void OnTileHeightChanged ()
 		{
+			if (App.CurrentUserConfig.CanScroll)
+			{
+				foreach (var tc in tileOverflowList)
+				{
+					AddToTargetPanel (tc, TilesControl);
+				}
+				tileOverflowList.Clear ();
+				return;
+			}
+			if (IsTileDragging) return;
 			var totalHeight = TilesRegionHeightLimit;
+			if (totalHeight <= 0) return;
+			List<TileControl> willadd = new List<TileControl> ();
 			foreach (FrameworkElement element in TilesControl.Children)
 			{
 				TileControl tc = null;
@@ -388,13 +411,18 @@ namespace Sidebar
 					totalHeight -= tc.ActualHeight;
 					if (totalHeight < 0)
 					{
-						tileOverflowList.Add (tc);
+						willadd.Add (tc);
 					}
 				}
 			}
+			foreach (var tc in willadd)
+			{
+				AddToOverflowTilesList (tc);
+				AddToTargetPanel (tc, hideTilesWindow?.OverflowTilesRegion);
+			}
 			SortOverflowTiles ();
 			HashSet<TileControl> willremove = new HashSet<TileControl> ();
-			var remain = TilesControl.GetRemainingVertical ();
+			var remain = totalHeight;
 			if (remain > 0)
 			{
 				foreach (var tc in tileOverflowList)
@@ -402,8 +430,7 @@ namespace Sidebar
 					remain -= tc.ActualHeight;
 					if (remain >= 0)
 					{
-						(tc?.Parent as Panel)?.Children?.Remove (tc);
-						TilesControl?.Children?.Add (tc);
+						AddToTargetPanel (tc, TilesControl);
 						willremove.Add (tc);
 					}
 					else break;
@@ -413,8 +440,17 @@ namespace Sidebar
 			{
 				tileOverflowList.Remove (tc);
 			}
+			List<TileControl> willclear = new List<TileControl> ();
+			foreach (var tc in tileOverflowList)
+			{
+				if (tc?.Parent == TilesControl) willclear.Add (tc);
+			}
+			foreach (var tc in willclear)
+			{
+				tileOverflowList.Remove (tc);
+			}
 		}
-		private bool IsTileOverflow (TileControl tc) => tileOverflowList?.Contains (tc) ?? false;
+		public bool IsTileOverflow (TileControl tc) => tileOverflowList?.Contains (tc) ?? false;
 		private void SortOverflowTiles ()
 		{
 			if (tileOverflowList == null || tileOverflowList.Count <= 1) return;
@@ -442,6 +478,22 @@ namespace Sidebar
 				if (pinned [i].NEquals (umid)) return i;
 			}
 			return int.MaxValue;
+		}
+		private void AddToOverflowTilesList (TileControl tc)
+		{
+			if (tc == null) return;
+			if (tileOverflowList.Contains (tc)) return;
+			tileOverflowList.Add (tc);
+		}
+		private void AddToTargetPanel (FrameworkElement ue, Panel p)
+		{
+			if (ue?.Parent as Panel == p) return;
+			else
+			{
+				(ue?.Parent as Panel)?.Children?.Remove (ue);
+				if (p == null) return;
+				p.Children.Add (ue);
+			}
 		}
 		#endregion
 		#region Features
@@ -544,7 +596,7 @@ namespace Sidebar
 			InteropHelper = null;
 			InteropHelper = new WindowInteropHelper (this);
 		}
-		private bool ?_lastAeroState = null;
+		private bool? _lastAeroState = null;
 		private void ApplyAero (bool value)
 		{
 			if (!DWMAPI.IsDwmAvailable ()) return;
@@ -771,6 +823,7 @@ namespace Sidebar
 					break;
 				case nameof (cuc.CanScroll):
 					ApplyScrollMode (cuc.CanScroll);
+					RebuildOverflowList ();
 					break;
 				case nameof (cuc.Screen):
 					RefreshWndPos ();
@@ -981,6 +1034,98 @@ namespace Sidebar
 			ExplorerShell.TaskbarPositionChanged -= ExplorerShell_TaskbarPositionChanged;
 		}
 		#endregion
+		#region Tile Drag/Drop
+		private TileDragManager _tileDragManager;
+		/// <summary>是否正在处理磁贴拖拽（含待拖状态）；拖拽期间会抑制 TileOverflow 相关逻辑。</summary>
+		public bool IsTileDragging { get { return _tileDragManager != null && (_tileDragManager.IsDragging || _tileDragManager.IsPending); } }
+		/// <summary>磁贴拖拽管理器，供 TileControl 在手势中访问。</summary>
+		internal TileDragManager DragManager { get { return _tileDragManager; } }
+		/// <summary>初始化磁贴拖拽重排。</summary>
+		private void InitTileDragDrop ()
+		{
+			if (_tileDragManager != null) return;
+			_tileDragManager = new TileDragManager (this);
+			PreviewMouseMove += TileDragDrop_PreviewMouseMove;
+			PreviewMouseLeftButtonUp += TileDragDrop_PreviewMouseLeftButtonUp;
+			PreviewStylusMove += TileDragDrop_PreviewStylusMove;
+			PreviewStylusUp += TileDragDrop_PreviewStylusUp;
+			PreviewTouchMove += TileDragDrop_PreviewTouchMove;
+			PreviewTouchUp += TileDragDrop_PreviewTouchUp;
+			PreviewKeyDown += TileDragDrop_PreviewKeyDown;
+		}
+		/// <summary>卸载磁贴拖拽重排。</summary>
+		private void DestroyTileDragDrop ()
+		{
+			if (_tileDragManager == null) return;
+			_tileDragManager.Cancel ();
+			PreviewMouseMove -= TileDragDrop_PreviewMouseMove;
+			PreviewMouseLeftButtonUp -= TileDragDrop_PreviewMouseLeftButtonUp;
+			PreviewStylusMove -= TileDragDrop_PreviewStylusMove;
+			PreviewStylusUp -= TileDragDrop_PreviewStylusUp;
+			PreviewTouchMove -= TileDragDrop_PreviewTouchMove;
+			PreviewTouchUp -= TileDragDrop_PreviewTouchUp;
+			PreviewKeyDown -= TileDragDrop_PreviewKeyDown;
+			_tileDragManager = null;
+		}
+		private void TileDragDrop_PreviewMouseMove (object sender, MouseEventArgs e)
+		{
+			if (IsTileDragging) _tileDragManager.OnMouseMove (e);
+		}
+		private void TileDragDrop_PreviewMouseLeftButtonUp (object sender, MouseButtonEventArgs e)
+		{
+			if (IsTileDragging) _tileDragManager.OnMouseUp (e);
+		}
+		private void TileDragDrop_PreviewStylusMove (object sender, StylusEventArgs e)
+		{
+			if (IsTileDragging) _tileDragManager.OnStylusMove (e);
+		}
+		private void TileDragDrop_PreviewStylusUp (object sender, StylusEventArgs e)
+		{
+			if (IsTileDragging) _tileDragManager.OnStylusUp (e);
+		}
+		private void TileDragDrop_PreviewTouchMove (object sender, TouchEventArgs e)
+		{
+			if (IsTileDragging) _tileDragManager.OnTouchMove (e);
+		}
+		private void TileDragDrop_PreviewTouchUp (object sender, TouchEventArgs e)
+		{
+			if (IsTileDragging) _tileDragManager.OnTouchUp (e);
+		}
+		private void TileDragDrop_PreviewKeyDown (object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Escape && IsTileDragging)
+			{
+				_tileDragManager.Cancel ();
+				e.Handled = true;
+			}
+		}
+		private bool _suppressTileRefresh;
+		/// <summary>把磁贴移动到指定面板的指定索引处；内部走 list.Move，由原有重建流程负责后续布局。</summary>
+		public bool MoveTileToPanelIndex (string userModelId, Panel panel, int panelIndex)
+		{
+			if (string.IsNullOrWhiteSpace (userModelId)) return false;
+			SidebarConfig cc = App.CurrentUserConfig;
+			if (cc == null) return false;
+			ObservableCollection<string> list;
+			if (ReferenceEquals (panel, TilesControl)) list = cc.PinnedTiles;
+			else if (ReferenceEquals (panel, PinnedTilesControl)) list = cc.PinnedBottomTiles;
+			else return false;
+			int srcList = IndexOfFamilyName (list, userModelId);
+			if (srcList < 0) return false;
+			if (panelIndex < 0) panelIndex = 0;
+			if (panelIndex > list.Count - 1) panelIndex = list.Count - 1;
+			if (panelIndex == srcList) return false;
+			list.Move (srcList, panelIndex);
+			return true;
+		}
+		bool ITileReorderHost.MoveTileToPanelIndex (string userModelId, Panel panel, int panelIndex)
+		{
+			return MoveTileToPanelIndex (userModelId, panel, panelIndex);
+		}
+		#endregion
+		#region Flyout Position
+
+		#endregion
 		private void Window_Loaded (object sender, RoutedEventArgs e)
 		{
 			UpdateMinMaxWidth ();
@@ -988,12 +1133,14 @@ namespace Sidebar
 			InitNotifyIcon ();
 			InitSystemEventHandlers ();
 			InitOverflowArea ();
+			InitTileDragDrop ();
 			ContextMenu = TryFindResource ("SidebarContextMenu") as ContextMenu;
 			App.CurrentUserConfig.PropertyChanged -= CurrentUserConfig_PropertyChanged;
 			App.CurrentUserConfig.PropertyChanged += CurrentUserConfig_PropertyChanged;
 		}
 		private void Window_Closed (object sender, EventArgs e)
 		{
+			DestroyTileDragDrop ();
 			DestroyOverflowArea ();
 			DestroySystemEventHandlers ();
 			UninitTilesList ();
@@ -1006,6 +1153,7 @@ namespace Sidebar
 			notifyIcon?.Dispose ();
 			notifyIcon = null;
 			DestoryHwndSource ();
+			Current = null;
 			App.Current.Shutdown ();
 		}
 		private void Window_SizeChanged (object sender, System.Windows.SizeChangedEventArgs e)
