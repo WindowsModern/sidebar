@@ -177,13 +177,34 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="Width" Value="17" />
-		<Setter Property="Height" Value="17" />
+		<Setter Property="Width" Value="21" />
+		<Setter Property="Height" Value="20" />
 		<Setter Property="VerticalAlignment" Value="Center"></Setter>
-		<Setter Property="Margin" Value="11,0,13,0"></Setter>
+		<Setter Property="Margin" Value="10,0,2,0"></Setter>
+		<Setter Property="DockPanel.Dock" Value="Left"></Setter>
+	</Style>
+	<Style x:Key="SidebarMinAeroPeekButton" TargetType="Button">
+		<Setter Property="Width" Value="8"></Setter>
+		<Setter Property="DockPanel.Dock" Value="Right"></Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border x:Name="PART_Btn" Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
+						<ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"></ContentPresenter>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="PART_Btn" Property="Background" Value="#99FFFFFF"/>
+						</Trigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Setter TargetName="PART_Btn" Property="Background" Value="#4DFFFFFF"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 	<Style x:Key="SidebarMinTaskbarTilesControl" TargetType="ItemsControl">
-		<Setter Property="Margin" Value="0,0,10,0"></Setter>
 		<Setter Property="ItemsPanel">
 			<Setter.Value>
 				<ItemsPanelTemplate>
@@ -417,4 +438,8 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+	<Storyboard x:Key="SidebarWindowLoaded"></Storyboard>
+	<Storyboard x:Key="SidebarShowTaskbarTiles">
+		<DoubleAnimation Storyboard.TargetName="TaskbarTiles" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"></DoubleAnimation>
+	</Storyboard>
 </ResourceDictionary>

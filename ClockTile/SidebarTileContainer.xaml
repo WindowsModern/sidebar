@@ -7,20 +7,14 @@
              mc:Ignorable="d" Width="150"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-		<Grid Name="BackgroundRegion" Background="Transparent" RenderTransformOrigin="0.5, 0.5">
-			<Rectangle Name="BackgroundBlur" Fill="Transparent" IsHitTestVisible="False" SnapsToDevicePixels="True"></Rectangle>
-			<Rectangle Name="Background" Style="{DynamicResource Background}"></Rectangle>
-			<Image Name="BackgroundImage" Style="{DynamicResource BackgroundImage}"></Image>
-			<Rectangle Name="BackgroundHighlight" Style="{DynamicResource BackgroundHighlight}"></Rectangle>
-			<Canvas Name="BackgroundCustom" Style="{DynamicResource BackgroundCustomDraw}"></Canvas>
-			<Grid>
-				<Line x:Name="BorderLine" 
-				  X1="0" Y1="0" X2="0" Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" 
-				  StrokeThickness="1" Style="{DynamicResource BorderLine}"/>
-			</Grid>
+		<Control Style="{DynamicResource SidebarBackground}" />
+		<Control Style="{DynamicResource TileBackground}"></Control>
+		<Control Style="{DynamicResource TileContentBackground}"></Control>
+		<Grid Style="{DynamicResource TileContentContainer}">
+			<Grid Name="TileContent"></Grid>
 		</Grid>
-		<Grid Name="TileContent" Style="{DynamicResource TileContent}">
-			
-		</Grid>
+		<Control Style="{DynamicResource TileContentHighlight}" IsHitTestVisible="False"></Control>
+		<Control Style="{DynamicResource TileHighlight}" IsHitTestVisible="False"></Control>
+		<Control IsHitTestVisible="False" Style="{DynamicResource SidebarHighlightSide}" />
 	</Grid>
 </UserControl>

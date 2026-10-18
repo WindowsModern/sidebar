@@ -1,0 +1,820 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:pres="clr-namespace:Sidebar.Presentation"
+					xmlns:snt="clr-namespace:Sidebar;assembly=Native"
+                    xmlns:local="clr-namespace:Sidebar">
+	<!--  Clock  -->
+	<!--  Clock:FlyoutCalendar  -->
+	<Style x:Key="TileClockCalendarBorder" TargetType="Border">
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Width" Value="219" />
+		<Setter Property="Height" Value="294" />
+		<Setter Property="BorderBrush" Value="Black" />
+		<Setter Property="CornerRadius" Value="3,3,3,3" />
+		<Setter Property="Background" Value="White" />
+		<Setter Property="ClipToBounds" Value="True" />
+		<Setter Property="Clip">
+			<Setter.Value>
+				<RectangleGeometry RadiusX="4" RadiusY="4" Rect="0,0,219,294" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileClockCalendarContainer" TargetType="DockPanel" />
+	<Style x:Key="TileClockCalendarMonthImage" TargetType="Image">
+		<Setter Property="Height" Value="113" />
+		<Setter Property="DockPanel.Dock" Value="Top" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="Stretch" Value="UniformToFill" />
+	</Style>
+	<Style x:Key="TileClockCalendarItem" TargetType="Calendar">
+		<Setter Property="Foreground" Value="#FF333333" />
+		<Setter Property="Background" Value="White" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="CalendarItemStyle" Value="{DynamicResource TileClockCalendarCalendarItem}" />
+		<Setter Property="CalendarDayButtonStyle" Value="{DynamicResource TileClockFlyoutCalendarDayButton}" />
+		<Setter Property="CalendarButtonStyle" Value="{DynamicResource TileFlyoutCalendarCalendarButton}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Calendar}">
+					<StackPanel Name="PART_Root" HorizontalAlignment="Stretch">
+						<CalendarItem Name="PART_CalendarItem" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" Style="{TemplateBinding Calendar.CalendarItemStyle}" />
+					</StackPanel>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileClockCalendarCalendarItem" TargetType="CalendarItem">
+		<Setter Property="Margin" Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CalendarItem}">
+					<FrameworkTemplate.Resources>
+						<ResourceDictionary>
+							<DataTemplate x:Key="{x:Static CalendarItem.DayTitleTemplateResourceKey}">
+								<TextBlock Margin="0,3,0,6" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource GlobalFontFamily}" FontSize="9.5" FontWeight="Normal" Foreground="#AAB2C5" Text="{Binding}" />
+							</DataTemplate>
+						</ResourceDictionary>
+					</FrameworkTemplate.Resources>
+					<Grid Name="PART_Root" HorizontalAlignment="Stretch">
+						<FrameworkElement.Resources>
+							<ResourceDictionary>
+								<SolidColorBrush x:Key="DisabledVisualBrush" Color="#A5FFFFFF" />
+							</ResourceDictionary>
+						</FrameworkElement.Resources>
+						<Border Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" CornerRadius="0">
+							<Border BorderBrush="#FFFFFFFF" BorderThickness="0" CornerRadius="0">
+								<Grid Background="Transparent">
+									<FrameworkElement.Resources>
+										<ResourceDictionary>
+											<ControlTemplate x:Key="HeaderButtonTemplate" TargetType="{x:Type Button}">
+												<Grid Cursor="Hand">
+													<ContentPresenter Name="buttonContent" Margin="5,10" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" Content="{TemplateBinding ContentControl.Content}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}">
+														<TextElement.Foreground>
+															<SolidColorBrush Color="#AAB2C5" />
+														</TextElement.Foreground>
+													</ContentPresenter>
+												</Grid>
+												<ControlTemplate.Triggers>
+													<Trigger Property="IsMouseOver" Value="True">
+														<Setter TargetName="buttonContent" Property="TextElement.Foreground" Value="#FF73A9D8" />
+													</Trigger>
+													<Trigger Property="IsEnabled" Value="False">
+														<Setter TargetName="buttonContent" Property="Opacity" Value="0.5" />
+													</Trigger>
+												</ControlTemplate.Triggers>
+											</ControlTemplate>
+											<Storyboard x:Key="HeaderEnter">
+												<DoubleAnimation Storyboard.TargetName="PART_PreviousButton" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.35" />
+												<DoubleAnimation Storyboard.TargetName="PART_NextButton" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.35" />
+											</Storyboard>
+											<Storyboard x:Key="HeaderLeave">
+												<DoubleAnimation Storyboard.TargetName="PART_PreviousButton" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.35" />
+												<DoubleAnimation Storyboard.TargetName="PART_NextButton" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.35" />
+											</Storyboard>
+										</ResourceDictionary>
+									</FrameworkElement.Resources>
+									<FrameworkElement.Triggers>
+										<EventTrigger RoutedEvent="MouseEnter">
+											<BeginStoryboard Storyboard="{DynamicResource HeaderEnter}" />
+										</EventTrigger>
+										<EventTrigger RoutedEvent="MouseLeave">
+											<BeginStoryboard Storyboard="{DynamicResource HeaderLeave}" />
+										</EventTrigger>
+									</FrameworkElement.Triggers>
+									<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top">
+										<Button Name="PART_PreviousButton" DockPanel.Dock="Left" Focusable="False" Opacity="0" Style="{DynamicResource TileClockCalendarBackButton}" />
+										<Button Name="PART_NextButton" DockPanel.Dock="Right" Focusable="False" Opacity="0" Style="{DynamicResource TileClockCalendarNextButton}" />
+										<Button Name="PART_HeaderButton" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" FontSize="10.5" FontWeight="Bold" Template="{DynamicResource HeaderButtonTemplate}" />
+									</DockPanel>
+									<Grid Margin="20,35,20,5" ClipToBounds="True">
+										<Grid Name="PART_MonthView" HorizontalAlignment="Center" VerticalAlignment="Top" Opacity="1" RenderTransformOrigin="0.5,0.5" Visibility="Visible">
+											<Grid.RenderTransform>
+												<ScaleTransform ScaleX="1" ScaleY="1" />
+											</Grid.RenderTransform>
+											<Grid.RowDefinitions>
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+											</Grid.RowDefinitions>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+											</Grid.ColumnDefinitions>
+										</Grid>
+										<Grid Name="PART_YearView" HorizontalAlignment="Center" ColumnSpan="3" Opacity="0" RenderTransformOrigin="0.5,0.5" Row="1" Visibility="Hidden">
+											<Grid.RenderTransform>
+												<ScaleTransform ScaleX="2" ScaleY="2" />
+											</Grid.RenderTransform>
+											<Grid.RowDefinitions>
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+												<RowDefinition Height="Auto" />
+											</Grid.RowDefinitions>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition Width="Auto" />
+											</Grid.ColumnDefinitions>
+										</Grid>
+									</Grid>
+								</Grid>
+							</Border>
+						</Border>
+						<Rectangle Name="PART_DisabledVisual" Fill="{DynamicResource DisabledVisualBrush}" Opacity="0" RadiusX="2" RadiusY="2" Stretch="Fill" Stroke="{DynamicResource DisabledVisualBrush}" StrokeThickness="1" Visibility="Collapsed" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="PART_DisabledVisual" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="{x:Static Visibility.Collapsed}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="PART_DisabledVisual" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<DataTrigger Binding="{Binding Path=DisplayMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Calendar}}}" Value="Year">
+							<DataTrigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.5" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.5" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+											<DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="{x:Static Visibility.Hidden}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</BeginStoryboard>
+							</DataTrigger.EnterActions>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=DisplayMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Calendar}}, Converter={x:Static pres:CalendarModeToBooleanConverter.Instance}, FallbackValue=True}" Value="True">
+							<DataTrigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="2" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="2" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+											<DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="{x:Static Visibility.Hidden}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</BeginStoryboard>
+							</DataTrigger.EnterActions>
+							<DataTrigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation BeginTime="0:0:0.25" Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.5" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.5" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_YearView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_MonthView" Storyboard.TargetProperty="Visibility">
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+											<DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="{x:Static Visibility.Hidden}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</BeginStoryboard>
+							</DataTrigger.ExitActions>
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileClockFlyoutCalendarDayButton" TargetType="CalendarDayButton">
+		<Setter Property="MinWidth" Value="5" />
+		<Setter Property="MinHeight" Value="5" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CalendarDayButton}">
+					<Grid>
+						<snt:Slice9Image Name="TodayBackground" Opacity="0" SliceThickness="4" Source="..\..\Images\Others\ItemHover.png" />
+						<Border Name="SelectedBackground" BorderThickness="1" CornerRadius="4" Opacity="0">
+							<Border.Background>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="#22FFB400" />
+									<GradientStop Offset="1" Color="#4DFFB400" />
+								</LinearGradientBrush>
+							</Border.Background>
+							<Border.BorderBrush>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="#40E6A000" />
+									<GradientStop Offset="1" Color="#66CC8800" />
+								</LinearGradientBrush>
+							</Border.BorderBrush>
+						</Border>
+						<Border Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" />
+						<Border Name="HighlightBackground" BorderThickness="1" CornerRadius="4" Opacity="0">
+							<Border.Background>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="#18FFA740" />
+									<GradientStop Offset="1" Color="#33FFA740" />
+								</LinearGradientBrush>
+							</Border.Background>
+							<Border.BorderBrush>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="#33E08A30" />
+									<GradientStop Offset="1" Color="#4DBF7F00" />
+								</LinearGradientBrush>
+							</Border.BorderBrush>
+						</Border>
+						<ContentPresenter Name="NormalText" Margin="5,1,5,1" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}">
+							<TextElement.Foreground>
+								<SolidColorBrush Color="#FF333333" />
+							</TextElement.Foreground>
+						</ContentPresenter>
+						<Path Name="Blackout" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Data="M8.1772461,11.029181 L10.433105,11.029181 L11.700684,12.801641 L12.973633,11.029181 L15.191895,11.029181 L12.844727,13.999395 L15.21875,17.060919 L12.962891,17.060919 L11.673828,15.256231 L10.352539,17.060919 L8.1396484,17.060919 L10.519043,14.042364" Fill="#FF000000" Opacity="0" RenderTransformOrigin="0.5,0.5" Stretch="Fill" />
+						<Border Name="DayButtonFocusVisual" BorderThickness="1" CornerRadius="4" IsHitTestVisible="False" Visibility="Collapsed">
+							<Border.BorderBrush>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="#33CC5500" />
+									<GradientStop Offset="1" Color="#26A04D00" />
+								</LinearGradientBrush>
+							</Border.BorderBrush>
+						</Border>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup Name="CommonStates">
+								<VisualState Name="Normal" />
+								<VisualState Name="MouseOver">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="HighlightBackground" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.15" />
+									</Storyboard>
+								</VisualState>
+								<VisualState Name="Pressed">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="HighlightBackground" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.1" />
+									</Storyboard>
+								</VisualState>
+								<VisualState Name="Disabled">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="HighlightBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
+										<DoubleAnimation Storyboard.TargetName="NormalText" Storyboard.TargetProperty="Opacity" To="0.35" Duration="0:0:0.1" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup Name="SelectionStates">
+								<VisualState Name="Unselected" />
+								<VisualState Name="Selected">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="0.75" Duration="0:0:0.1" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup Name="ActiveStates">
+								<VisualState Name="Active" />
+								<VisualState Name="Inactive">
+									<Storyboard>
+										<ColorAnimation Storyboard.TargetName="NormalText" Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" To="#FF777777" Duration="0:0:0.15" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup Name="DayStates">
+								<VisualState Name="RegularDay" />
+								<VisualState Name="Today">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="TodayBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
+										<ColorAnimation Storyboard.TargetName="NormalText" Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" To="Black" Duration="0:0:0.15" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup Name="BlackoutDayStates">
+								<VisualState Name="NormalDay" />
+								<VisualState Name="BlackoutDay">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Blackout" Storyboard.TargetProperty="Opacity" To="0.267" Duration="0:0:0.15" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsFocused" Value="True">
+							<Setter TargetName="DayButtonFocusVisual" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="IsFocused" Value="False">
+							<Setter TargetName="DayButtonFocusVisual" Property="Visibility" Value="Collapsed" />
+						</Trigger>
+						<DataTrigger Binding="{Binding IsToday, RelativeSource={RelativeSource Self}}" Value="True">
+							<Setter TargetName="NormalText" Property="TextElement.FontWeight" Value="Bold" />
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileFlyoutCalendarCalendarButton" TargetType="CalendarButton">
+		<Setter Property="Background">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+					<GradientStop Offset="0" Color="#18FFB400" />
+					<GradientStop Offset="1" Color="#33FFA740" />
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="MinWidth" Value="40" />
+		<Setter Property="MinHeight" Value="42" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CalendarButton}">
+					<Grid>
+						<Rectangle Name="SelectedBackground" Fill="{TemplateBinding Control.Background}" Opacity="0" RadiusX="4" RadiusY="4" />
+						<Rectangle Name="Background" Fill="{TemplateBinding Control.Background}" Opacity="0" RadiusX="4" RadiusY="4" />
+						<ContentPresenter Name="NormalText" Margin="1,0,1,1" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}">
+							<TextElement.Foreground>
+								<SolidColorBrush Color="#FF333333" />
+							</TextElement.Foreground>
+						</ContentPresenter>
+						<Rectangle Name="CalendarButtonFocusVisual" IsHitTestVisible="False" RadiusX="4" RadiusY="4" Visibility="Collapsed">
+							<Rectangle.Stroke>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="#33CC5500" />
+									<GradientStop Offset="1" Color="#26A04D00" />
+								</LinearGradientBrush>
+							</Rectangle.Stroke>
+						</Rectangle>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup Name="CommonStates">
+								<VisualState Name="Normal" />
+								<VisualState Name="MouseOver">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.15" />
+									</Storyboard>
+								</VisualState>
+								<VisualState Name="Pressed">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.1" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup Name="SelectionStates">
+								<VisualState Name="Unselected" />
+								<VisualState Name="Selected">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="0.75" Duration="0:0:0.1" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup Name="ActiveStates">
+								<VisualState Name="Active" />
+								<VisualState Name="Inactive">
+									<Storyboard>
+										<ColorAnimation Storyboard.TargetName="NormalText" Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" To="#FF777777" Duration="0:0:0.15" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsFocused" Value="True">
+							<Setter TargetName="CalendarButtonFocusVisual" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="IsFocused" Value="False">
+							<Setter TargetName="CalendarButtonFocusVisual" Property="Visibility" Value="Collapsed" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileClockCalendarBackButton" TargetType="Button">
+		<Setter Property="Width" Value="23" />
+		<Setter Property="Height" Value="23" />
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="Margin" Value="11,5,0,0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid>
+						<Image x:Name="Normal" Source="..\..\Images\Clock\BackNormal.png" />
+						<Image x:Name="Hover" Opacity="0" Source="..\..\Images\Clock\BackLight.png" />
+						<Image x:Name="Active" Opacity="0" Source="..\..\Images\Clock\BackPress.png" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Opacity" Value="0.5" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileClockCalendarNextButton" TargetType="Button">
+		<Setter Property="Width" Value="23" />
+		<Setter Property="Height" Value="23" />
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="HorizontalAlignment" Value="Right" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="Margin" Value="0,5,11,0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid>
+						<Image x:Name="Normal" Source="..\..\Images\Clock\NextNormal.png" />
+						<Image x:Name="Hover" Opacity="0" Source="..\..\Images\Clock\NextLight.png" />
+						<Image x:Name="Active" Opacity="0" Source="..\..\Images\Clock\NextPress.png" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Opacity" Value="0.5" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<!--  Clock:FlyoutPanel  -->
+	<Style x:Key="TileClockFlyoutPanel" TargetType="Grid">
+		<Setter Property="Margin" Value="0,0,4,0" />
+	</Style>
+	<Style x:Key="TileClockFlyoutClock" TargetType="FrameworkElement">
+		<Setter Property="Width" Value="260" />
+		<Setter Property="Height" Value="260" />
+	</Style>
+	<Style x:Key="TileClockPanelShortTimeText" TargetType="FrameworkElement">
+		<Setter Property="Margin" Value="0,0,0,2" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+	</Style>
+	<Style x:Key="TileClockPanelCommonTextFlyout" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalNormalFontSize}" />
+		<Setter Property="TextAlignment" Value="Center" />
+		<Setter Property="Margin" Value="0,0,0,2" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+	</Style>
+	<Style x:Key="TileClockFlyoutCalendar" TargetType="FrameworkElement">
+		<Setter Property="Width" Value="219" />
+		<Setter Property="Height" Value="294" />
+	</Style>
+	<Style x:Key="TileClockFlyoutAlarmPointAM" TargetType="Button">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid Background="{TemplateBinding Background}">
+						<Image x:Name="ButtonImage" Style="{DynamicResource TileClockFlyoutClockAlarmRegulator}" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="ButtonImage" Property="Style" Value="{DynamicResource TileClockFlyoutClockAlarmRegulatorHover}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileClockFlyoutAlarmPointPM" TargetType="Button">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid Background="{TemplateBinding Background}">
+						<Image x:Name="ButtonImage" Style="{DynamicResource TileClockFlyoutClockAlarmRegulatorPm}" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="ButtonImage" Property="Style" Value="{DynamicResource TileClockFlyoutClockAlarmRegulatorPmHover}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<!--  Clock:ShortTime  -->
+	<Style x:Key="TileClockShortTimeTimePart" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="#D8E4FF" />
+		<Setter Property="FontWeight" Value="Bold" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalNormalFontSize}" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+	</Style>
+	<Style x:Key="TileClockShortTimeMeridiemPart" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="#9EB5BB" />
+		<Setter Property="FontWeight" Value="Bold" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalNormalFontSize}" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+	</Style>
+	<Style x:Key="TileClockShortTimeTimePartLarge" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="#D8E4FF" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="FontSize" Value="22" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+	</Style>
+	<Style x:Key="TileClockShortTimeMeridiemPartLarge" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="#9EB5BB" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="FontSize" Value="22" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+	</Style>
+	<Style x:Key="TileClockShortTimeBlankPart" TargetType="TextBlock">
+		<Setter Property="FontSize" Value="{DynamicResource GlobalNormalFontSize}" />
+	</Style>
+	<Style x:Key="TileClockShortTimeBlankPartLarge" TargetType="TextBlock">
+		<Setter Property="FontSize" Value="22" />
+	</Style>
+	<!--  Clock:SmallCalendar  -->
+	<Style x:Key="TileClockSmallCalendarBorder" TargetType="Border">
+		<Setter Property="Width" Value="34" />
+		<Setter Property="Height" Value="36" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="CornerRadius" Value="1,1,0,0" />
+		<Setter Property="BorderBrush" Value="#C6E8E8E8" />
+		<Setter Property="ClipToBounds" Value="True" />
+	</Style>
+	<Style x:Key="TileClockSmallCalendarContainer" TargetType="DockPanel">
+		<Setter Property="Background" Value="White" />
+		<Setter Property="LastChildFill" Value="True" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+	</Style>
+	<Style x:Key="TileClockSmallCalendarDayInWeek" TargetType="Grid">
+		<Setter Property="Height" Value="16" />
+		<Setter Property="Background" Value="#ADD8E6" />
+		<Setter Property="DockPanel.Dock" Value="Top" />
+	</Style>
+	<Style x:Key="TileClockSmallCalendarDay" TargetType="Grid" />
+	<Style x:Key="TileClockSmallCalendarDivideLine" TargetType="Line">
+		<Setter Property="X1" Value="0" />
+		<Setter Property="X2" Value="100" />
+		<Setter Property="Y1" Value="0" />
+		<Setter Property="Y2" Value="0" />
+		<Setter Property="DockPanel.Dock" Value="Top" />
+		<Setter Property="Stroke" Value="#ACC5CF" />
+		<Setter Property="StrokeThickness" Value="1" />
+	</Style>
+	<Style x:Key="TileClockSmallCalendarDayInWeekText" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="White" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="TextAlignment" Value="Center" />
+		<Setter Property="FontWeight" Value="Bold" />
+	</Style>
+	<Style x:Key="TileClockSmallCalendarDayText" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="#69749C" />
+		<Setter Property="FontSize" Value="12" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="TextAlignment" Value="Center" />
+	</Style>
+	<!--  Clock:ClockFace  -->
+	<Style x:Key="TileClockClockContainer" TargetType="Grid">
+		<Setter Property="Width" Value="260" />
+		<Setter Property="Height" Value="260" />
+	</Style>
+	<Style x:Key="TileClockFace" TargetType="Image">
+		<Setter Property="Width" Value="260" />
+		<Setter Property="Height" Value="260" />
+		<Setter Property="Source" Value="..\..\Images\Clock\ClockFace.png" />
+	</Style>
+	<Style x:Key="TileClockHourHand" TargetType="Image">
+		<Setter Property="Height" Value="95" />
+		<Setter Property="Margin" Value="0,0,0,50" />
+		<Setter Property="RenderTransformOrigin" Value="0.5,0.78" />
+		<Setter Property="Source" Value="..\..\Images\Clock\Hour.png" />
+	</Style>
+	<Style x:Key="TileClockMinuteHand" TargetType="Image">
+		<Setter Property="Height" Value="125" />
+		<Setter Property="Margin" Value="0,0,0,85" />
+		<Setter Property="RenderTransformOrigin" Value="0.5,0.845" />
+		<Setter Property="Source" Value="..\..\Images\Clock\Minute.png" />
+	</Style>
+	<Style x:Key="TileClockSecondHand" TargetType="Image">
+		<Setter Property="Height" Value="128" />
+		<Setter Property="Margin" Value="0,0,0,72" />
+		<Setter Property="RenderTransformOrigin" Value="0.5,0.778" />
+		<Setter Property="Source" Value="..\..\Images\Clock\Second.png" />
+	</Style>
+	<Style x:Key="TileClockHub" TargetType="Image">
+		<Setter Property="Width" Value="12" />
+		<Setter Property="Height" Value="12" />
+		<Setter Property="Source" Value="..\..\Images\Clock\Dot.png" />
+	</Style>
+	<Style x:Key="TileClockCrystal" TargetType="Image">
+		<Setter Property="Width" Value="260" />
+		<Setter Property="Height" Value="260" />
+		<Setter Property="Source" Value="..\..\Images\Clock\Crystal.png" />
+	</Style>
+	<!--  Clock:Tile  -->
+	<Style x:Key="TileClockPanelCommonText" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalNormalFontSize}" />
+		<Setter Property="TextAlignment" Value="Center" />
+		<Setter Property="Margin" Value="0,2,0,2" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+	</Style>
+	<Style x:Key="TileClockPanelFace1" TargetType="Grid">
+		<Setter Property="Height" Value="100" />
+		<Setter Property="Margin" Value="6,0,0,0" />
+	</Style>
+	<Style x:Key="TileClockPanelFace2" TargetType="Grid">
+		<Setter Property="Height" Value="66" />
+		<Setter Property="Margin" Value="6,0,0,0" />
+	</Style>
+	<Style x:Key="TileClockPanelSmallCalendar" TargetType="FrameworkElement">
+		<Setter Property="Width" Value="34" />
+		<Setter Property="Height" Value="36" />
+	</Style>
+	<Style x:Key="TileClockPanel2Clock" TargetType="FrameworkElement">
+		<Setter Property="Width" Value="42" />
+		<Setter Property="Height" Value="42" />
+	</Style>
+	<Style x:Key="TileClockPanelShortTimeText2" TargetType="FrameworkElement">
+		<Setter Property="Margin" Value="0,0,0,2" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+	</Style>
+	<Style x:Key="TileClockPanelFace3" TargetType="Grid">
+		<Setter Property="Height" Value="26" />
+		<Setter Property="Margin" Value="11,0,0,0" />
+	</Style>
+	<Style x:Key="TileClockPanelFace4" TargetType="Grid">
+		<Setter Property="Height" Value="52" />
+		<Setter Property="Margin" Value="11,0,0,0" />
+	</Style>
+	<Style x:Key="TileClockPanelShortTimeText4" TargetType="FrameworkElement">
+		<Setter Property="Margin" Value="0,0,0,2" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+	</Style>
+	<Style x:Key="TileClockPanelCommonText4" BasedOn="{StaticResource TileClockPanelCommonText}" TargetType="TextBlock">
+		<Setter Property="TextAlignment" Value="Left" />
+		<Setter Property="Margin" Value="0,0,0,2" />
+	</Style>
+	<Style x:Key="TileClockPanelFace5" TargetType="Grid">
+		<Setter Property="Height" Value="30" />
+		<Setter Property="Margin" Value="6,0,0,0" />
+	</Style>
+	<Style x:Key="TileClockPanelClock5" TargetType="FrameworkElement">
+		<Setter Property="Width" Value="20" />
+		<Setter Property="Height" Value="20" />
+	</Style>
+	<Style x:Key="TileClockPanelTextPart5" TargetType="StackPanel">
+		<Setter Property="Margin" Value="6,0,0,0" />
+		<Setter Property="Orientation" Value="Vertical" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+	<Style x:Key="TileClockPanelFace6" TargetType="Grid">
+		<Setter Property="Height" Value="42" />
+		<Setter Property="Margin" Value="6,0,0,0" />
+	</Style>
+	<Style x:Key="TileClockPanelClock6" TargetType="FrameworkElement">
+		<Setter Property="Width" Value="32" />
+		<Setter Property="Height" Value="32" />
+	</Style>
+	<Style x:Key="TileClockPanelShortTimeText6" BasedOn="{StaticResource TileClockPanelShortTimeText2}" TargetType="FrameworkElement">
+		<Setter Property="Margin" Value="0,0,0,2" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+	</Style>
+	<Style x:Key="TileClockPanelCommonTextLeft" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalNormalFontSize}" />
+		<Setter Property="Margin" Value="0,0,0,2" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+	</Style>
+	<Style x:Key="TileClockPanelFace7" TargetType="Grid">
+		<Setter Property="Height" Value="58" />
+		<Setter Property="Margin" Value="6,0,0,0" />
+	</Style>
+	<Style x:Key="TileClockPanelClock7" TargetType="FrameworkElement">
+		<Setter Property="Width" Value="48" />
+		<Setter Property="Height" Value="48" />
+	</Style>
+</ResourceDictionary>

@@ -33,6 +33,8 @@ namespace WindowsModern.TrayTile
 			e.Window.SizeToContent = System.Windows.SizeToContent.WidthAndHeight;
 			e.Window.MaxWidth = 300;
 			e.Window.MaxHeight = 200;
+			e.ClientArea.Width = double.NaN;
+			e.ClientArea.Height = double.NaN;
 			e.FlyoutWindowFeatures.FixPosition ();
 			tilePanel?.OnFlyoutInit (e);
 		}

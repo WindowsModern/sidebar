@@ -119,8 +119,12 @@ namespace Sidebar
 		}
 		private void KarlSidebarTile_PropertiesClosing (object sender, PropertiesAboutEventArgs e)
 		{
-			if (Instance != null && _legacyConfigWindow != null)
-				Instance.OnConfigurationWindowClosing (_legacyConfigWindow);
+			try
+			{
+				if (Instance != null && _legacyConfigWindow != null)
+					Instance.OnConfigurationWindowClosing (_legacyConfigWindow);
+			}
+			catch { }
 		}
 		private void KarlSidebarTile_PropertiesClosed (object sender, EventArgs e)
 		{

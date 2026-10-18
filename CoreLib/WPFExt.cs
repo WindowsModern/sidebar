@@ -397,4 +397,88 @@ namespace Sidebar
 			return Math.Max (0, panel.ActualHeight - used);
 		}
 	}
+	public static class VisualPositionExtensions
+	{
+		public static System.Windows.Point GetTopLeftInPhysicalPixels (this System.Windows.Media.Visual visual)
+		{
+			if (visual == null) return new System.Windows.Point (double.NaN, double.NaN);
+			return visual.PointToScreen (new System.Windows.Point (0, 0));
+		}
+		public static bool TryGetPhysicalBounds (this System.Windows.Media.Visual visual, out System.Windows.Point physicalTopLeft, out System.Windows.Point physicalBottomRight)
+		{
+			physicalTopLeft = new System.Windows.Point (double.NaN, double.NaN);
+			physicalBottomRight = new System.Windows.Point (double.NaN, double.NaN);
+			if (visual == null) return false;
+			var source = System.Windows.PresentationSource.FromVisual (visual);
+			if (source == null || source.CompositionTarget == null) return false;
+			var fe = visual as System.Windows.FrameworkElement;
+			double width = fe != null ? fe.ActualWidth : 0;
+			double height = fe != null ? fe.ActualHeight : 0;
+			physicalTopLeft = visual.PointToScreen (new System.Windows.Point (0, 0));
+			physicalBottomRight = visual.PointToScreen (new System.Windows.Point (width, height));
+			return true;
+		}
+		public static System.Windows.Size GetPhysicalSize (this System.Windows.Media.Visual visual)
+		{
+			System.Windows.Point tl;
+			System.Windows.Point br;
+			if (!visual.TryGetPhysicalBounds (out tl, out br)) return new System.Windows.Size (double.NaN, double.NaN);
+			return new System.Windows.Size (Math.Abs (br.X - tl.X), Math.Abs (br.Y - tl.Y));
+		}
+		public static bool TryGetPhysicalSize (this System.Windows.Media.Visual visual, out System.Windows.Size physicalSize)
+		{
+			physicalSize = new System.Windows.Size (double.NaN, double.NaN);
+			System.Windows.Point tl;
+			System.Windows.Point br;
+			if (!visual.TryGetPhysicalBounds (out tl, out br)) return false;
+			physicalSize = new System.Windows.Size (br.X - tl.X, br.Y - tl.Y);
+			return true;
+		}
+		public static System.Windows.Size GetPhysicalSizeFromDpi (this System.Windows.Media.Visual visual)
+		{
+			var fe = visual as System.Windows.FrameworkElement;
+			if (fe == null) return new System.Windows.Size (double.NaN, double.NaN);
+			var scale = visual.GetDpiScale ();
+			return new System.Windows.Size (fe.ActualWidth * scale.X, fe.ActualHeight * scale.Y);
+		}
+		public static System.Windows.Rect GetPhysicalRect (this System.Windows.Media.Visual visual)
+		{
+			System.Windows.Point tl;
+			System.Windows.Point br;
+			if (!visual.TryGetPhysicalBounds (out tl, out br)) return System.Windows.Rect.Empty;
+			return new System.Windows.Rect (tl, br);
+		}
+		public static bool TryGetPositionRelativeTo (this System.Windows.Media.Visual visual, System.Windows.Media.Visual ancestor, out System.Windows.Point dipInAncestor)
+		{
+			dipInAncestor = new System.Windows.Point (double.NaN, double.NaN);
+			if (visual == null || ancestor == null) return false;
+			try
+			{
+				dipInAncestor = visual.TransformToAncestor (ancestor).Transform (new System.Windows.Point (0, 0));
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		public static System.Windows.Point GetDpiScale (this System.Windows.Media.Visual visual)
+		{
+			var source = System.Windows.PresentationSource.FromVisual (visual);
+			if (source == null || source.CompositionTarget == null) return new System.Windows.Point (1.0, 1.0);
+			System.Windows.Media.Matrix m = source.CompositionTarget.TransformToDevice;
+			return new System.Windows.Point (m.M11, m.M22);
+		}
+		public static System.Windows.Point DipScreenToPixel (this System.Windows.Media.Visual referenceVisual, System.Windows.Point dipScreen)
+		{
+			var scale = referenceVisual.GetDpiScale ();
+			return new System.Windows.Point (dipScreen.X * scale.X, dipScreen.Y * scale.Y);
+		}
+		public static System.Windows.Point PixelScreenToDip (this System.Windows.Media.Visual referenceVisual, System.Windows.Point pixelScreen)
+		{
+			var scale = referenceVisual.GetDpiScale ();
+			if (scale.X <= 0 || scale.Y <= 0) return pixelScreen;
+			return new System.Windows.Point (pixelScreen.X / scale.X, pixelScreen.Y / scale.Y);
+		}
+	}
 }

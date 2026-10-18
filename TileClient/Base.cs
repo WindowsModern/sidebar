@@ -42,7 +42,7 @@ namespace Sidebar
 		public object TransferDatas { get; set; }
 		public TileRequest (ITileBase itb)
 		{
-			RequestSource = itb.Manifest.Identity.FamilyName;
+			RequestSource = itb.UserModelId;
 		}
 	}
 	public interface ISidebarRequest: ITileRequest { }
@@ -70,7 +70,7 @@ namespace Sidebar
 		public object TransferDatas { get; set; }
 		public SidebarRequest (ITileBase itb)
 		{
-			RequestSource = itb.Manifest.Identity.FamilyName;
+			RequestSource = itb.UserModelId;
 		}
 	}
 	[ComVisible (true)]
@@ -129,6 +129,8 @@ namespace Sidebar
 		ISidebarFeatures Features { get; }
 		IProgramFolder UserRegion { get; }
 		UIElement TileUI { get; }
+		ITileApplication Application { get; }
+		string UserModelId { get; }
 		void OnLoad ();
 		void OnUnload ();
 		void OnHostChanged (TileHostEvent eventName, object context, object sender = null);

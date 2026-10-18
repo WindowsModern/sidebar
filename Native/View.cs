@@ -342,6 +342,12 @@ namespace Sidebar
 		public virtual void Dispose ()
 		{
 			if (Interlocked.Exchange (ref _disposed, 1) != 0) return;
+			lock (_sync)
+			{
+				DestroyAutoRefreshTimerLocked ();
+				DestroyDebounceTimerLocked ();
+				_debounceQueue.Clear ();
+			}
 			var incc = _source as INotifyCollectionChanged;
 			if (incc != null)
 				incc.CollectionChanged -= OnSourceCollectionChanged;
@@ -349,6 +355,21 @@ namespace Sidebar
 			ClearFormsWhenDispose ();
 		}
 		private void OnSourceCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if (_disposed != 0) return;
+			if (_debounceRefreshInterval > 0)
+			{
+				lock (_sync)
+				{
+					if (_disposed != 0) return;
+					_debounceQueue.Add (e);
+					RestartDebounceTimerLocked ();
+				}
+				return;
+			}
+			DoSourceChanged (e);
+		}
+		private void DoSourceChanged (NotifyCollectionChangedEventArgs e)
 		{
 			if (_disposed != 0) return;
 			bool hasFilter;
@@ -643,6 +664,214 @@ namespace Sidebar
 			return new View<T> (this, (item, _) => predicate (item));
 		}
 		#endregion
+		#region Refresh Timers
+		private int _autoRefreshInterval;
+		private int _debounceRefreshInterval;
+		private object _autoRefreshTimer;
+		private EventHandler _autoRefreshTickHandler;
+		private object _debounceTimer;
+		private EventHandler _debounceTickHandler;
+		private readonly List<NotifyCollectionChangedEventArgs> _debounceQueue = new List<NotifyCollectionChangedEventArgs> ();
+		/// <summary>
+		/// 定时刷新间隔（毫秒），仅在源为非 INotifyCollectionChanged 时生效。
+		/// 0 表示不自动刷新，timer 停止并释放。
+		/// </summary>
+		public int AutoRefreshInterval
+		{
+			get { lock (_sync) return _autoRefreshInterval; }
+			set
+			{
+				if (value < 0) throw new ArgumentOutOfRangeException (nameof (value));
+				lock (_sync)
+				{
+					if (_autoRefreshInterval == value) return;
+					_autoRefreshInterval = value;
+					DestroyAutoRefreshTimerLocked ();
+					if (value > 0 && _disposed == 0 && _source != null && !(_source is INotifyCollectionChanged))
+					{
+						StartAutoRefreshTimerLocked ();
+					}
+				}
+			}
+		}
+		/// <summary>
+		/// 延迟刷新间隔（毫秒），仅在源为 INotifyCollectionChanged 时生效。
+		/// 源变化事件会先入队，N 毫秒无新事件后按序触发；有过滤时合并为一次 Reset，无过滤时逐个透传原始事件。
+		/// 0 表示立即处理、不启动 timer。
+		/// </summary>
+		public int DebounceRefreshInterval
+		{
+			get { lock (_sync) return _debounceRefreshInterval; }
+			set
+			{
+				if (value < 0) throw new ArgumentOutOfRangeException (nameof (value));
+				bool needFlush = false;
+				lock (_sync)
+				{
+					if (_debounceRefreshInterval == value) return;
+					_debounceRefreshInterval = value;
+					if (value == 0)
+					{
+						needFlush = _debounceQueue.Count > 0;
+					}
+				}
+				if (needFlush) FlushDebounceQueue ();
+				else if (value == 0)
+				{
+					lock (_sync) DestroyDebounceTimerLocked ();
+				}
+			}
+		}
+		private static bool IsWpfEnvironment ()
+		{
+			try { return System.Windows.Application.Current != null; } catch { return false; }
+		}
+		private static void StartTimerObject (object timer)
+		{
+			if (timer is System.Windows.Threading.DispatcherTimer)
+				((System.Windows.Threading.DispatcherTimer)timer).Start ();
+			else if (timer is System.Windows.Forms.Timer)
+				((System.Windows.Forms.Timer)timer).Start ();
+		}
+		private static void StopTimerObject (object timer)
+		{
+			if (timer is System.Windows.Threading.DispatcherTimer)
+				((System.Windows.Threading.DispatcherTimer)timer).Stop ();
+			else if (timer is System.Windows.Forms.Timer)
+				((System.Windows.Forms.Timer)timer).Stop ();
+		}
+		private static void DestroyTimerObject (ref object timer, EventHandler handler)
+		{
+			if (timer is System.Windows.Threading.DispatcherTimer)
+			{
+				var t = (System.Windows.Threading.DispatcherTimer)timer;
+				t.Stop ();
+				if (handler != null) t.Tick -= handler;
+			}
+			else if (timer is System.Windows.Forms.Timer)
+			{
+				var t = (System.Windows.Forms.Timer)timer;
+				t.Stop ();
+				if (handler != null) t.Tick -= handler;
+				t.Dispose ();
+			}
+			timer = null;
+		}
+		private void StartAutoRefreshTimerLocked ()
+		{
+			if (_autoRefreshTimer != null) return;
+			_autoRefreshTickHandler = OnAutoRefreshTick;
+			if (IsWpfEnvironment ())
+			{
+				var t = new System.Windows.Threading.DispatcherTimer (
+					System.Windows.Threading.DispatcherPriority.Background,
+					System.Windows.Application.Current.Dispatcher);
+				t.Interval = TimeSpan.FromMilliseconds (_autoRefreshInterval);
+				t.Tick += _autoRefreshTickHandler;
+				_autoRefreshTimer = t;
+				t.Start ();
+			}
+			else
+			{
+				var t = new System.Windows.Forms.Timer ();
+				t.Interval = _autoRefreshInterval;
+				t.Tick += _autoRefreshTickHandler;
+				_autoRefreshTimer = t;
+				t.Start ();
+			}
+		}
+		private void DestroyAutoRefreshTimerLocked ()
+		{
+			DestroyTimerObject (ref _autoRefreshTimer, _autoRefreshTickHandler);
+			_autoRefreshTickHandler = null;
+		}
+		private void EnsureDebounceTimerLocked ()
+		{
+			if (_debounceTimer != null) return;
+			_debounceTickHandler = OnDebounceTick;
+			if (IsWpfEnvironment ())
+			{
+				var t = new System.Windows.Threading.DispatcherTimer (
+					System.Windows.Threading.DispatcherPriority.Background,
+					System.Windows.Application.Current.Dispatcher);
+				t.Interval = TimeSpan.FromMilliseconds (_debounceRefreshInterval);
+				t.Tick += _debounceTickHandler;
+				_debounceTimer = t;
+			}
+			else
+			{
+				var t = new System.Windows.Forms.Timer ();
+				t.Interval = _debounceRefreshInterval;
+				t.Tick += _debounceTickHandler;
+				_debounceTimer = t;
+			}
+		}
+		private void DestroyDebounceTimerLocked ()
+		{
+			DestroyTimerObject (ref _debounceTimer, _debounceTickHandler);
+			_debounceTickHandler = null;
+		}
+		private void RestartDebounceTimerLocked ()
+		{
+			if (_debounceRefreshInterval <= 0) return;
+			EnsureDebounceTimerLocked ();
+			StopTimerObject (_debounceTimer);
+			StartTimerObject (_debounceTimer);
+		}
+		private void OnAutoRefreshTick (object sender, EventArgs e)
+		{
+			if (_disposed != 0) return;
+			Refresh ();
+		}
+		private void OnDebounceTick (object sender, EventArgs e)
+		{
+			List<NotifyCollectionChangedEventArgs> snapshot = null;
+			bool hasFilter = false;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				StopTimerObject (_debounceTimer);
+				if (_debounceQueue.Count == 0) return;
+				snapshot = new List<NotifyCollectionChangedEventArgs> (_debounceQueue);
+				_debounceQueue.Clear ();
+				hasFilter = _cast != null;
+				if (hasFilter) BuildCastLocked ();
+			}
+			if (_disposed != 0) return;
+			if (hasFilter)
+			{
+				RaiseReset ();
+			}
+			else
+			{
+				for (int i = 0; i < snapshot.Count; i++) RaiseRaw (snapshot [i]);
+			}
+		}
+		/// <summary>立即处理排队中的延迟事件（用于 DebounceRefreshInterval 归零或 Dispose 时）。</summary>
+		private void FlushDebounceQueue ()
+		{
+			List<NotifyCollectionChangedEventArgs> snapshot = null;
+			bool hasFilter = false;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				DestroyDebounceTimerLocked ();
+				if (_debounceQueue.Count == 0) return;
+				snapshot = new List<NotifyCollectionChangedEventArgs> (_debounceQueue);
+				_debounceQueue.Clear ();
+				hasFilter = _cast != null;
+				if (hasFilter) BuildCastLocked ();
+			}
+			if (hasFilter)
+			{
+				RaiseReset ();
+			}
+			else
+			{
+				for (int i = 0; i < snapshot.Count; i++) RaiseRaw (snapshot [i]);
+			}
+		}
+		#endregion
 	}
 	/// <summary>
 	/// 只读/可写投影视图。继承自 View&lt;U&gt;，因此具备完整的 IList&lt;U&gt; 语义。
@@ -845,6 +1074,474 @@ namespace Sidebar
 			{
 				return GetEnumerator ();
 			}
+		}
+	}
+	/// <summary>
+	/// 多源视图：继承自 View&lt;T&gt;，把多个 IList&lt;T&gt; 拼接成一个逻辑列表。
+	/// 支持动态添加/移除源、可选 IComparer&lt;T&gt; 排序（同值时保留拼接顺序，稳定排序），
+	/// 并保留 View&lt;T&gt; 的 Selector 过滤、Select/Where 派生、事件转发等全部能力。
+	/// 底层通过内部 MultiSourceList&lt;T&gt; 作为 View&lt;T&gt; 的单一源，
+	/// 源集合变化、排序器变化均以 Reset 事件向上传播。
+	/// </summary>
+	public class MultiView<T>: View<T>
+	{
+		private readonly MultiSourceList<T> _multi;
+		public MultiView ()
+			: base (new MultiSourceList<T> ())
+		{
+			_multi = (MultiSourceList<T>)Source;
+		}
+		public MultiView (params IList<T> [] sources): base (new MultiSourceList<T> (sources))
+		{
+			_multi = (MultiSourceList<T>)Source;
+		}
+		public MultiView (Func<T, int, bool> selector, params IList<T> [] sources)
+			: base (new MultiSourceList<T> (sources), selector)
+		{
+			_multi = (MultiSourceList<T>)Source;
+		}
+		public MultiView (IEnumerable<IList<T>> sources)
+			: base (new MultiSourceList<T> (sources))
+		{
+			_multi = (MultiSourceList<T>)Source;
+		}
+		public MultiView (IEnumerable<IList<T>> sources, Func<T, int, bool> selector)
+			: base (new MultiSourceList<T> (sources), selector)
+		{
+			_multi = (MultiSourceList<T>)Source;
+		}
+		public MultiView (Func<T, int, bool> selector)
+			: base (new MultiSourceList<T> (), selector)
+		{
+			_multi = (MultiSourceList<T>)Source;
+		}
+		public IList<IList<T>> Sources
+		{
+			get { return _multi.Sources; }
+		}
+		public IComparer<T> Comparer
+		{
+			get { return _multi.Comparer; }
+			set { _multi.Comparer = value; }
+		}
+		public bool IsSorted
+		{
+			get { return _multi.Comparer != null; }
+		}
+		public void Sort (IComparer<T> comparer) { _multi.Comparer = comparer; }
+		public void Sort (Comparison<T> comparison)
+		{
+			if (comparison == null) throw new ArgumentNullException (nameof (comparison));
+			_multi.Comparer = new ComparisonComparer (comparison);
+		}
+		public void RemoveSort () { _multi.Comparer = null; }
+		public void AddSource (IList<T> source) { _multi.AddSource (source); }
+		public bool RemoveSource (IList<T> source) { return _multi.RemoveSource (source); }
+		public void ClearSources () { _multi.ClearSources (); }
+		public override void Refresh () { _multi.Refresh (); }
+		public override void Dispose ()
+		{
+			base.Dispose ();
+			_multi.Dispose ();
+		}
+		private sealed class ComparisonComparer: IComparer<T>
+		{
+			private readonly Comparison<T> _c;
+			public ComparisonComparer (Comparison<T> c) { _c = c; }
+			public int Compare (T x, T y) { return _c (x, y); }
+		}
+	}
+	/// <summary>
+	/// 内部支撑类：把多个 IList&lt;T&gt; 拼接成一个虚拟 IList&lt;T&gt;，
+	/// 支持动态源增删、可选 IComparer&lt;T&gt; 排序。
+	/// 只实现 IList&lt;T&gt; + INotifyCollectionChanged，不含非泛型 IList 接口。
+	/// 线程安全：所有内部状态受 _sync 保护，事件在锁外触发。
+	/// </summary>
+	internal sealed class MultiSourceList<T>: IList<T>, INotifyCollectionChanged, IDisposable
+	{
+		private readonly object _sync = new object ();
+		private readonly object _handlersLock = new object ();
+		private readonly HashSet<NotifyCollectionChangedEventHandler> _handlers = new HashSet<NotifyCollectionChangedEventHandler> ();
+		private readonly List<IList<T>> _sources = new List<IList<T>> ();
+		private readonly List<SourceSubscription> _subscriptions = new List<SourceSubscription> ();
+		private List<FlatItem> _flattened = new List<FlatItem> ();
+		private IComparer<T> _comparer;
+		private volatile int _disposed;
+		private struct FlatItem
+		{
+			public T Item;
+			public int SourceIndex;
+			public int LocalIndex;
+			public int OriginalIndex;
+		}
+		private sealed class SourceSubscription
+		{
+			public IList<T> Source;
+			public NotifyCollectionChangedEventHandler Handler;
+		}
+		public event NotifyCollectionChangedEventHandler CollectionChanged
+		{
+			add { if (value != null) lock (_handlersLock) _handlers.Add (value); }
+			remove { if (value != null) lock (_handlersLock) _handlers.Remove (value); }
+		}
+		public MultiSourceList () { }
+		public MultiSourceList (IEnumerable<IList<T>> sources)
+		{
+			if (sources != null)
+			{
+				foreach (var s in sources) AddSourceCore (s);
+				lock (_sync) RebuildLocked ();
+			}
+		}
+		public IComparer<T> Comparer
+		{
+			get { lock (_sync) return _comparer; }
+			set
+			{
+				bool changed;
+				lock (_sync)
+				{
+					if (ReferenceEquals (_comparer, value)) return;
+					_comparer = value;
+					RebuildLocked ();
+					changed = true;
+				}
+				if (changed) RaiseReset ();
+			}
+		}
+		public IList<IList<T>> Sources
+		{
+			get
+			{
+				lock (_sync)
+				{
+					var copy = new List<IList<T>> (_sources);
+					return copy.AsReadOnly ();
+				}
+			}
+		}
+		public void AddSource (IList<T> source)
+		{
+			if (source == null) throw new ArgumentNullException (nameof (source));
+			bool changed;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				int before = _sources.Count;
+				AddSourceCore (source);
+				changed = _sources.Count != before;
+				if (changed) RebuildLocked ();
+			}
+			if (changed) RaiseReset ();
+		}
+		public bool RemoveSource (IList<T> source)
+		{
+			if (source == null) return false;
+			bool removed;
+			lock (_sync)
+			{
+				if (_disposed != 0) return false;
+				int idx = _sources.IndexOf (source);
+				removed = idx >= 0;
+				if (removed)
+				{
+					_sources.RemoveAt (idx);
+					for (int i = _subscriptions.Count - 1; i >= 0; i--)
+					{
+						if (ReferenceEquals (_subscriptions [i].Source, source))
+						{
+							var incc = _subscriptions [i].Source as INotifyCollectionChanged;
+							if (incc != null) incc.CollectionChanged -= _subscriptions [i].Handler;
+							_subscriptions.RemoveAt (i);
+						}
+					}
+					RebuildLocked ();
+				}
+			}
+			if (removed) RaiseReset ();
+			return removed;
+		}
+		public void ClearSources ()
+		{
+			bool changed;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				changed = _sources.Count > 0;
+				if (changed)
+				{
+					foreach (var sub in _subscriptions)
+					{
+						var incc = sub.Source as INotifyCollectionChanged;
+						if (incc != null) incc.CollectionChanged -= sub.Handler;
+					}
+					_subscriptions.Clear ();
+					_sources.Clear ();
+					_flattened = new List<FlatItem> ();
+				}
+			}
+			if (changed) RaiseReset ();
+		}
+		public void Refresh ()
+		{
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				RebuildLocked ();
+			}
+			RaiseReset ();
+		}
+		private void AddSourceCore (IList<T> source)
+		{
+			if (source == null) return;
+			if (_sources.Contains (source)) return;
+			_sources.Add (source);
+			var incc = source as INotifyCollectionChanged;
+			if (incc != null)
+			{
+				var sub = new SourceSubscription { Source = source };
+				sub.Handler = (s, e) => OnSourceCollectionChanged (source);
+				incc.CollectionChanged += sub.Handler;
+				_subscriptions.Add (sub);
+			}
+		}
+		private void OnSourceCollectionChanged (IList<T> source)
+		{
+			if (_disposed != 0) return;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				RebuildLocked ();
+			}
+			RaiseReset ();
+		}
+		private void RebuildLocked ()
+		{
+			var flat = new List<FlatItem> ();
+			for (int s = 0; s < _sources.Count; s++)
+			{
+				var src = _sources [s];
+				if (src == null) continue;
+				int n = src.Count;
+				for (int i = 0; i < n; i++)
+				{
+					flat.Add (new FlatItem {
+						Item = src [i],
+						SourceIndex = s,
+						LocalIndex = i,
+						OriginalIndex = flat.Count
+					});
+				}
+			}
+			if (_comparer != null && flat.Count > 1)
+			{
+				flat.Sort ((a, b) =>
+				{
+					int c = _comparer.Compare (a.Item, b.Item);
+					if (c != 0) return c;
+					return a.OriginalIndex.CompareTo (b.OriginalIndex);
+				});
+			}
+			_flattened = flat;
+		}
+		private void RaiseReset ()
+		{
+			NotifyCollectionChangedEventHandler [] snapshot = null;
+			lock (_handlersLock)
+			{
+				if (_handlers.Count > 0) snapshot = _handlers.ToArray ();
+			}
+			if (snapshot == null) return;
+			var args = new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Reset);
+			for (int i = 0; i < snapshot.Length; i++) snapshot [i] (this, args);
+		}
+		public int Count
+		{
+			get { lock (_sync) return _flattened.Count; }
+		}
+		public bool IsReadOnly
+		{
+			get { return false; }
+		}
+		public T this [int index]
+		{
+			get
+			{
+				lock (_sync)
+				{
+					if (index < 0 || index >= _flattened.Count) throw new ArgumentOutOfRangeException (nameof (index));
+					return _flattened [index].Item;
+				}
+			}
+			set
+			{
+				bool manualReset = false;
+				lock (_sync)
+				{
+					if (index < 0 || index >= _flattened.Count) throw new ArgumentOutOfRangeException (nameof (index));
+					var f = _flattened [index];
+					var src = _sources [f.SourceIndex];
+					if (src.IsReadOnly) throw new NotSupportedException ("Source is read-only.");
+					src [f.LocalIndex] = value;
+					if (!(src is INotifyCollectionChanged))
+					{
+						RebuildLocked ();
+						manualReset = true;
+					}
+				}
+				if (manualReset) RaiseReset ();
+			}
+		}
+		public int IndexOf (T item)
+		{
+			lock (_sync)
+			{
+				for (int i = 0; i < _flattened.Count; i++)
+					if (EqualityComparer<T>.Default.Equals (_flattened [i].Item, item)) return i;
+				return -1;
+			}
+		}
+		public bool Contains (T item) { return IndexOf (item) >= 0; }
+		public void CopyTo (T [] array, int arrayIndex)
+		{
+			if (array == null) throw new ArgumentNullException (nameof (array));
+			if (arrayIndex < 0) throw new ArgumentOutOfRangeException (nameof (arrayIndex));
+			lock (_sync)
+			{
+				if (array.Length - arrayIndex < _flattened.Count) throw new ArgumentException ("Target array is too small.", nameof (array));
+				for (int i = 0; i < _flattened.Count; i++) array [arrayIndex + i] = _flattened [i].Item;
+			}
+		}
+		public IEnumerator<T> GetEnumerator ()
+		{
+			T [] snapshot;
+			lock (_sync)
+			{
+				snapshot = new T [_flattened.Count];
+				for (int i = 0; i < snapshot.Length; i++) snapshot [i] = _flattened [i].Item;
+			}
+			for (int i = 0; i < snapshot.Length; i++) yield return snapshot [i];
+		}
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator () { return GetEnumerator (); }
+		public void Add (T item)
+		{
+			bool manualReset = false;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				if (_sources.Count == 0) throw new InvalidOperationException ("No sources. Call AddSource first.");
+				var last = _sources [_sources.Count - 1];
+				if (last.IsReadOnly) throw new NotSupportedException ("Source is read-only.");
+				last.Add (item);
+				if (!(last is INotifyCollectionChanged))
+				{
+					RebuildLocked ();
+					manualReset = true;
+				}
+			}
+			if (manualReset) RaiseReset ();
+		}
+		public void Clear ()
+		{
+			bool manualReset = false;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				bool anyChanged = false;
+				bool anyNonObservable = false;
+				foreach (var s in _sources)
+				{
+					if (s.IsReadOnly) continue;
+					if (s.Count > 0) anyChanged = true;
+					if (!(s is INotifyCollectionChanged)) anyNonObservable = true;
+				}
+				if (!anyChanged) return;
+				foreach (var s in _sources)
+				{
+					if (s.IsReadOnly) continue;
+					if (s.Count > 0) s.Clear ();
+				}
+				if (anyNonObservable)
+				{
+					RebuildLocked ();
+					manualReset = true;
+				}
+			}
+			if (manualReset) RaiseReset ();
+		}
+		public bool Remove (T item)
+		{
+			int idx = IndexOf (item);
+			if (idx < 0) return false;
+			RemoveAt (idx);
+			return true;
+		}
+		public void Insert (int index, T item)
+		{
+			bool manualReset = false;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				if (_flattened.Count == 0)
+				{
+					if (_sources.Count == 0) throw new InvalidOperationException ("No sources. Call AddSource first.");
+					var first = _sources [0];
+					if (first.IsReadOnly) throw new NotSupportedException ("Source is read-only.");
+					first.Insert (0, item);
+					if (!(first is INotifyCollectionChanged)) { RebuildLocked (); manualReset = true; }
+				}
+				else
+				{
+					if (index < 0 || index > _flattened.Count) throw new ArgumentOutOfRangeException (nameof (index));
+					int srcIdx, localIdx;
+					if (index >= _flattened.Count)
+					{
+						srcIdx = _flattened [_flattened.Count - 1].SourceIndex;
+						localIdx = _flattened [_flattened.Count - 1].LocalIndex + 1;
+					}
+					else
+					{
+						srcIdx = _flattened [index].SourceIndex;
+						localIdx = _flattened [index].LocalIndex;
+					}
+					var src = _sources [srcIdx];
+					if (src.IsReadOnly) throw new NotSupportedException ("Source is read-only.");
+					src.Insert (localIdx, item);
+					if (!(src is INotifyCollectionChanged)) { RebuildLocked (); manualReset = true; }
+				}
+			}
+			if (manualReset) RaiseReset ();
+		}
+		public void RemoveAt (int index)
+		{
+			bool manualReset = false;
+			lock (_sync)
+			{
+				if (_disposed != 0) return;
+				if (index < 0 || index >= _flattened.Count) throw new ArgumentOutOfRangeException (nameof (index));
+				var f = _flattened [index];
+				var src = _sources [f.SourceIndex];
+				if (src.IsReadOnly) throw new NotSupportedException ("Source is read-only.");
+				src.RemoveAt (f.LocalIndex);
+				if (!(src is INotifyCollectionChanged)) { RebuildLocked (); manualReset = true; }
+			}
+			if (manualReset) RaiseReset ();
+		}
+		public void Dispose ()
+		{
+			if (Interlocked.Exchange (ref _disposed, 1) != 0) return;
+			lock (_sync)
+			{
+				foreach (var sub in _subscriptions)
+				{
+					var incc = sub.Source as INotifyCollectionChanged;
+					if (incc != null) incc.CollectionChanged -= sub.Handler;
+				}
+				_subscriptions.Clear ();
+				_sources.Clear ();
+				_flattened = new List<FlatItem> ();
+			}
+			lock (_handlersLock) _handlers.Clear ();
 		}
 	}
 }

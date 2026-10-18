@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Threading;
+using Shell32;
 
 namespace Sidebar
 {
@@ -147,6 +148,16 @@ namespace Sidebar
 		private static void OnTaskbarPosChanged (object sender, EventArgs e)
 		{
 			TaskbarPositionChanged?.Invoke (null, EventArgs.Empty);
+		}
+		// Taskbar 无关，显示桌面。
+		public static void ToggleDesktop ()
+		{
+			try
+			{
+				var shell = new Shell ();
+				((IShellDispatch4)shell).ToggleDesktop ();
+			}
+			catch { }
 		}
 	}
 	/// <summary>

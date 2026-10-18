@@ -6,13 +6,18 @@
 	xmlns:local="clr-namespace:Sidebar"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:pst="clr-namespace:Sidebar.Presentation"
-	Title="{pst:StringResource SIDEBAR_TITLE}" Width="150" Height="600" AllowsTransparency="True"
+	Title="{pst:StringResource SIDEBAR_TITLE}" Width="150" Height="0" AllowsTransparency="True"
 	Background="Transparent" Opacity="1" ResizeMode="NoResize"
 	ShowInTaskbar="False" WindowStyle="None" Focusable="False"
 	Closed="Window_Closed" Loaded="Window_Loaded" SourceInitialized="Window_SourceInitialized" SizeChanged="Window_SizeChanged" MouseDoubleClick="Window_MouseDoubleClick" MouseMove="Window_MouseMove"
 	mc:Ignorable="d">
-	<Window.Resources>
-		<ContextMenu x:Key="SidebarContextMenu">
+	<Window.Triggers>
+		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
+			<BeginStoryboard Storyboard="{DynamicResource SidebarWindowLoaded}"/>
+		</EventTrigger>
+	</Window.Triggers>
+	<Window.ContextMenu>
+		<ContextMenu Name="SidebarContextMenu">
 			<MenuItem Name="MenuItemMinBar" Click="MenuItemMinBar_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_MINBAR}"></MenuItem>
 			<MenuItem Name="MenuItemProperties" Click="MenuItemProperties_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_PROP}"></MenuItem>
 			<MenuItem Name="MenuItemAddTiles" SubmenuOpened="MenuItemAddTiles_SubmenuOpened" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_ADDTILE}">
@@ -24,10 +29,7 @@
 			<Separator />
 			<MenuItem Name="MenuItemCancel" Click="MenuItemCancel_Click" Header="{pst:StringResource SIDEBAR_CONTEXTMENU_CANCEL}"></MenuItem>
 		</ContextMenu>
-		<Storyboard x:Key="ShowTaskbarTiles">
-			<DoubleAnimation Storyboard.TargetName="TaskbarTiles" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"></DoubleAnimation>
-		</Storyboard>
-	</Window.Resources>
+	</Window.ContextMenu>
 	<Grid>
 		<Grid Name="SidebarView">
 			<Control Style="{DynamicResource SidebarBackground}" />
@@ -46,10 +48,11 @@
 		</Grid>
 		<Grid Name="TaskbarView" Visibility="Collapsed">
 			<Control Style="{DynamicResource SidebarTaskbarTrayBackground}"></Control>
-			<StackPanel Orientation="Horizontal">
+			<DockPanel>
 				<Button Name="RestoreButton" Style="{DynamicResource SidebarMinRestoreButton}" Click="RestoreButton_Click">↑</Button>
+				<Button Name="AeroPeekButton" Style="{DynamicResource SidebarMinAeroPeekButton}" Click="AeroPeekButton_Click"></Button>
 				<ItemsControl Name="TaskbarTiles" Style="{DynamicResource SidebarMinTaskbarTilesControl}"></ItemsControl>
-			</StackPanel>
+			</DockPanel>
 		</Grid>
 	</Grid>
 </Window>

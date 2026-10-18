@@ -1,0 +1,28 @@
+﻿<Window x:Class="Sidebar.MessageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Sidebar"
+        xmlns:pst="clr-namespace:Sidebar.Presentation"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        MaxWidth="640" MaxHeight="480" SizeToContent="WidthAndHeight"
+		Style="{DynamicResource MessageWindowWindow}">
+	<Grid Background="Transparent">
+		<Control Style="{DynamicResource MessageWindowBackground}"></Control>
+		<DockPanel>
+			<TextBlock Name="MessageTitle" Style="{DynamicResource MessageWindowTitle}"></TextBlock>
+			<TextBlock Name="MessageDescription" Style="{DynamicResource MessageWindowText}"></TextBlock>
+			<Grid Style="{DynamicResource MessageWindowButtonAera}">
+				<Control Style="{DynamicResource MessageWindowControlsBackground}"></Control>
+				<StackPanel Style="{DynamicResource MessageWindowButtonsContainer}">
+					<Button Name="CopyInfoButton" Click="CopyInfoButton_Click" Style="{DynamicResource MessageWindowControlButton}" Content="{pst:StringResource SIDEBAR_MESSAGE_ERROR_COPYTEXT}"></Button>
+					<Button Name="OkButton" Focusable="True" Click="OkButton_Click" Style="{DynamicResource MessageWindowControlButton}" Content="{pst:StringResource SIDEBAR_MESSAGE_ERROR_OK}"></Button>
+				</StackPanel>
+			</Grid>
+			<Expander Name="DetailExpander" Style="{DynamicResource MessageWindowDetailExpander}" Header="{pst:StringResource SIDEBAR_MESSAGE_ERROR_DETAIL}">
+				<TextBox Name="MessageDetail" Style="{DynamicResource MessageWindowDetailMessage}"></TextBox>
+			</Expander>
+		</DockPanel>
+	</Grid>
+</Window>

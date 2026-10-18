@@ -9,13 +9,6 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="Styles\Styles.xaml"></ResourceDictionary>
-				<ResourceDictionary>
-					<!--  Options  -->
-					
-					
-
-
-				</ResourceDictionary>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>

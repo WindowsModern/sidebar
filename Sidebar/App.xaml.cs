@@ -29,6 +29,16 @@ namespace Sidebar
 		internal static TileManager TileMgr { get; } = new TileManager ();
 		internal static Mutex GlobalMutex = null;
 		internal const string AppIdentity = "WindowsModern.Sidebar!App";
+		public App ()
+		{
+			DispatcherUnhandledException += App_DispatcherUnhandledException;
+		}
+		private void App_DispatcherUnhandledException (object sender, DispatcherUnhandledExceptionEventArgs e)
+		{
+			var sr = ProgramFolder.StringResources;
+			MessageWindow.ShowException (e.Exception, sr.SuitableResource ("SIDEBAR_MESSAGE_ERROR_TITLE"), sr.SuitableResource ("SIDEBAR_MESSAGE_ERROR_DESC"), true);
+			e.Handled = true;
+		}
 		private void Application_Startup (object sender, StartupEventArgs e)
 		{
 			Directory.SetCurrentDirectory (AppDomain.CurrentDomain.BaseDirectory);

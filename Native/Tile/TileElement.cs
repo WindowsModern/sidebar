@@ -12,5 +12,6 @@ namespace Sidebar
 		ImageSource Icon { get; }
 		string DisplayName { get; }
 		Panel ContentContainer { get; }
+		string UserModelId { get; }
 	}
 }
