@@ -13,12 +13,12 @@
 			<Button Style="{DynamicResource TileIconItemForTrayTile}"
                           ToolTip="{Binding ToolTip}"
                           Tag="{Binding}"
-						  MouseEnter="ToggleButton_MouseEnter"
-						  MouseLeave="ToggleButton_MouseLeave"
-						  TouchEnter="ToggleButton_TouchEnter"
-						  TouchLeave="ToggleButton_TouchLeave"
-							Click="ToggleButton_Click"
-                          MouseDoubleClick="ToggleButton_MouseDoubleClick">
+						  MouseEnter="Button_MouseEnter"
+						  MouseLeave="Button_MouseLeave"
+						  TouchEnter="Button_TouchEnter"
+						  TouchLeave="Button_TouchLeave"
+							Click="Button_Click"
+                          MouseDoubleClick="Button_MouseDoubleClick">
 				<Image Source="{Binding Icon}" Width="16" Height="16"/>
 			</Button>
 		</DataTemplate>

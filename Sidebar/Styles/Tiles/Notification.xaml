@@ -1,0 +1,154 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Sidebar">
+	<Style x:Key="TileNotificationTileArea" TargetType="Canvas">
+		<Setter Property="Margin" Value="6,5,8,0" />
+	</Style>
+	<Style x:Key="TileNotificationButton" TargetType="Button">
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="Width" Value="19" />
+		<Setter Property="Height" Value="16" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid>
+						<Image x:Name="Icon" RenderOptions.BitmapScalingMode="HighQuality" Source="{DynamicResource TileNotificationMessage2Image}" />
+						<Image x:Name="IconHover" IsHitTestVisible="False" Opacity="0" RenderOptions.BitmapScalingMode="HighQuality" Source="{DynamicResource TileNotificationMessage4Image}" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding IsRead}" Value="True">
+							<Setter TargetName="Icon" Property="Source" Value="{DynamicResource TileNotificationMessageImage}" />
+							<Setter TargetName="IconHover" Property="Source" Value="{DynamicResource TileNotificationMessage3Image}" />
+						</DataTrigger>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="IconHover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="Icon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="IconHover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
+										<DoubleAnimation Storyboard.TargetName="Icon" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileNotificationFlyoutScrollViewer" TargetType="ScrollViewer">
+		<Setter Property="Background" Value="White" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+		<Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+	</Style>
+	<Style x:Key="TileNotificationFlyoutDateTitle" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="Margin" Value="0,4,0,0" />
+	</Style>
+	<Style x:Key="TileNotificationRulesAndAlertsButton" TargetType="Button">
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="DockPanel.Dock" Value="Bottom" />
+		<Setter Property="Width" Value="Auto" />
+		<Setter Property="Height" Value="Auto" />
+	</Style>
+	<Style x:Key="TileNotificationRulesAndAlerts" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+	<Style x:Key="TileNotificationRulesAndAlertsImage" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TileNotificationRingNormalImage}" />
+		<Setter Property="Stretch" Value="None" />
+		<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+	</Style>
+	<Style x:Key="TileNotificationFlyoutItemTime" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontSize" Value="12.5" />
+		<Setter Property="DockPanel.Dock" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+	<Style x:Key="TileNotificationFlyoutItemImage" TargetType="Image">
+		<Setter Property="Stretch" Value="None" />
+		<Setter Property="Source" Value="{DynamicResource TileNotificationMessage2Image}" />
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsRead}" Value="True">
+				<Setter Property="Source" Value="{DynamicResource TileNotificationMessageImage}" />
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="TileNotificationFlyoutItemImageHover" TargetType="Image">
+		<Setter Property="Stretch" Value="None" />
+		<Setter Property="Source" Value="{DynamicResource TileNotificationMessage4Image}" />
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsRead}" Value="True">
+				<Setter Property="Source" Value="{DynamicResource TileNotificationMessage3Image}" />
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="TileNotificationFlyoutItemTextPart" TargetType="StackPanel">
+		<Setter Property="Grid.Column" Value="3" />
+		<Setter Property="Grid.ColumnSpan" Value="1" />
+		<Setter Property="DockPanel.Dock" Value="Right" />
+		<Setter Property="Orientation" Value="Horizontal" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+	<Style x:Key="TileNotificationFlyoutItemTitle" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="#EE8A00" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="Grid.Column" Value="0" />
+		<Setter Property="Grid.ColumnSpan" Value="1" />
+		<Setter Property="Margin" Value="0,0,2,0" />
+		<Setter Property="TextWrapping" Value="Wrap" />
+		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+		<Setter Property="DockPanel.Dock" Value="Left" />
+	</Style>
+	<Style x:Key="TileNotificationFlyoutItemText" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="Margin" Value="0,0,2,0" />
+		<Setter Property="TextWrapping" Value="Wrap" />
+		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+	</Style>
+	<Style x:Key="TileNotificationFlyoutItemButton" TargetType="Button">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border Background="Transparent" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="#11000000" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<ImageSource x:Key="TileNotificationRingNormalImage">..\..\Images\Notification\Notification.png</ImageSource>
+	<ImageSource x:Key="TileNotificationMessageImage">..\..\Images\Notification\Message.png</ImageSource>
+	<ImageSource x:Key="TileNotificationMessage2Image">..\..\Images\Notification\Message2.png</ImageSource>
+	<ImageSource x:Key="TileNotificationMessage3Image">..\..\Images\Notification\Message3.png</ImageSource>
+	<ImageSource x:Key="TileNotificationMessage4Image">..\..\Images\Notification\Message4.png</ImageSource>
+</ResourceDictionary>

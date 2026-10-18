@@ -5,5 +5,10 @@
 		<ResourceDictionary Source="Clock.xaml"></ResourceDictionary>
 		<ResourceDictionary Source="Search.xaml"></ResourceDictionary>
 		<ResourceDictionary Source="TrayAndQuickLaunch.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Power.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Feed.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Slideshow.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="User.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Notification.xaml"></ResourceDictionary>
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

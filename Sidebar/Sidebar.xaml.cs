@@ -1190,7 +1190,7 @@ namespace Sidebar
 			Presentation.DwmThemeProvider.Instance.StartListening (hwndSource);
 			h.StylesEx |= Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
 			h.StylesEx |= Win32.ExtendedWindowStyles.WS_EX_LAYERED;
-			h.StylesEx |= Win32.ExtendedWindowStyles.WS_EX_NOACTIVATE;
+			//h.StylesEx |= Win32.ExtendedWindowStyles.WS_EX_NOACTIVATE;
 			#region Preview Desktop
 			IntPtr desktopHwnd = Win32WindowNative.FindWindow ("Progman", null);
 			if (desktopHwnd == IntPtr.Zero)

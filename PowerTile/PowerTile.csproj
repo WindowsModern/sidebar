@@ -51,6 +51,9 @@
       <DependentUpon>FlyoutPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Options.cs" />
+    <Compile Include="PowerGauge.xaml.cs">
+      <DependentUpon>PowerGauge.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PowerHelper.cs" />
     <Compile Include="PowerHostForm.cs">
       <SubType>Form</SubType>
@@ -58,11 +61,16 @@
     <Compile Include="PowerHostForm.Designer.cs">
       <DependentUpon>PowerHostForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PowerTextDecorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TilePanel.xaml.cs">
       <DependentUpon>TilePanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TilePanel2.xaml.cs">
+      <DependentUpon>TilePanel2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TimeSpanPrinter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Native\Native.csproj">
@@ -79,7 +87,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PowerGauge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TilePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TilePanel2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

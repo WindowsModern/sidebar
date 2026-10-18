@@ -47,6 +47,8 @@ namespace WindowsModern.QuickLaunchTile
 			(flyoutPanel.Parent as Panel)?.Children?.Clear ();
 			var panel = e.FlyoutUI as Panel;
 			panel.Children.Add (flyoutPanel);
+			panel.Width = double.NaN;
+			panel.Height = double.NaN;
 			var wnd = Window.GetWindow (panel);
 			wnd.SizeToContent = SizeToContent.WidthAndHeight;
 			wnd.MaxWidth = 300;

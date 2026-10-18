@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
 	<UserControl.Resources>
 		<DataTemplate x:Key="ItemTemplate">
-			<ToggleButton Style="{DynamicResource TileIconItemWithTextForQuickLaunchTile}"
+			<Button Style="{DynamicResource TileIconItemWithTextForQuickLaunchTile}"
                           ToolTip="{Binding Description}"
                           Command="{Binding LeftClickCommand}"
                           Tag="{Binding}"
@@ -17,7 +17,7 @@
 					<Image Source="{Binding IconSource}" Width="16" Height="16" Stretch="Uniform"/>
 					<TextBlock Text="{Binding Title}" Style="{DynamicResource TileIconItemWithTextItemTextPart}"/>
 				</StackPanel>
-			</ToggleButton>
+			</Button>
 		</DataTemplate>
 	</UserControl.Resources>
 	<Grid Width="Auto" Height="Auto" MaxHeight="400" MaxWidth="500">

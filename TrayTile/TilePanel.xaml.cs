@@ -48,7 +48,7 @@ namespace WindowsModern.TrayTile
 		// 预览右键：阻止父菜单并模拟托盘右键（不移动鼠标）
 		private void SystemTrayContainer_PreviewMouseRightButtonDown (object sender, MouseButtonEventArgs e)
 		{
-			ToggleButton btn = FindVisualParent<ToggleButton> (e.OriginalSource as DependencyObject);
+			Button btn = FindVisualParent<Button> (e.OriginalSource as DependencyObject);
 			if (btn == null) return;
 			var info = btn.Tag as Utils.ITrayIcon;
 			if (info == null) return;
@@ -57,13 +57,13 @@ namespace WindowsModern.TrayTile
 		}
 		private void TilePanel_ContextMenuOpening (object sender, ContextMenuEventArgs e)
 		{
-			if (e.OriginalSource is ToggleButton ||
-				FindVisualParent<ToggleButton> (e.OriginalSource as DependencyObject) != null)
+			if (e.OriginalSource is Button ||
+				FindVisualParent<Button> (e.OriginalSource as DependencyObject) != null)
 				e.Handled = true;
 		}
-		private void ToggleButton_MouseDoubleClick (object sender, MouseButtonEventArgs e)
+		private void Button_MouseDoubleClick (object sender, MouseButtonEventArgs e)
 		{
-			ToggleButton btn = sender as ToggleButton;
+			Button btn = sender as Button;
 			if (btn == null) return;
 			var info = btn.Tag as Utils.ITrayIcon;
 			if (info == null) return;
@@ -77,45 +77,45 @@ namespace WindowsModern.TrayTile
 				parent = VisualTreeHelper.GetParent (parent);
 			return parent as T;
 		}
-		private void ToggleButton_Click (object sender, RoutedEventArgs e)
+		private void Button_Click (object sender, RoutedEventArgs e)
 		{
-			ToggleButton btn = FindVisualParent<ToggleButton> (e.OriginalSource as DependencyObject);
+			Button btn = FindVisualParent<Button> (e.OriginalSource as DependencyObject);
 			if (btn == null) return;
 			var info = btn.Tag as Utils.ITrayIcon;
 			if (info == null) return;
 			info.OnClick ();
 			e.Handled = true;
 		}
-		private void ToggleButton_MouseEnter (object sender, MouseEventArgs e)
+		private void Button_MouseEnter (object sender, MouseEventArgs e)
 		{
-			ToggleButton btn = FindVisualParent<ToggleButton> (e.OriginalSource as DependencyObject);
+			Button btn = FindVisualParent<Button> (e.OriginalSource as DependencyObject);
 			if (btn == null) return;
 			var info = btn.Tag as Utils.ITrayIcon;
 			if (info == null) return;
 			info.OnHover ();
 			e.Handled = true;
 		}
-		private void ToggleButton_MouseLeave (object sender, MouseEventArgs e)
+		private void Button_MouseLeave (object sender, MouseEventArgs e)
 		{
-			ToggleButton btn = FindVisualParent<ToggleButton> (e.OriginalSource as DependencyObject);
+			Button btn = FindVisualParent<Button> (e.OriginalSource as DependencyObject);
 			if (btn == null) return;
 			var info = btn.Tag as Utils.ITrayIcon;
 			if (info == null) return;
 			info.OnLeave ();
 			e.Handled = true;
 		}
-		private void ToggleButton_TouchEnter (object sender, TouchEventArgs e)
+		private void Button_TouchEnter (object sender, TouchEventArgs e)
 		{
-			ToggleButton btn = FindVisualParent<ToggleButton> (e.OriginalSource as DependencyObject);
+			Button btn = FindVisualParent<Button> (e.OriginalSource as DependencyObject);
 			if (btn == null) return;
 			var info = btn.Tag as Utils.ITrayIcon;
 			if (info == null) return;
 			info.OnHover ();
 			e.Handled = true;
 		}
-		private void ToggleButton_TouchLeave (object sender, TouchEventArgs e)
+		private void Button_TouchLeave (object sender, TouchEventArgs e)
 		{
-			ToggleButton btn = FindVisualParent<ToggleButton> (e.OriginalSource as DependencyObject);
+			Button btn = FindVisualParent<Button> (e.OriginalSource as DependencyObject);
 			if (btn == null) return;
 			var info = btn.Tag as Utils.ITrayIcon;
 			if (info == null) return;

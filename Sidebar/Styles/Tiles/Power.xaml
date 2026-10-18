@@ -1,0 +1,263 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Sidebar">
+	<LinearGradientBrush x:Key="TilePowerTileShinyWhite" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Color="#cdc7af" Offset="0"/>
+		<GradientStop Color="#cdc7af" Offset="0.10"/>
+		<GradientStop Color="#dddddd" Offset="0.25"/>
+		<GradientStop Color="#cdc7af" Offset="0.40"/>
+		<GradientStop Color="#cdc7af" Offset="0.8"/>
+		<GradientStop Color="#ada76f" Offset="1"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="TilePowerTileShinyGray" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Color="#333333" Offset="0"/>
+		<GradientStop Color="#babaa3" Offset="0.5"/>
+		<GradientStop Color="#333333" Offset="1"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="TilePowerTileShinyGreen" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Color="#4fdf26" Offset="0"/>
+		<GradientStop Color="#a1fe86" Offset="0.3"/>
+		<GradientStop Color="#4bde21" Offset="1"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="TilePowerTileShinyYellow" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Color="#fff200" Offset="0"/>
+		<GradientStop Color="#fff799" Offset="0.5"/>
+		<GradientStop Color="#fff200" Offset="1"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="TilePowerTileShinyRed" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Color="#d71b0c" Offset="0"/>
+		<GradientStop Color="#f0c3bf" Offset="0.5"/>
+		<GradientStop Color="#d71b0c" Offset="1"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="TilePowerTileGraySweep" StartPoint="0,0" EndPoint="1,0">
+		<GradientStop Color="#000000" Offset="0"/>
+		<GradientStop Color="#777777" Offset="0.8"/>
+		<GradientStop Color="#888888" Offset="1"/>
+	</LinearGradientBrush>
+	<Style x:Key="TilePowerTileBatteryCanvas" TargetType="Canvas">
+		<Setter Property="Width" Value="21"/>
+		<Setter Property="Height" Value="42"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="7,0,0,0"/>
+	</Style>
+	<Style x:Key="TilePowerTilePower" TargetType="Canvas">
+		<Setter Property="Width" Value="38"/>
+		<Setter Property="Height" Value="21"/>
+		<Setter Property="Canvas.Left" Value="-7"/>
+		<Setter Property="Canvas.Top" Value="10"/>
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<TransformGroup>
+					<RotateTransform Angle="270" CenterX="19" CenterY="10.5"/>
+					<ScaleTransform ScaleX="0.95" ScaleY="1"/>
+				</TransformGroup>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TilePowerTileBatteryBody" TargetType="Canvas">
+		<Setter Property="Width" Value="35"/>
+		<Setter Property="Height" Value="19"/>
+		<Setter Property="Canvas.Top" Value="1"/>
+	</Style>
+	<Style x:Key="TilePowerTileCoppertop" TargetType="Rectangle">
+		<Setter Property="Width" Value="35"/>
+		<Setter Property="Height" Value="19"/>
+		<Setter Property="Fill" Value="{StaticResource TilePowerTileShinyWhite}"/>
+	</Style>
+	<Style x:Key="TilePowerTileCopper" TargetType="Rectangle">
+		<Setter Property="Width" Value="22.75"/>
+		<Setter Property="Height" Value="19"/>
+		<Setter Property="Fill" Value="{StaticResource TilePowerTileShinyWhite}"/>
+	</Style>
+	<Style x:Key="TilePowerTileBorder" TargetType="Rectangle">
+		<Setter Property="Width" Value="35"/>
+		<Setter Property="Height" Value="19"/>
+		<Setter Property="Stroke" Value="White"/>
+		<Setter Property="StrokeThickness" Value="0"/>
+	</Style>
+	<Style x:Key="TilePowerTileMinus" TargetType="Rectangle">
+		<Setter Property="Width" Value="2"/>
+		<Setter Property="Height" Value="7"/>
+		<Setter Property="Fill" Value="Red"/>
+		<Setter Property="Stroke" Value="Red"/>
+		<Setter Property="Canvas.Left" Value="5"/>
+		<Setter Property="Canvas.Top" Value="6"/>
+	</Style>
+	<Style x:Key="TilePowerTilePlusH" TargetType="Rectangle">
+		<Setter Property="Width" Value="2"/>
+		<Setter Property="Height" Value="7"/>
+		<Setter Property="Fill" Value="Red"/>
+		<Setter Property="Stroke" Value="Red"/>
+		<Setter Property="Canvas.Left" Value="27"/>
+		<Setter Property="Canvas.Top" Value="6"/>
+	</Style>
+	<Style x:Key="TilePowerTilePlusV" TargetType="Rectangle">
+		<Setter Property="Width" Value="7"/>
+		<Setter Property="Height" Value="2"/>
+		<Setter Property="Fill" Value="Red"/>
+		<Setter Property="Stroke" Value="Red"/>
+		<Setter Property="Canvas.Left" Value="24.5"/>
+		<Setter Property="Canvas.Top" Value="8.5"/>
+	</Style>
+	<Style x:Key="TilePowerTileNub" TargetType="Rectangle">
+		<Setter Property="Width" Value="3"/>
+		<Setter Property="Height" Value="10"/>
+		<Setter Property="Fill" Value="{StaticResource TilePowerTileShinyGray}"/>
+		<Setter Property="Stroke" Value="{StaticResource TilePowerTileShinyGray}"/>
+		<Setter Property="StrokeThickness" Value="0.5"/>
+		<Setter Property="Canvas.Left" Value="35"/>
+		<Setter Property="Canvas.Top" Value="5"/>
+	</Style>
+	<Style x:Key="TilePowerTileACLogo" TargetType="Canvas">
+		<Setter Property="Width" Value="30"/>
+		<Setter Property="Height" Value="21"/>
+		<Setter Property="Opacity" Value="0"/>
+		<Setter Property="Canvas.Left" Value="2"/>
+	</Style>
+	<Style x:Key="TilePowerTileACLogoRectSmallTop" TargetType="Rectangle">
+		<Setter Property="Width" Value="3"/>
+		<Setter Property="Height" Value="2.1"/>
+		<Setter Property="Fill" Value="Black"/>
+		<Setter Property="Canvas.Left" Value="6.6"/>
+		<Setter Property="Canvas.Top" Value="7.35"/>
+	</Style>
+	<Style x:Key="TilePowerTileACLogoRectSmallBottom" TargetType="Rectangle">
+		<Setter Property="Width" Value="3"/>
+		<Setter Property="Height" Value="2.1"/>
+		<Setter Property="Fill" Value="Black"/>
+		<Setter Property="Canvas.Left" Value="6.6"/>
+		<Setter Property="Canvas.Top" Value="11.55"/>
+	</Style>
+	<Style x:Key="TilePowerTileACLogoRectTall" TargetType="Rectangle">
+		<Setter Property="Width" Value="7.2"/>
+		<Setter Property="Height" Value="10.5"/>
+		<Setter Property="Fill" Value="Black"/>
+		<Setter Property="Canvas.Left" Value="9.6"/>
+		<Setter Property="Canvas.Top" Value="5.25"/>
+	</Style>
+	<Style x:Key="TilePowerTileACLogoRectWide" TargetType="Rectangle">
+		<Setter Property="Width" Value="3.6"/>
+		<Setter Property="Height" Value="4.2"/>
+		<Setter Property="Fill" Value="Black"/>
+		<Setter Property="Canvas.Left" Value="16.8"/>
+		<Setter Property="Canvas.Top" Value="8.4"/>
+	</Style>
+	<Style x:Key="TilePowerTileStatusPanel" TargetType="DockPanel">
+		<Setter Property="Margin" Value="32,0,11,0"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
+	<Style x:Key="TilePowerTileStatusPanelForFlyout" TargetType="DockPanel">
+		<Setter Property="Margin" Value="32,0,100,0"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
+	<Style x:Key="TilePowerTileStatusInnerPanel" TargetType="DockPanel"/>
+	<Style x:Key="TilePowerTileGaugeTopPanel" TargetType="DockPanel">
+		<Setter Property="DockPanel.Dock" Value="Top"/>
+	</Style>
+	<Style x:Key="TilePowerTileGaugeBackgroundBorder" TargetType="Border">
+		<Setter Property="Background" Value="#FF808080"/>
+		<Setter Property="Height" Value="21"/>
+	</Style>
+	<Style x:Key="TilePowerTileGaugeOuterBorder" TargetType="Border">
+		<Setter Property="BorderBrush" Value="Black"/>
+		<Setter Property="BorderThickness" Value="1"/>
+	</Style>
+	<Style x:Key="TilePowerTileGaugeInnerPanel" TargetType="DockPanel">
+		<Setter Property="Margin" Value="2"/>
+	</Style>
+	<Style x:Key="TilePowerTileGaugeGrid" TargetType="Grid"/>
+	<Style x:Key="TilePowerTileGaugeColumn" TargetType="ColumnDefinition">
+		<Setter Property="Width" Value="75*"/>
+	</Style>
+	<Style x:Key="TilePowerTileGaugeRemainColumn" TargetType="ColumnDefinition">
+		<Setter Property="Width" Value="25*"/>
+	</Style>
+	<Style x:Key="TilePowerTileGaugeBackground" TargetType="Rectangle">
+		<Setter Property="Fill" Value="{StaticResource TilePowerTileShinyGreen}"/>
+		<Setter Property="Opacity" Value="0.4"/>
+		<Setter Property="Grid.ColumnSpan" Value="2"/>
+	</Style>
+	<Style x:Key="TilePowerTileGauge" TargetType="Rectangle">
+		<Setter Property="Fill" Value="{StaticResource TilePowerTileShinyGreen}"/>
+		<Setter Property="Grid.Column" Value="0"/>
+	</Style>
+	<Style x:Key="TilePowerTileGaugeSweep" TargetType="Rectangle">
+		<Setter Property="Fill" Value="{StaticResource TilePowerTileGraySweep}"/>
+		<Setter Property="Opacity" Value="0.15"/>
+		<Setter Property="Grid.Column" Value="0"/>
+	</Style>
+	<Style x:Key="TilePowerTileTextPanel" TargetType="DockPanel">
+		<Setter Property="DockPanel.Dock" Value="Top"/>
+	</Style>
+	<Style x:Key="TilePowerTileNumbers" TargetType="TextBlock">
+		<Setter Property="Margin" Value="8,2,8,0"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Bottom"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}"/>
+	</Style>
+	<Style x:Key="TilePowerTileNumbersForFlyout" TargetType="TextBlock">
+		<Setter Property="Margin" Value="8,2,8,0"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Bottom"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+		<Setter Property="Foreground" Value="Black"/>
+	</Style>
+	<Style x:Key="TilePowerFoldToggleButton" TargetType="ToggleButton">
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="ToggleButton">
+					<Grid>
+						<Image x:Name="ButtonImage" Stretch="Uniform" />
+						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="False">
+							<Setter TargetName="ButtonImage" Property="Source" Value="../../Images/Power/UnfoldNormal.png" />
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="False" />
+								<Condition Property="IsMouseOver" Value="True" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="ButtonImage" Property="Source" Value="../../Images/Power/UnfoldLight.png" />
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="False" />
+								<Condition Property="IsPressed" Value="True" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="ButtonImage" Property="Source" Value="../../Images/Power/UnfoldPress.png" />
+						</MultiTrigger>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter TargetName="ButtonImage" Property="Source" Value="../../Images/Power/FoldNormal.png" />
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="True" />
+								<Condition Property="IsMouseOver" Value="True" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="ButtonImage" Property="Source" Value="../../Images/Power/FoldLight.png" />
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="True" />
+								<Condition Property="IsPressed" Value="True" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="ButtonImage" Property="Source" Value="../../Images/Power/FoldPress.png" />
+						</MultiTrigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="ButtonImage" Property="Opacity" Value="0.5" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

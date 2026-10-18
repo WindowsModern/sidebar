@@ -11,12 +11,12 @@
 			<Button Style="{DynamicResource TileIconItemWithTextForTrayTile}"
                           ToolTip="{Binding ToolTip}"
                           Tag="{Binding}"
-                          Click="ToggleButton_Click"
-						  MouseDoubleClick="ToggleButton_MouseDoubleClick"
-						  MouseEnter="ToggleButton_MouseEnter"
-						  MouseLeave="ToggleButton_MouseLeave"
-						  TouchEnter="ToggleButton_TouchEnter"
-						  TouchLeave="ToggleButton_TouchLeave">
+                          Click="Button_Click"
+						  MouseDoubleClick="Button_MouseDoubleClick"
+						  MouseEnter="Button_MouseEnter"
+						  MouseLeave="Button_MouseLeave"
+						  TouchEnter="Button_TouchEnter"
+						  TouchLeave="Button_TouchLeave">
 				<StackPanel Margin="4,4,4,4" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
 					<Image Source="{Binding Icon}" VerticalAlignment="Top" Width="16" Height="16" Stretch="Uniform"/>
 					<TextBlock Text="{Binding ToolTip}" Style="{DynamicResource TileIconItemWithTextItemTextPart}"/>

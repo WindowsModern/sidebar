@@ -169,6 +169,8 @@ namespace Sidebar
 					return grid;
 				case TileOverflow.Scroll:
 					var sv = new ScrollViewer ();
+					sv.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+					sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
 					sv.SetResourceReference (ScrollViewer.StyleProperty, "AutoHideScrollViewer");
 					TileContentContainer.Children.Add (sv);
 					var sg = new Grid ();

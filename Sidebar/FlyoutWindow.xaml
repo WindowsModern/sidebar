@@ -11,7 +11,7 @@
 		AllowsTransparency="True" Topmost="True"
         Title="FlyoutWindow" Height="300" Width="300"
 		Deactivated="Window_Deactivated" SourceInitialized="Window_SourceInitialized"
-		SizeChanged="Window_SizeChanged"
+		SizeChanged="Window_SizeChanged" Focusable="True"
 		>
 	<Grid>
 		<Control Style="{DynamicResource FlyoutBackground}"></Control>

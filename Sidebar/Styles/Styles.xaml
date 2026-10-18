@@ -10,5 +10,6 @@
 		<ResourceDictionary Source="Notification.xaml"></ResourceDictionary>
 		<ResourceDictionary Source="MessageBox.xaml"></ResourceDictionary>
 		<ResourceDictionary Source="Tiles\Styles.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Materials.xaml"></ResourceDictionary>
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -1,0 +1,189 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Sidebar">
+	<!--  Material  -->
+	<!--  Clock  -->
+	<ImageSource x:Key="TileClockFlyoutClockAlarmRegulatorImage">..\Images\Clock\AlarmNormal.png</ImageSource>
+	<ImageSource x:Key="TileClockFlyoutClockAlarmRegulatorHoverImage">..\Images\Clock\AlarmHover.png</ImageSource>
+	<ImageSource x:Key="TileClockFlyoutClockAlarmRegulatorPmImage">..\Images\Clock\AlarmNormalPM.png</ImageSource>
+	<ImageSource x:Key="TileClockFlyoutClockAlarmRegulatorPmHoverImage">..\Images\Clock\AlarmHoverPM.png</ImageSource>
+	<Style x:Key="TileClockFlyoutClockAlarmRegulator" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TileClockFlyoutClockAlarmRegulatorImage}" />
+	</Style>
+	<Style x:Key="TileClockFlyoutClockAlarmRegulatorHover" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TileClockFlyoutClockAlarmRegulatorHoverImage}" />
+	</Style>
+	<Style x:Key="TileClockFlyoutClockAlarmRegulatorPm" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TileClockFlyoutClockAlarmRegulatorPmImage}" />
+	</Style>
+	<Style x:Key="TileClockFlyoutClockAlarmRegulatorPmHover" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TileClockFlyoutClockAlarmRegulatorPmHoverImage}" />
+	</Style>
+	<!--  People Nearby  -->
+	<ImageSource x:Key="TilePeopleNearbyOffImage">..\Images\People Nearby\PeopleNearbyOff.png</ImageSource>
+	<Style x:Key="TilePeopleNearbyOff" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TilePeopleNearbyOffImage}" />
+	</Style>
+	<ImageSource x:Key="TilePeopleNearbyOnImage">..\Images\People Nearby\PeopleNearbyOn.png</ImageSource>
+	<Style x:Key="TilePeopleNearbyOn" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TilePeopleNearbyOnImage}" />
+	</Style>
+	<ImageSource x:Key="TilePeopleNearbyOnImageLight">..\Images\People Nearby\PeopleNearbyOnLight.png</ImageSource>
+	<Style x:Key="TilePeopleNearbyOnLight" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TilePeopleNearbyOnImageLight}" />
+	</Style>
+	<!--  Basket  -->
+	<ImageSource x:Key="TileBasketTileImageImage">..\Images\Basket\Basket.png</ImageSource>
+	<Style x:Key="TileBasketTileImage" TargetType="Image">
+		<Setter Property="Source" Value="{DynamicResource TileBasketTileImageImage}" />
+	</Style>
+	<!--  Button Image  -->
+	<ImageSource x:Key="TileIconItemHoverImage">..\Images\Others\IconItemHover.png</ImageSource>
+	<ImageSource x:Key="TileIconItemActiveImage">..\Images\Others\IconItemPress.png</ImageSource>
+	<ImageSource x:Key="TileItemHoverImage">..\Images\Others\ItemHover.png</ImageSource>
+	<!--  Image Buttons  -->
+	<Style x:Key="TileButtonsLeftButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid x:Name="Root">
+						<Image x:Name="Normal" Source="..\Images\Buttons\TBLeftNormal.png" />
+						<Image x:Name="Hover" Opacity="0" Source="..\Images\Buttons\TBLeftLight.png" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="Root" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="Root" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileButtonsRightButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid x:Name="Root">
+						<Image x:Name="Normal" Source="..\Images\Buttons\TBRightNormal.png" />
+						<Image x:Name="Hover" Opacity="0" Source="..\Images\Buttons\TBRightLight.png" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="Root" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="Root" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileButtonsUpButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid x:Name="Root">
+						<Image x:Name="Normal" Source="..\Images\Buttons\TBUpNormal.png" />
+						<Image x:Name="Hover" Opacity="0" Source="..\Images\Buttons\TBUpLight.png" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="Root" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="Root" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="TileButtonsDownButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid x:Name="Root">
+						<Image x:Name="Normal" Source="..\Images\Buttons\TBDownNormal.png" />
+						<Image x:Name="Hover" Opacity="0" Source="..\Images\Buttons\TBDownLight.png" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter TargetName="Root" Property="Opacity" Value="0.3" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="True">
+							<Setter TargetName="Root" Property="Opacity" Value="1" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

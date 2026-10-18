@@ -300,7 +300,7 @@ namespace WindowsModern.PowerTile
 			SystemPowerHelper.StartPerformanceModeWatcher ();
 			AddEventHandlers ();
 			if (TilePanelContainer.Children.Count == 0)
-				TilePanelContainer.Children.Add (new TilePanel ());
+				TilePanelContainer.Children.Add (new PowerGauge ());
 		}
 		private void SystemPowerHelper_PerformanceModeChanged (SystemPowerHelper.PowerMode obj)
 		{
@@ -337,7 +337,7 @@ namespace WindowsModern.PowerTile
 		{
 			if (TilePanelContainer.Children.Count != 0)
 			{
-				var tilePanel = TilePanelContainer.Children [0] as TilePanel;
+				var tilePanel = TilePanelContainer.Children [0] as PowerGauge;
 				(tilePanel?.Parent as Panel)?.Children?.Clear ();
 				tilePanel?.Dispose ();
 				TilePanelContainer.Children.Clear ();

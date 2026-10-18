@@ -13,7 +13,7 @@ namespace WindowsModern.PowerTile
 		public static ISidebarFeatures SidebarFeatures { get; set; }
 		public static Options TileOptions { get; set; }
 		public static Tile TileInstance { get; set; }
-		private TilePanel tilePanel;
+		private TilePanel2 tilePanel;
 		private TileEventRouter router;
 		public override void OnInitialize ()
 		{
@@ -23,9 +23,9 @@ namespace WindowsModern.PowerTile
 			Region?.StringResources?.CleanRedundantValues ();
 			UserRegion?.StringResources?.CleanRedundantValues ();
 			TileOptions = new Options (Config.Ini);
-			tilePanel = new TilePanel ();
+			tilePanel = new TilePanel2 ();
 			var panel = TileUI as Panel;
-			panel.Children.Add (tilePanel = tilePanel ?? new TilePanel ());
+			panel.Children.Add (tilePanel = tilePanel ?? new TilePanel2 ());
 			router = new TileEventRouter (this);
 			TileOptions.PropertyChanged += TileOptions_PropertyChanged;
 			SystemPowerHelper.SetScreenKeepAwake (TileOptions.KeepScreen);
@@ -63,6 +63,7 @@ namespace WindowsModern.PowerTile
 				e.ClientArea.Children.Add (flyoutPanel);
 				e.Window.SizeToContent = System.Windows.SizeToContent.Height;
 				e.Window.MaxHeight = 550;
+				e.ClientArea.Height = double.NaN;
 			}
 			public override void FlyoutForm_Loaded (object sender, FlyoutAboutEventArgs e)
 			{
