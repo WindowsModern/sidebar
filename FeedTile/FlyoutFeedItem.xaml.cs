@@ -79,31 +79,6 @@ namespace WindowsModern.FeedTile
 			Title.SetResourceReference (StyleProperty, "TileFeedItemTitle");
 			Desc.SetResourceReference (StyleProperty, "TileFeedItemDescription");
 		}
-		bool isdown = false;
-		private void FeedItemContainer_MouseDown (object sender, MouseButtonEventArgs e)
-		{
-			isdown = true;
-		}
-		private void FeedItemContainer_MouseUp (object sender, MouseButtonEventArgs e)
-		{
-			if (isdown)
-			{
-				RequireShowDetailPage ();
-				isdown = false;
-			}
-		}
-		private void FeedItemContainer_TouchDown (object sender, TouchEventArgs e)
-		{
-			isdown = true;
-		}
-		private void FeedItemContainer_TouchUp (object sender, TouchEventArgs e)
-		{
-			if (isdown)
-			{
-				RequireShowDetailPage ();
-				isdown = false;
-			}
-		}
 		public static FeedArticlePanel DetailPanel { get; set; }
 		private void RequireShowDetailPage ()
 		{
@@ -133,6 +108,10 @@ namespace WindowsModern.FeedTile
 		{
 			if (value != null) disabledClick = value ?? false;
 			return disabledClick;
+		}
+		private void ClickContainer_Click (object sender, RoutedEventArgs e)
+		{
+			RequireShowDetailPage ();
 		}
 	}
 }

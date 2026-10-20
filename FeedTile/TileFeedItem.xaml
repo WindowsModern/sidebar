@@ -7,12 +7,20 @@
              mc:Ignorable="d" SizeChanged="UserControl_SizeChanged"
              d:DesignHeight="300" d:DesignWidth="300">
 	<Grid Margin="0,15,0,15">
-		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" MouseEnter="StackPanel_MouseEnter" MouseLeave="StackPanel_MouseLeave" Background="Transparent" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" MouseLeftButtonUp="StackPanel_MouseLeftButtonUp" TouchDown="StackPanel_TouchDown" TouchUp="StackPanel_TouchUp">
+		<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Background="Transparent" >
 			<DockPanel Margin="5,1,0,0">
 				<Image DockPanel.Dock="Top" Name="ItemPoint" Style="{DynamicResource TileFeedsTileItemPoint}"></Image>
 				<Grid></Grid>
 			</DockPanel>
 			<TextBlock Name="FeedTitle" Margin="4,0,0,0" TextWrapping="Wrap" Style="{DynamicResource TileFeedTitleNormal}"></TextBlock>
 		</StackPanel>
-    </Grid>
+		<Button Name="ClickContainer" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"
+				MouseEnter="StackPanel_MouseEnter" MouseLeave="StackPanel_MouseLeave" Click="ClickContainer_Click">
+			<Button.Template>
+				<ControlTemplate TargetType="Button">
+					<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"></Border>
+				</ControlTemplate>
+			</Button.Template>
+		</Button>
+	</Grid>
 </UserControl>

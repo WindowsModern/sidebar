@@ -438,6 +438,9 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+	<Style x:Key="SidebarTaskbarTrayHighlight" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
 	<Storyboard x:Key="SidebarWindowLoaded"></Storyboard>
 	<Storyboard x:Key="SidebarShowTaskbarTiles">
 		<DoubleAnimation Storyboard.TargetName="TaskbarTiles" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"></DoubleAnimation>

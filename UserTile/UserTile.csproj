@@ -80,11 +80,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SmallLogoBlue.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SmallLogoGreen.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="people_tile_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="LICENSE - Cauldron">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -92,9 +89,6 @@
     <Content Include="Locale.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Logo.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Manifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

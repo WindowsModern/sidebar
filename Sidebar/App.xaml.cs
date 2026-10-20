@@ -21,7 +21,7 @@ namespace Sidebar
 	/// </summary>
 	public partial class App: Application
 	{
-		internal static ThemeManager ThemeMgr { get; } = new ThemeManager ();
+		internal static ThemeManager ThemeMgr { get; private set; } 
 		internal static ProgramFolder ProgramFolder { get; } = ProgramFolder.GlobalFolder;
 		internal static ProgramFolder CurrentUserFolder { get; } = ProgramFolder.CurrentUserFolder;
 		internal static SidebarConfig GlobalConfig { get; } = new SidebarConfig (ProgramFolder);
@@ -64,6 +64,7 @@ namespace Sidebar
 			Resources.Add ("GlobalConfig", GlobalConfig);
 			Resources.Add ("CurrentUserConfig", CurrentUserConfig);
 			//BrowserEmulation.SetWebBrowserEmulation ();
+			ThemeMgr = new ThemeManager ();
 			var theme = ThemeMgr.CurrentUserTheme;
 			ThemeManager.Apply (theme);
 			var mainwnd = new SidebarWindow ();

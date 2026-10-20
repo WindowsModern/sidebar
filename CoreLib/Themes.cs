@@ -174,9 +174,14 @@ namespace Sidebar
 			_baseDirs = baseDirs != null
 				? Array.FindAll (baseDirs, d => !string.IsNullOrWhiteSpace (d))
 				: new string [0];
+
+			List<Tuple<bool, string, Theme>> all;
+			List<Theme> valid;
+			ScanAll (out all, out valid);
+			ApplyResult (all, valid);
+
 			_watcher = new MultiRootWatcher (_baseDirs, TimeSpan.FromMilliseconds (500), OnWatched);
 			_watcher.Start ();
-			TriggerRefresh ();
 		}
 		public ThemeManager () : this (DefaultBaseDirs ()) { }
 		private static string [] DefaultBaseDirs ()

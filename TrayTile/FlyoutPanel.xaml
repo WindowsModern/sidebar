@@ -17,7 +17,7 @@
 						  MouseLeave="Button_MouseLeave"
 						  TouchEnter="Button_TouchEnter"
 						  TouchLeave="Button_TouchLeave">
-				<StackPanel Margin="4,4,4,4" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+				<StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
 					<Image Source="{Binding Icon}" VerticalAlignment="Top" Width="16" Height="16" Stretch="Uniform"/>
 					<TextBlock Text="{Binding ToolTip}" Style="{DynamicResource TileIconItemWithTextItemTextPart}"/>
 				</StackPanel>

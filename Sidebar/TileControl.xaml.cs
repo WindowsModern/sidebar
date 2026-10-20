@@ -463,6 +463,25 @@ namespace Sidebar
 		#endregion
 		#region Overflow (Hide Tile)
 		public bool IsSizeHeightWhenOverflowed = false;
+		private bool _overflowLock = false;
+		private TimeoutHandle _overflowLockTimeout = null;
+		public bool IsOverflowLock
+		{
+			get { return _overflowLock; }
+			set
+			{
+				if (_overflowLock == value) return;
+				_overflowLock = value;
+				if (_overflowLockTimeout != null) TimeoutExtensions.ClearTimeout (this, _overflowLockTimeout);
+				_overflowLockTimeout = null;
+				if (_overflowLock)
+				{
+					_overflowLockTimeout = TimeoutExtensions.SetTimeout (this, () => {
+						_overflowLock = false;
+					}, 501);
+				}
+			}
+		}
 		#endregion
 		#region Tile Drag/Drop
 		/// <summary>初始化磁贴拖拽手势。</summary>

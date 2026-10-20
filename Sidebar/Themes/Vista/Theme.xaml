@@ -4,7 +4,11 @@
 	xmlns:local="clr-namespace:Sidebar"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	xmlns:snt="clr-namespace:Sidebar;assembly=Native">
-	<!--  Includes  -->
+	<!-- Infomation -->
+	<s:String x:Key="ThemeDisplayName">Vista</s:String>
+	<s:String x:Key="ThemePublisherDisplayName">LongBar Project Group.</s:String>
+	<s:String x:Key="ThemeDescription">Vista theme.</s:String>
+	<s:String x:Key="ThemeLogo">Logo.png</s:String>
 	<!--  Options  -->
 	<s:Boolean x:Key="EnableBlur">true</s:Boolean>
 	<s:Boolean x:Key="EnableBlurForFlyout">true</s:Boolean>
@@ -15,272 +19,193 @@
 	<s:Double x:Key="GlobalNormalFontSize">10</s:Double>
 	<s:Double x:Key="GlobalNormalFontSizeSmall">9</s:Double>
 	<!--  Sidebar  -->
-	<Style x:Key="Background" TargetType="Rectangle">
-		<Setter Property="Visibility" Value="Collapsed" />
-	</Style>
-	<Style x:Key="SidebarBackgroundTemplate" TargetType="Control">
+	<Style x:Key="SidebarBackground" TargetType="Control">
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate>
-					<Grid>
-						<Border Background="{TemplateBinding Tag}" Opacity="0.6" />
-						<Border Background="Black" Opacity="0.3" />
+				<ControlTemplate TargetType="Control">
+					<Grid x:Name="RootGrid" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<ScaleTransform ScaleX="1" />
+						</Grid.RenderTransform>
+						<Grid>
+							<Border Background="{DynamicResource UtilDwmOpaqueThemeBrush}" Opacity="0.6" />
+							<Border Background="Black" Opacity="0.1" />
+							<Border HorizontalAlignment="Left" Width="2">
+								<Border.Background>
+									<LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+										<GradientStop Offset="0.0" Color="#BB000000" />
+										<GradientStop Offset="0.5" Color="#BB000000" />
+										<GradientStop Offset="0.5" Color="#66FFFFFF" />
+										<GradientStop Offset="1.0" Color="#66FFFFFF" />
+									</LinearGradientBrush>
+								</Border.Background>
+							</Border>
+						</Grid>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{StaticResource UtilSidebarIsReversedBinding}" Value="True">
+							<Setter TargetName="RootGrid" Property="RenderTransform">
+								<Setter.Value>
+									<ScaleTransform ScaleX="-1" />
+								</Setter.Value>
+							</Setter>
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<ControlTemplate x:Key="SidebarOptionsSplliterTemplate" TargetType="Control">
+		<Border VerticalAlignment="Bottom" Height="2">
+			<Border.Background>
+				<LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+					<GradientStop Offset="0.0" Color="#BB000000" />
+					<GradientStop Offset="0.5" Color="#BB000000" />
+					<GradientStop Offset="0.5" Color="#66FFFFFF" />
+					<GradientStop Offset="1.0" Color="#66FFFFFF" />
+				</LinearGradientBrush>
+			</Border.Background>
+		</Border>
+	</ControlTemplate>
+	<Style x:Key="SidebarOptionsSplliter" TargetType="Control">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Height" Value="2" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="Margin" Value="0,17,0,0" />
+		<Setter Property="Template" Value="{DynamicResource SidebarOptionsSplliterTemplate}"></Setter>
+	</Style>
+	<Style x:Key="SidebarOverflowPartSplliter" TargetType="Control">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Height" Value="2" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="Template" Value="{DynamicResource SidebarOptionsSplliterTemplate}"></Setter>
+	</Style>
+	<Style x:Key="SidebarTaskbarTrayBackground" TargetType="Control">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Control">
+					<Grid x:Name="RootGrid" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<ScaleTransform ScaleX="1" />
+						</Grid.RenderTransform>
+						<Grid>
+							<Border Background="{DynamicResource UtilDwmOpaqueThemeBrush}" Opacity="0.6" />
+							<Border Background="Black" Opacity="0.1" />
+							<Border VerticalAlignment="Top" Width="2">
+								<Border.Background>
+									<LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+										<GradientStop Offset="0.0" Color="#BB000000" />
+										<GradientStop Offset="0.5" Color="#BB000000" />
+										<GradientStop Offset="0.5" Color="#66FFFFFF" />
+										<GradientStop Offset="1.0" Color="#66FFFFFF" />
+									</LinearGradientBrush>
+								</Border.Background>
+							</Border>
+						</Grid>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{StaticResource UtilSystemIsTaskbarTopBinding}" Value="True">
+							<Setter TargetName="RootGrid" Property="RenderTransform">
+								<Setter.Value>
+									<ScaleTransform ScaleY="-1" />
+								</Setter.Value>
+							</Setter>
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<!-- Tile -->
+	<ControlTemplate x:Key="TileSplliterTemplate" TargetType="Control">
+		<Grid>
+			<Border x:Name="Normal" VerticalAlignment="Bottom" Height="2">
+				<Border.Background>
+					<LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+						<GradientStop Offset="0.0" Color="#BB000000" />
+						<GradientStop Offset="0.5" Color="#BB000000" />
+						<GradientStop Offset="0.5" Color="#66FFFFFF" />
+						<GradientStop Offset="1.0" Color="#66FFFFFF" />
+					</LinearGradientBrush>
+				</Border.Background>
+			</Border>
+			<Border x:Name="Hover" VerticalAlignment="Bottom" Height="2" Opacity="0">
+				<Border.Background>
+					<LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+						<GradientStop Offset="0.0" Color="#66000000" />
+						<GradientStop Offset="0.5" Color="#BB000000" />
+						<GradientStop Offset="0.5" Color="#BBFFFFFF" />
+						<GradientStop Offset="1.0" Color="#BBFFFFFF" />
+					</LinearGradientBrush>
+				</Border.Background>
+			</Border>
+		</Grid>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Trigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="Normal" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15"/>
+							<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15"/>
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15"/>
+							<DoubleAnimation Storyboard.TargetName="Normal" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15"/>
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.ExitActions>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+	<Style x:Key="TileSplliter" TargetType="Thumb">
+		<Setter Property="DockPanel.Dock" Value="Bottom"></Setter>
+		<Setter Property="Height" Value="4"></Setter>
+		<Setter Property="Cursor" Value="SizeNS" />
+		<Setter Property="Background" Value="Transparent"></Setter>
+		<Setter Property="Template" Value="{DynamicResource TileSplliterTemplate}"></Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsPinned, ElementName=RootTileElement}" Value="True">
+				<Setter Property="DockPanel.Dock" Value="Top"/>
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+	<!--  Flyout  -->
+	<ControlTemplate x:Key="FlyoutBackgroundTemplate" TargetType="Control">
+		<Grid>
+			<Border x:Name="FlyoutBackgroundFill" Background="#10FFFFFF" />
+			<Border x:Name="FlyoutBorderBehind" BorderBrush="#71000000" BorderThickness="1" />
+		</Grid>
+	</ControlTemplate>
+	<Style x:Key="FlyoutBackground" TargetType="Control">
+		<Setter Property="Template" Value="{DynamicResource FlyoutBackgroundTemplate}" />
+	</Style>
+	<!--  Drag  -->
+	<Style x:Key="DragWindowBackground" TargetType="Control">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Control">
+					<Grid x:Name="RootGrid" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<ScaleTransform ScaleX="1" />
+						</Grid.RenderTransform>
+						<Grid>
+							<Border Background="{DynamicResource UtilDwmOpaqueThemeBrush}" Opacity="0.6" />
+							<Border Background="Black" Opacity="0.1" />
+							<Border BorderBrush="#BB000000" BorderThickness="1">
+								<Border BorderBrush="#66FFFFFF" BorderThickness="1"></Border>
+							</Border>
+						</Grid>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style x:Key="BackgroundHighlight" TargetType="Rectangle">
-		<Setter Property="Stretch" Value="Fill" />
-		<Setter Property="HorizontalAlignment" Value="Left" />
-		<Setter Property="Width" Value="2" />
-		<Setter Property="Fill">
-			<Setter.Value>
-				<LinearGradientBrush Opacity="1" StartPoint="0,0" EndPoint="1,0">
-					<GradientStop Offset="0.0" Color="#BB000000" />
-					<GradientStop Offset="0.5" Color="#BB000000" />
-					<GradientStop Offset="0.5" Color="#66FFFFFF" />
-					<GradientStop Offset="1" Color="#66FFFFFF" />
-				</LinearGradientBrush>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<Style x:Key="BorderLine" TargetType="Line">
-		<Setter Property="Visibility" Value="Collapsed" />
-	</Style>
-	<Style x:Key="TileSplitterPanel" TargetType="StackPanel">
-		<Setter Property="DockPanel.Dock" Value="Bottom" />
-		<Setter Property="Height" Value="4" />
-		<Setter Property="Cursor" Value="SizeNS" />
-		<Setter Property="Background" Value="#00000000" />
-	</Style>
-	<Style x:Key="TileSplitterLineTop" TargetType="Line">
-		<Setter Property="Opacity" Value="0.7" />
-		<Setter Property="X1" Value="0" />
-		<Setter Property="X2" Value="200" />
-		<Setter Property="Stretch" Value="UniformToFill" />
-		<Setter Property="StrokeThickness" Value="1" />
-		<Setter Property="Stroke" Value="Gray" />
-		<Setter Property="OpacityMask">
-			<Setter.Value>
-				<LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
-					<GradientStop Offset="0.0" Color="#FF000000" />
-					<GradientStop Offset="1.0" Color="#00000000" />
-				</LinearGradientBrush>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<Style x:Key="TileSplitterLineBottom" TargetType="Line">
-		<Setter Property="Opacity" Value="0.7" />
-		<Setter Property="X1" Value="0" />
-		<Setter Property="X2" Value="200" />
-		<Setter Property="Stretch" Value="UniformToFill" />
-		<Setter Property="StrokeThickness" Value="1" />
-		<Setter Property="Stroke" Value="Black" />
-		<Setter Property="OpacityMask">
-			<Setter.Value>
-				<LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
-					<GradientStop Offset="0.0" Color="#FF000000" />
-					<GradientStop Offset="1.0" Color="#00000000" />
-				</LinearGradientBrush>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<Style
-		x:Key="TileSplitterLineTopLighting"
-		BasedOn="{StaticResource TileSplitterLineTop}"
-		TargetType="Line">
-		<Setter Property="OpacityMask">
-			<Setter.Value>
-				<LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
-					<GradientStop Offset="0.0" Color="#FF000000" />
-					<GradientStop Offset="1.0" Color="#AA000000" />
-				</LinearGradientBrush>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<Style
-		x:Key="TileSplitterLineBottomLighting"
-		BasedOn="{StaticResource TileSplitterLineBottom}"
-		TargetType="Line">
-		<Setter Property="OpacityMask">
-			<Setter.Value>
-				<LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
-					<GradientStop Offset="0.0" Color="#FF000000" />
-					<GradientStop Offset="1.0" Color="#AA000000" />
-				</LinearGradientBrush>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<Style x:Key="MainPanel" TargetType="DockPanel">
-		<Setter Property="Margin" Value="0,19,0,0" />
-		<Setter Property="HorizontalAlignment" Value="Stretch" />
-		<Setter Property="VerticalAlignment" Value="Stretch" />
-		<Setter Property="LastChildFill" Value="True" />
-	</Style>
-	<!--  Top Options  -->
-	<Style
-		x:Key="TopOptionsText"
-		BasedOn="{StaticResource GlobalTextBlockTextDisplay}"
-		TargetType="TextBlock">
-		<Setter Property="Foreground" Value="White" />
-		<Setter Property="FontSize" Value="9" />
-	</Style>
-	<Style x:Key="TopOptionsIcon" TargetType="Polygon">
-		<Setter Property="Opacity" Value="0.45" />
-		<Setter Property="Stroke" Value="#020202" />
-		<Setter Property="StrokeThickness" Value="1" />
-		<Setter Property="Fill" Value="White" />
-		<Setter Property="Margin" Value="2,1,2,0" />
-		<Setter Property="RenderTransformOrigin" Value="0.556,0.9" />
-		<Setter Property="SnapsToDevicePixels" Value="True" />
-		<Setter Property="UseLayoutRounding" Value="True" />
-		<Setter Property="StrokeStartLineCap" Value="Round" />
-		<Setter Property="StrokeEndLineCap" Value="Round" />
-		<Setter Property="StrokeLineJoin" Value="Round" />
-	</Style>
-	<Style x:Key="TopOptionsPanel" TargetType="FrameworkElement">
-		<Setter Property="VerticalAlignment" Value="Top" />
-		<Setter Property="Height" Value="17" />
-	</Style>
-	<Style x:Key="TopOptionsPanelSplitter" TargetType="StackPanel">
-		<Setter Property="Margin" Value="0,17,0,0" />
-		<Setter Property="VerticalAlignment" Value="Top" />
-		<Setter Property="Cursor" Value="Arrow" />
-		<Setter Property="Background" Value="#00000000" />
-		<Setter Property="Height" Value="4" />
-	</Style>
-	<!--  Tile  -->
-	<Style x:Key="TilePanel" TargetType="DockPanel">
-		<Setter Property="Background" Value="#00000000" />
-	</Style>
-	<Style x:Key="TileHeader" TargetType="DockPanel">
-		<Setter Property="Visibility" Value="Collapsed" />
-	</Style>
-	<Style x:Key="TileIcon" TargetType="Image">
-		<Setter Property="DockPanel.Dock" Value="Right" />
-		<Setter Property="Height" Value="15" />
-		<Setter Property="Width" Value="15" />
-	</Style>
-	<Style
-		x:Key="TileTitle"
-		BasedOn="{StaticResource GlobalTextBlockTextDisplay}"
-		TargetType="TextBlock">
-		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="HorizontalAlignment" Value="Left" />
-		<Setter Property="Margin" Value="5,0,5,0" />
-		<Setter Property="FontSize" Value="10" />
-		<Setter Property="Foreground" Value="White" />
-	</Style>
-	<Style x:Key="TileContent" TargetType="Grid">
-		<Setter Property="Background" Value="#00000000" />
-		<Setter Property="Margin" Value="1,0,0,0" />
-	</Style>
-	<Style x:Key="TileFlyoutIcon" TargetType="Polygon">
-		<Setter Property="Opacity" Value="0" />
-		<Setter Property="Stroke" Value="#020202" />
-		<Setter Property="StrokeThickness" Value="1" />
-		<Setter Property="Fill" Value="White" />
-		<Setter Property="Margin" Value="1,2,1,0" />
-		<Setter Property="RenderTransformOrigin" Value="0.556,0.9" />
-		<Setter Property="SnapsToDevicePixels" Value="True" />
-		<Setter Property="UseLayoutRounding" Value="True" />
-		<Setter Property="StrokeStartLineCap" Value="Round" />
-		<Setter Property="StrokeEndLineCap" Value="Round" />
-		<Setter Property="StrokeLineJoin" Value="Round" />
-	</Style>
-	<Style
-		x:Key="PinnedTileIcon"
-		BasedOn="{StaticResource TileIcon}"
-		TargetType="Image" />
-	<Style
-		x:Key="PinnedTileTitle"
-		BasedOn="{StaticResource TileTitle}"
-		TargetType="TextBlock" />
-	<Style x:Key="PinnedTileHeader" TargetType="DockPanel">
-		<Setter Property="Visibility" Value="Collapsed" />
-	</Style>
-	<Style
-		x:Key="PinnedTileFlyoutIcon"
-		BasedOn="{StaticResource TileFlyoutIcon}"
-		TargetType="Polygon">
-		<Setter Property="Margin" Value="1,4,1,0" />
-	</Style>
-	<Style
-		x:Key="PinnedTileContent"
-		BasedOn="{StaticResource TileContent}"
-		TargetType="Grid">
-		<Setter Property="Margin" Value="0,0,1,0" />
-	</Style>
-	<Style
-		x:Key="PinnedTileSplitterPanel"
-		BasedOn="{StaticResource TileSplitterPanel}"
-		TargetType="StackPanel">
-		<Setter Property="DockPanel.Dock" Value="Top" />
-	</Style>
-	<!--  Flyout  -->
-	<Style x:Key="FlyoutBorderBehind" TargetType="Rectangle">
-		<Setter Property="Stroke" Value="#71000000" />
-		<Setter Property="StrokeThickness" Value="1" />
-	</Style>
-	<Style x:Key="FlyoutBackgroundFill" TargetType="Rectangle">
-		<Setter Property="Fill" Value="#10FFFFFF" />
-	</Style>
-	<Style x:Key="FlyoutBackgroundHighlight1" TargetType="Rectangle" />
-	<Style x:Key="FlyoutHeaderOptionsBar" TargetType="FrameworkElement">
-		<Setter Property="Height" Value="14" />
-		<Setter Property="Margin" Value="4,1,4,0" />
-		<Setter Property="MinHeight" Value="0" />
-	</Style>
-	<Style
-		x:Key="FlyoutHeaderOptionsIcon"
-		BasedOn="{StaticResource TopOptionsIcon}"
-		TargetType="Polygon">
-		<Setter Property="Margin" Value="2,0,0,0" />
-	</Style>
-	<Style x:Key="FlyoutContent" TargetType="Grid">
-		<Setter Property="Margin" Value="4,17,4,4" />
-	</Style>
-	<!--  Drag  -->
-	<Style x:Key="DragPlaceholder" TargetType="Rectangle">
-		<Setter Property="Margin" Value="0,0,0,0" />
-		<Setter Property="Stroke" Value="#B3FFFFFF" />
-		<Setter Property="StrokeThickness" Value="1.5" />
-		<Setter Property="Opacity" Value="1" />
-		<Setter Property="Fill">
-			<Setter.Value>
-				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-					<GradientStop Offset="0" Color="#33FFFFFF" />
-					<GradientStop Offset="1" Color="#18FFFFFF" />
-				</LinearGradientBrush>
-			</Setter.Value>
-		</Setter>
-		<Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-		<Setter Property="RenderTransform">
-			<Setter.Value>
-				<ScaleTransform ScaleX="1" ScaleY="1" />
-			</Setter.Value>
-		</Setter>
-		<Style.Triggers>
-			<EventTrigger RoutedEvent="Rectangle.Loaded">
-				<BeginStoryboard>
-					<Storyboard Duration="0:0:0.3">
-						<DoubleAnimation
-							Storyboard.TargetProperty="Opacity"
-							From="1"
-							To="0.2" />
-						<DoubleAnimation
-							Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
-							From="1"
-							To="0.6" />
-						<DoubleAnimation
-							Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
-							From="1"
-							To="0.6" />
-					</Storyboard>
-				</BeginStoryboard>
-			</EventTrigger>
-		</Style.Triggers>
+	<Style x:Key="DragWindowContentContainer" TargetType="Grid">
+		<Setter Property="Margin" Value="10"></Setter>
 	</Style>
 
 	<!--  Search  -->
@@ -312,162 +237,6 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-	</Style>
-
-	<!--  Icon Button  -->
-	<Style x:Key="TileIconItemButtonStyle" TargetType="ToggleButton">
-		<Setter Property="Width" Value="30" />
-		<Setter Property="Height" Value="50" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="ToggleButton">
-					<Grid>
-						<Border x:Name="BackgroundActive">
-							<Border.Background>
-								<LinearGradientBrush Opacity="0" StartPoint="0,0" EndPoint="0,1">
-									<GradientStop Offset="0" Color="Transparent" />
-									<GradientStop Offset="0.25" Color="#77000000" />
-									<GradientStop Offset="0.75" Color="#77000000" />
-									<GradientStop Offset="1" Color="Transparent" />
-								</LinearGradientBrush>
-							</Border.Background>
-						</Border>
-						<Border
-							x:Name="BackgroundOuter"
-							Margin="0,3"
-							BorderThickness="1,0"
-							Opacity="0">
-							<Border.BorderBrush>
-								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-									<GradientStop Offset="0" Color="Transparent" />
-									<GradientStop Offset="0.25" Color="#66000000" />
-									<GradientStop Offset="0.75" Color="#66000000" />
-									<GradientStop Offset="1" Color="Transparent" />
-								</LinearGradientBrush>
-							</Border.BorderBrush>
-						</Border>
-						<Border
-							x:Name="BackgroundInner"
-							Margin="1,3"
-							BorderThickness="1,0"
-							Opacity="0">
-							<Border.BorderBrush>
-								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-									<GradientStop Offset="0" Color="Transparent" />
-									<GradientStop Offset="0.25" Color="#CCFFFFFF" />
-									<GradientStop Offset="0.75" Color="#CCFFFFFF" />
-									<GradientStop Offset="1" Color="Transparent" />
-								</LinearGradientBrush>
-							</Border.BorderBrush>
-						</Border>
-						<ContentPresenter Content="{TemplateBinding Content}" />
-						<Viewbox
-							x:Name="BottonLight"
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Bottom"
-							Opacity="0">
-							<Grid
-								Width="20"
-								Height="20"
-								ClipToBounds="True">
-								<Ellipse Margin="3,15,3,-7">
-									<Ellipse.Fill>
-										<RadialGradientBrush Center="0.5,1" GradientOrigin="0.5,1" RadiusX="0.5" RadiusY="1">
-											<GradientStop Offset="0" Color="White" />
-											<GradientStop Offset="1" Color="#00FFFFFF" />
-										</RadialGradientBrush>
-									</Ellipse.Fill>
-								</Ellipse>
-							</Grid>
-						</Viewbox>
-					</Grid>
-					<ControlTemplate.Triggers>
-						<Trigger Property="IsMouseOver" Value="True">
-							<Trigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation
-											Storyboard.TargetName="BackgroundOuter"
-											Storyboard.TargetProperty="Opacity"
-											To="1"
-											Duration="0:0:0.15" />
-										<DoubleAnimation
-											Storyboard.TargetName="BackgroundInner"
-											Storyboard.TargetProperty="Opacity"
-											To="1"
-											Duration="0:0:0.15" />
-										<DoubleAnimation
-											Storyboard.TargetName="BottonLight"
-											Storyboard.TargetProperty="Opacity"
-											To="1"
-											Duration="0:0:0.15" />
-									</Storyboard>
-								</BeginStoryboard>
-							</Trigger.EnterActions>
-							<Trigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation
-											Storyboard.TargetName="BackgroundOuter"
-											Storyboard.TargetProperty="Opacity"
-											To="0"
-											Duration="0:0:0.15" />
-										<DoubleAnimation
-											Storyboard.TargetName="BackgroundInner"
-											Storyboard.TargetProperty="Opacity"
-											To="0"
-											Duration="0:0:0.15" />
-										<DoubleAnimation
-											Storyboard.TargetName="BottonLight"
-											Storyboard.TargetProperty="Opacity"
-											To="0"
-											Duration="0:0:0.15" />
-									</Storyboard>
-								</BeginStoryboard>
-							</Trigger.ExitActions>
-						</Trigger>
-						<Trigger Property="IsPressed" Value="True">
-							<Trigger.EnterActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation
-											Storyboard.TargetName="BackgroundActive"
-											Storyboard.TargetProperty="Opacity"
-											To="1"
-											Duration="0:0:0.1" />
-									</Storyboard>
-								</BeginStoryboard>
-							</Trigger.EnterActions>
-							<Trigger.ExitActions>
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation
-											Storyboard.TargetName="BackgroundActive"
-											Storyboard.TargetProperty="Opacity"
-											To="0"
-											Duration="0:0:0.1" />
-									</Storyboard>
-								</BeginStoryboard>
-							</Trigger.ExitActions>
-						</Trigger>
-					</ControlTemplate.Triggers>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<Style
-		x:Key="TileIconItemForTrayTile"
-		BasedOn="{StaticResource TileIconItemButtonStyle}"
-		TargetType="ToggleButton">
-		<Setter Property="Width" Value="24" />
-		<Setter Property="Height" Value="24" />
-	</Style>
-	<Style
-		x:Key="TileIconItemForQuickLaunchTile"
-		BasedOn="{StaticResource TileIconItemButtonStyle}"
-		TargetType="ToggleButton">
-		<Setter Property="Width" Value="28" />
-		<Setter Property="Height" Value="28" />
 	</Style>
 
 	<!--  Image Buttons  -->

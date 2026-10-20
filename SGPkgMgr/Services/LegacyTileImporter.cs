@@ -190,7 +190,16 @@ namespace SGPkgMgr.Services
 				primary.AssemblyTitle,
 				primary.AssemblyProduct,
 				fallbackName) ?? fallbackName;
-			string desc = primary.CombinedDescription ?? "";
+
+			string descBody = primary.CombinedDescription ?? "";
+			string sdkLabel = FormatSdkLabel (primary.SourceSdk);
+			string desc;
+			if (string.IsNullOrEmpty (sdkLabel))
+				desc = descBody;
+			else if (string.IsNullOrEmpty (descBody))
+				desc = sdkLabel;
+			else
+				desc = sdkLabel + "\n\n" + descBody;
 
 			// ---- Architecture 聚合 ----
 			Sidebar.ProcessorArchitecture arch = primary.Architecture;
@@ -215,7 +224,18 @@ namespace SGPkgMgr.Services
 
 			return new TileManifest (identity, properties, prereq, apps);
 		}
-
+		/// <summary>
+		/// 把 SourceSdk 映射成描述头部要显示的磁贴类型标记。
+		/// 未知 SDK 返回 null（不添加标记）。
+		/// </summary>
+		private static string FormatSdkLabel (string sdk)
+		{
+			if (string.Equals (sdk, "LongBar", StringComparison.OrdinalIgnoreCase))
+				return "LongBar Tile";
+			if (string.Equals (sdk, "KarlSidebar", StringComparison.OrdinalIgnoreCase))
+				return "Karl's Sidebar Tile";
+			return null;
+		}
 		private static TileApplication BuildApplication (
 			LegacyTileAnalysis a, string dllName, bool singleApp)
 		{

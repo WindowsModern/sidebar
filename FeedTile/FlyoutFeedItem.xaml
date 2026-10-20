@@ -7,9 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
 	<Grid Margin="0,10,0,10">
-		<WrapPanel Orientation="Vertical" Name="FeedItemContainer" MouseEnter="FeedItemContainer_MouseEnter" MouseLeave="FeedItemContainer_MouseLeave" MouseDown="FeedItemContainer_MouseDown" MouseUp="FeedItemContainer_MouseUp" TouchDown="FeedItemContainer_TouchDown" TouchUp="FeedItemContainer_TouchUp">
+		<WrapPanel Orientation="Vertical" Name="FeedItemContainer">
 			<TextBlock Name="Title" Style="{DynamicResource TileFeedItemTitle}">Feed Item Title</TextBlock>
 			<TextBlock Name="Desc" Style="{DynamicResource TileFeedItemDescription}">Feed Item Content</TextBlock>
 		</WrapPanel>
+		<Button Name="ClickContainer" Click="ClickContainer_Click" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"
+				MouseEnter="FeedItemContainer_MouseEnter" MouseLeave="FeedItemContainer_MouseLeave">
+			<Button.Template>
+				<ControlTemplate TargetType="Button">
+					<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"></Border>
+				</ControlTemplate>
+			</Button.Template>
+		</Button>
     </Grid>
 </UserControl>

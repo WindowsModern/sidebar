@@ -53,6 +53,7 @@
 				<Button Name="AeroPeekButton" Style="{DynamicResource SidebarMinAeroPeekButton}" Click="AeroPeekButton_Click"></Button>
 				<ItemsControl Name="TaskbarTiles" Style="{DynamicResource SidebarMinTaskbarTilesControl}"></ItemsControl>
 			</DockPanel>
+			<Control Style="{DynamicResource SidebarTaskbarTrayHighlight}" IsHitTestVisible="False"></Control>
 		</Grid>
 	</Grid>
 </Window>

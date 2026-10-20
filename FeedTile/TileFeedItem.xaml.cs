@@ -65,34 +65,6 @@ namespace WindowsModern.FeedTile
 		{
 			return currData?.LocalId;
 		}
-		bool isdown = false;
-		private void StackPanel_MouseLeftButtonDown (object sender, MouseButtonEventArgs e)
-		{
-			isdown = true;
-		}
-
-		private void StackPanel_MouseLeftButtonUp (object sender, MouseButtonEventArgs e)
-		{
-			if (isdown)
-			{
-				RequireShowDetailPage ();
-				isdown = false;
-			}
-		}
-
-		private void StackPanel_TouchDown (object sender, TouchEventArgs e)
-		{
-			isdown = true;
-		}
-
-		private void StackPanel_TouchUp (object sender, TouchEventArgs e)
-		{
-			if (isdown)
-			{
-				RequireShowDetailPage ();
-				isdown = false;
-			}
-		}
 		public static FeedArticlePanel DetailPanel { get; set; }
 		private void RequireShowDetailPage ()
 		{
@@ -113,6 +85,10 @@ namespace WindowsModern.FeedTile
 				RequestName = "RequireExtraFlyout",
 				TransferDatas = page
 			});
+		}
+		private void ClickContainer_Click (object sender, RoutedEventArgs e)
+		{
+			RequireShowDetailPage ();
 		}
 	}
 }

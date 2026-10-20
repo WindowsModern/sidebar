@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Manifest Version="2">
-  <Identity Name="WindowsModern.UserTile" Publisher="CN=Windows Modern" Version="1.0.0.1" ProcessorArchitecture="Neutral" />
+  <Identity Name="WindowsModern.UserTile" Publisher="CN=Windows Modern" Version="1.0.0.2" ProcessorArchitecture="Neutral" />
   <Properties>
     <DisplayName>TILE_PROP_DISPNAME</DisplayName>
     <PublisherDisplayName>Windows Modern</PublisherDisplayName>
@@ -12,7 +12,9 @@
   </Prerequisites>
   <Applications>
     <Application Id="App" Executable="WindowsModern.UserTile.dll" EntryPoint="WindowsModern.UserTile.Tile" HasFlyout="true" HasProperties="false">
-      <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="SmallLogoGreen.ico">
+      <VisualElements DisplayName="TILE_PROP_DISPNAME" Logo="people_tile_icon.png">
+				<!-- 注：people_tile_icon.png 是 Longhorn Plex 时期的磁贴，不是 User 磁贴（User 磁贴默认用显示桌面图标）。
+				但是后来 4074 时期被 People nearby 取代，且图标也换了，所以就用这个图片了。-->
         <Tile MinHeight="34" MaxHeight="100" DefaultHeight="32" CanPinBottom="true" Overflow="Auto" />
         <Flyout FlyoutWidth="292" FlyoutHeight="179" FlyoutCanResize="true" />
       </VisualElements>

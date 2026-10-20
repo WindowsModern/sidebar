@@ -379,6 +379,7 @@ namespace Sidebar
 		}
 		private void TileControl_SizeChanged (object sender, System.Windows.SizeChangedEventArgs e)
 		{
+			if ((sender as TileControl)?.IsOverflowLock ?? false) return;
 			RebuildOverflowList ();
 		}
 		private DispatcherTimer overflowUpdateTimer;
@@ -501,6 +502,7 @@ namespace Sidebar
 		{
 			if (tc == null) return;
 			if (tileOverflowList.Contains (tc)) return;
+			tc.IsOverflowLock = true;
 			tileOverflowList.Add (tc);
 		}
 		private void AddToTargetPanel (FrameworkElement ue, Panel p)
@@ -1231,6 +1233,9 @@ namespace Sidebar
 		private MultiView<ITileElement> taskbarTilesList;
 		private ProjectedView<string, ITileElement> taskbarTopTiles;
 		private ProjectedView<string, ITileElement> taskbarBottomTiles;
+		private DispatcherTimer taskbarPosTimer = new DispatcherTimer () {
+			Interval = TimeSpan.FromMilliseconds (50)
+		};
 		private void InitAppBar ()
 		{
 			var cc = App.CurrentUserConfig;
@@ -1617,7 +1622,24 @@ namespace Sidebar
 		private void ExplorerShell_TaskbarPositionChanged (object sender, EventArgs e)
 		{
 			var cc = App.CurrentUserConfig;
-			if (cc.OverlapTaskbar && cc.IsMinimum) RefreshWndPos ();
+			if (cc.OverlapTaskbar && cc.IsMinimum)
+			{
+				RefreshWndPos ();
+				taskbarPosTimer.Tick -= TaskbarPosTimer_Tick;
+				taskbarPosTimer.Tick += TaskbarPosTimer_Tick;
+				taskbarPosTimer.Stop ();
+				taskbarPosTimer.Start ();
+			}
+		}
+		private void TaskbarPosTimer_Tick (object sender, EventArgs e)
+		{
+			try
+			{
+				taskbarPosTimer.Stop ();
+				taskbarPosTimer.Tick -= TaskbarPosTimer_Tick;
+				RefreshWndPos ();
+			}
+			catch { }
 		}
 		private void ScreenChangeNotifier_WorkingAreaChanged (object sender, EventArgs e)
 		{
