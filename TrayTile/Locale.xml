@@ -84,4 +84,8 @@
 		<lang name="zh-TW">顯示工作列通知區域的圖示，並執行一些任務。不支援使用新工作列的 Windows 11 及未來版本。</lang>
 		<lang name="zh-Hant">顯示工作列通知區域的圖示，並執行一些任務。不支援使用新工作列的 Windows 11 及未來版本。</lang>
 	</resource>
+	<resource id="TILE_MENU_CUSTOMTRAY">
+		<lang name="zh-CN">自定义通知</lang>
+		<lang name="en-US">Customize Notifications</lang>
+	</resource>
 </resources>

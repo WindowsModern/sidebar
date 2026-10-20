@@ -2223,7 +2223,8 @@ namespace Sidebar
 		}
 		private void DestroySidebarTheme ()
 		{
-
+			var tmgr = App.ThemeMgr;
+			tmgr.Changed -= ThemeManager_Changed;
 		}
 		#endregion
 		private void Window_Loaded (object sender, RoutedEventArgs e)
@@ -2245,9 +2246,11 @@ namespace Sidebar
 			TimeoutExtensions.SetTimeout (this, () => {
 				RefreshTaskbarTileItems ();
 			});
+			InitSidebarTheme ();
 		}
 		private void Window_Closed (object sender, EventArgs e)
 		{
+			DestroySidebarTheme ();
 			DestroyPipeServerSubscribe ();
 			DestroyAeroPeek ();
 			DestroyTaskbarTilesList ();

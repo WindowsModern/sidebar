@@ -397,9 +397,10 @@ namespace Sidebar
 			InitTileContextMenuCustomItems ();
 			if (Instance?.Config != null)
 			{
-				MenuItemAutoSize.IsChecked = Instance.Config.AutoSize;
+				MenuItemAutoSize.IsChecked = IsOverflowAutoMode || IsAutoMode;
 				MenuItemPinnedBottom.IsChecked = Instance.Config.Pinned;
 			}
+			MenuItemAutoSize.IsEnabled = !(AppStorage?.Infomation?.VisualElements?.Tile?.Overflow == TileOverflow.Auto);
 			MenuItemProperties.IsEnabled = AppStorage?.Infomation?.HasProperties ?? false;
 			var host = SidebarHost;
 			MenuItemMoveUp.IsEnabled = host?.CanMoveTileUp (this) == true;

@@ -20,6 +20,7 @@ namespace WindowsModern.NotificationHistoryTile
 		private TilePanel tilePanel = null;
 		private FlyoutPanel flyoutPanel = null;
 		private HashSet<Guid> displayedId = new HashSet<Guid> ();
+		private MenuItem itemGotoRules = new MenuItem ();
 		public override void OnInitialize ()
 		{
 			History = new NotificationHistory (UserRegion.FolderPath);
@@ -35,6 +36,26 @@ namespace WindowsModern.NotificationHistoryTile
 			panel.Children.Add (tilePanel);
 			FlyoutInit += Tile_FlyoutInit;
 			FlyoutClosed += Tile_FlyoutClosed;
+			var contextMenu = new ContextMenu ();
+			contextMenu.Items.Add (itemGotoRules);
+			itemGotoRules.Header = Region.StringResources.SuitableResource ("TILE_FLYOUT_RULES");
+			itemGotoRules.Click += ItemGotoRules_Click;
+			ContextMenu = contextMenu;
+		}
+		private void ItemGotoRules_Click (object sender, System.Windows.RoutedEventArgs e)
+		{
+			try
+			{
+				Process.Start ("explorer.exe", "shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9}");
+			}
+			catch
+			{
+				try
+				{
+					Process.Start ("rundll32.exe", "shell32.dll,Options_RunDLL 1");
+				}
+				catch { }
+			}
 		}
 		private void Tile_FlyoutClosed (object sender, EventArgs e)
 		{
@@ -136,6 +157,7 @@ namespace WindowsModern.NotificationHistoryTile
 		}
 		public override void OnDestroy ()
 		{
+			itemGotoRules.Click += ItemGotoRules_Click;
 			tilePanel.History = null;
 			if (flyoutPanel != null) flyoutPanel.DataContext = null;
 			tilePanel.NotificationClicked -= TilePanel_NotificationClicked;

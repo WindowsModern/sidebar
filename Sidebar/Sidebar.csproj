@@ -137,9 +137,6 @@
       <DependentUpon>Sidebar.xaml</DependentUpon>
     </Compile>
     <Compile Include="SidebarAppBar.cs" />
-    <Compile Include="TestPage.xaml.cs">
-      <DependentUpon>TestPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TileCompatibility.cs" />
     <Compile Include="TileConfig.cs" />
     <Compile Include="TileControl.xaml.cs">
@@ -843,10 +840,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\Tile.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TestPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
