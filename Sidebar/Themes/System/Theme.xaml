@@ -5,6 +5,11 @@
 	xmlns:s="clr-namespace:System;assembly=mscorlib">
 	<!--  Options  -->
 	<s:Boolean x:Key="EnableBlur">true</s:Boolean>
+	<!-- Infomation -->
+	<s:String x:Key="ThemeDisplayName">System</s:String>
+	<s:String x:Key="ThemePublisherDisplayName">Windows Modern</s:String>
+	<s:String x:Key="ThemeDescription">Default theme.</s:String>
+	<s:String x:Key="ThemeLogo">Logo.png</s:String>
 	<!--  Tiles  -->
 	<!--  Clock  -->
 	<!--  Clock:ClockFace  -->

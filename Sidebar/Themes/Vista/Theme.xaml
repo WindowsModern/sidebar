@@ -6,7 +6,7 @@
 	xmlns:snt="clr-namespace:Sidebar;assembly=Native">
 	<!-- Infomation -->
 	<s:String x:Key="ThemeDisplayName">Vista</s:String>
-	<s:String x:Key="ThemePublisherDisplayName">LongBar Project Group.</s:String>
+	<s:String x:Key="ThemePublisherDisplayName">LongBar Project Group</s:String>
 	<s:String x:Key="ThemeDescription">Vista theme.</s:String>
 	<s:String x:Key="ThemeLogo">Logo.png</s:String>
 	<!--  Options  -->

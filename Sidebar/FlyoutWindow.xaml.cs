@@ -29,7 +29,7 @@ namespace Sidebar
 		{
 			InitializeComponent ();
 			tileComp = tc;
-			if (DWMAPI.IsElderWindows ()) AllowsTransparency = false;
+			if (DWMAPI.IsElderWindows () && !App.CurrentUserConfig.ForceTransparency) AllowsTransparency = false;
 			InteropHelper = new WindowInteropHelper (this);
 		}
 		#region Public Members

@@ -6,7 +6,7 @@
 		xmlns:winform="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:Sidebar"
         mc:Ignorable="d" Loaded="Window_Loaded" Closed="Window_Closed"
-        Title="ConfigWindow" Height="540" Width="430">
+        Title="ConfigWindow" Height="490.4" Width="430">
 	<Window.Resources>
 		<Style TargetType="Control">
 			<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
@@ -79,11 +79,56 @@
 										</StackPanel>
 									</RadioButton>
 								</StackPanel>
-								<TextBlock Name="LabelTheme" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">Current Theme:</TextBlock>
-								<StackPanel Orientation="Horizontal">
-									<ComboBox Name="SelectTheme" HorizontalAlignment="Stretch" Padding="10,2" FontFamily="{DynamicResource GlobalFontFamily}"></ComboBox>
-									<Button Name="ButtonRefreshTheme" Width="Auto" Padding="10,2" Margin="5,0,0,0" Click="ButtonRefreshTheme_Click" FontFamily="{DynamicResource GlobalFontFamily}">Refresh</Button>
-								</StackPanel>
+							</WrapPanel>
+						</GroupBox>
+					</StackPanel>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Name="HeaderTheme" Header="Themes" FontFamily="{DynamicResource GlobalFontFamily}">
+				<DockPanel Margin="10">
+					<DockPanel DockPanel.Dock="Top" Margin="0,0,0,5">
+						<TextBlock Name="LabelTheme">Current Theme: </TextBlock>
+						<Image MaxWidth="50" Height="50" Margin="5,0,0,0" Name="ImageCurrentThemeLogo" Stretch="Uniform"></Image>
+						<TextBlock Margin="5,0,0,0" TextWrapping="Wrap" Name="LabelCurrentThemeText">Test Theme</TextBlock>
+					</DockPanel>
+					<TextBlock Name="LabelInstalledThemes" DockPanel.Dock="Top" Margin="0,0,0,5">Installed Themes: </TextBlock>
+					<ListBox Name="ListTheme" SelectionChanged="ListTheme_SelectionChanged">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<DockPanel Margin="10">
+									<Image MaxWidth="50" Height="50" DockPanel.Dock="Left" Source="{Binding LogoImage}" Stretch="Uniform"></Image>
+									<StackPanel Margin="10,0,0,0" DockPanel.Dock="Right" Orientation="Vertical" ToolTip="{Binding FolderPath}">
+										<TextBlock Text="{Binding DisplayName}" ToolTip="{Binding DisplayName}" FontSize="13" TextTrimming="CharacterEllipsis"/>
+										<TextBlock Text="{Binding PublisherDisplayName}" ToolTip="{Binding PublisherDisplayName}" FontSize="11" Opacity="0.75" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
+										<TextBlock Text="{Binding Description}" ToolTip="{Binding Description}" FontSize="11" Opacity="0.6" TextWrapping="Wrap" MaxHeight="34" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
+									</StackPanel>
+								</DockPanel>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</DockPanel>
+			</TabItem>
+			<TabItem Name="HeaderExperience" Header="Experience" FontFamily="{DynamicResource GlobalFontFamily}">
+				<ScrollViewer Style="{DynamicResource AutoHideScrollViewer}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" Padding="10">
+					<StackPanel VerticalAlignment="Stretch">
+						<StackPanel.Resources>
+							<Style TargetType="CheckBox">
+								<Setter Property="Margin" Value="0,2"></Setter>
+							</Style>
+							<Style TargetType="Button">
+								<Setter Property="Margin" Value="0,2"></Setter>
+							</Style>
+							<Style TargetType="TextBlock">
+								<Setter Property="Margin" Value="0,2"></Setter>
+							</Style>
+						</StackPanel.Resources>
+						<GroupBox Name="GroupDisplayEx" Header="Display" Padding="10,5" Margin="0,5" FontFamily="{DynamicResource GlobalFontFamily}">
+							<WrapPanel Orientation="Vertical" VerticalAlignment="Stretch">
+								<CheckBox Name="InputFocusTransparency">
+									<TextBlock Name="LabelFocusTransparency" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}">Focus Enable Transparency</TextBlock>
+								</CheckBox>
+								<TextBlock Name="LabelDescFocusTransparency" TextWrapping="Wrap" FontFamily="{DynamicResource GlobalFontFamily}" Margin="0,2,0,0">Focus Enable Transparency</TextBlock>
+								
 							</WrapPanel>
 						</GroupBox>
 					</StackPanel>

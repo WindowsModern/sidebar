@@ -66,6 +66,7 @@ namespace Sidebar
 		private ObservableCollection<string> _pinnedBottomTiles;
 		private bool _isAdjustingPinned = false;
 		private bool _isMinimum = false;
+		private bool _forceTransparency = false;
 		public SidebarDirection Direction
 		{
 			get { return _direction; }
@@ -213,6 +214,16 @@ namespace Sidebar
 				_isMinimum = value;
 				initConfig ["Settings"] ["IsMinimum"] = value;
 				OnPropertyChanged (nameof (IsMinimum));
+			}
+		}
+		public bool ForceTransparency
+		{
+			get { return _forceTransparency; }
+			set
+			{
+				_forceTransparency = value;
+				initConfig ["Settings"] ["ForceTransparency"] = value;
+				OnPropertyChanged (nameof (ForceTransparency));
 			}
 		}
 		#region Pinned Tiles
@@ -482,6 +493,7 @@ namespace Sidebar
 			_autorun = settings?.GetKey ("AutoRun").ReadBool (false) ?? false;
 			_canScroll = settings?.GetKey ("CanScroll").ReadBool (false) ?? false;
 			_isMinimum = settings?.GetKey ("IsMinimum").ReadBool (false) ?? false;
+			_forceTransparency = settings?.GetKey ("ForceTransparency").ReadBool (false) ?? false;
 		}
 		public SidebarConfig (InitConfig ini, XmlConfig xml)
 		{

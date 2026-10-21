@@ -41,7 +41,6 @@ namespace Sidebar
 			HeaderSettings.Header = sres.SuitableResource ("CONFIG_TITLE");
 			HeaderAbout.Header = sres.SuitableResource ("ABOUT_TITLE");
 			Title = sres.SuitableResource ("SIDEBAR_CONTEXTMENU_PROP");
-			ButtonRefreshTheme.Content = sres.SuitableResource ("CONFIG_REFRESH");
 			LabelScreen.Text = sres.SuitableResource ("CONFIG_SCREEN");
 			GroupGeneral.Header = sres.SuitableResource ("CONFIG_GENERAL");
 			GroupDisplay.Header = sres.SuitableResource ("CONFIG_APPEARANCE");
@@ -54,6 +53,12 @@ namespace Sidebar
 			LabelProject.Text = sres.SuitableResource ("SIDEBAR_ABOUT_PROJECT");
 			LabelLicense.Text = sres.SuitableResource ("SIDEBAR_ABOUT_LICENSE");
 			LabelCanScroll.Text = sres.SuitableResource ("CONFIG_CANSCROLL");
+			HeaderTheme.Header = sres.SuitableResource ("CONFIG_THEME_HEADER");
+			LabelInstalledThemes.Text = sres.SuitableResource ("CONFIG_INSTALLEDTHEME");
+			HeaderExperience.Header = sres.SuitableResource ("CONFIG_EXPERIENCE");
+			LabelFocusTransparency.Text = sres.SuitableResource ("CONFIG_FOCUSTRANSPARENCY");
+			LabelDescFocusTransparency.Text = sres.SuitableResource ("CONFIG_FOCUSTRANSPARENCY_DESC");
+			GroupDisplayEx.Header = sres.SuitableResource ("CONFIG_APPEARANCE");
 		}
 		public void InitConfigValues ()
 		{
@@ -68,6 +73,8 @@ namespace Sidebar
 			InputCanScroll.IsChecked = cc.CanScroll;
 			RefreshThemeSelect ();
 			RefreshScreenSelect ();
+			InputFocusTransparency.IsChecked = App.CurrentUserConfig.ForceTransparency;
+			InputFocusTransparency.IsEnabled = DWMAPI.IsElderWindows ();
 			{
 				var loc = App.ProgramFolder.StringResources;
 				string smallText = loc.SuitableResource ("CONFIG_SMALL", "Small");
@@ -99,17 +106,19 @@ namespace Sidebar
 		}
 		private void RefreshThemeSelect ()
 		{
-			SelectTheme.SelectionChanged -= SelectTheme_SelectionChanged;
-			SelectTheme.ItemsSource = App.ThemeMgr.ValidThemes;
-			SelectTheme.DisplayMemberPath = "ThemeName";
-			SelectTheme.SelectedValuePath = "ThemeName";
+			ListTheme.SelectionChanged -= ListTheme_SelectionChanged;
+			ListTheme.ItemsSource = App.ThemeMgr.ValidThemes;
 			string currentThemeName = App.ThemeMgr.CurrentUserTheme?.ThemeName;
 			if (!string.IsNullOrWhiteSpace (currentThemeName))
 			{
-				SelectTheme.SelectedValue = currentThemeName;
+				ListTheme.SelectedValuePath = "ThemeName";
+				ListTheme.SelectedValue = currentThemeName;
+				var currTheme = App.ThemeMgr.CurrentUserTheme;
+				LabelCurrentThemeText.Text = currTheme?.DisplayName;
+				ImageCurrentThemeLogo.Source = currTheme?.LogoImage;
 			}
-			SelectTheme.SelectionChanged -= SelectTheme_SelectionChanged;
-			SelectTheme.SelectionChanged += SelectTheme_SelectionChanged;
+			ListTheme.SelectionChanged -= ListTheme_SelectionChanged;
+			ListTheme.SelectionChanged += ListTheme_SelectionChanged;
 		}
 		private void RefreshScreenSelect ()
 		{
@@ -159,16 +168,13 @@ namespace Sidebar
 			InputWidth.ValueChanged += InputWidth_ValueChanged;
 			InputLeft.Checked += InputLeft_Checked;
 			InputRight.Checked += InputRight_Checked;
-			SelectTheme.SelectionChanged += SelectTheme_SelectionChanged;
+			ListTheme.SelectionChanged += ListTheme_SelectionChanged;
+			InputFocusTransparency.Checked += InputFocusTransparency_CheckedChanged;
+			InputFocusTransparency.Unchecked += InputFocusTransparency_CheckedChanged;
 		}
-		private void SelectTheme_SelectionChanged (object sender, SelectionChangedEventArgs e)
+		private void InputFocusTransparency_CheckedChanged (object sender, RoutedEventArgs e)
 		{
-			if (SelectTheme.SelectedItem is Theme)
-			{ 
-				var selectedTheme = SelectTheme.SelectedItem as Theme;
-				App.ThemeMgr.SetCurrentUserTheme (selectedTheme);
-				ThemeManager.Apply (selectedTheme);
-			}
+			App.CurrentUserConfig.ForceTransparency = InputFocusTransparency.IsChecked ?? false;
 		}
 		private void InputRight_Checked (object sender, RoutedEventArgs e)
 		{
@@ -264,11 +270,7 @@ namespace Sidebar
 			InputWidth.ValueChanged -= InputWidth_ValueChanged;
 			InputLeft.Checked -= InputLeft_Checked;
 			InputRight.Checked -= InputRight_Checked;
-			SelectTheme.SelectionChanged -= SelectTheme_SelectionChanged;
-		}
-		private void ButtonRefreshTheme_Click (object sender, RoutedEventArgs e)
-		{
-			RefreshThemeSelect ();
+			ListTheme.SelectionChanged -= ListTheme_SelectionChanged;
 		}
 		private void Window_Loaded (object sender, RoutedEventArgs e)
 		{
@@ -291,6 +293,17 @@ namespace Sidebar
 		private void LinkLicense_Click (object sender, RoutedEventArgs e)
 		{
 			Process.Start (System.IO.Path.Combine (App.ProgramFolder.FolderPath, "Licenses\\License.rtf"));
+		}
+		private void ListTheme_SelectionChanged (object sender, SelectionChangedEventArgs e)
+		{
+			if (ListTheme.SelectedItem is Theme)
+			{
+				var selectedTheme = ListTheme.SelectedItem as Theme;
+				LabelCurrentThemeText.Text = selectedTheme?.DisplayName;
+				ImageCurrentThemeLogo.Source = selectedTheme?.LogoImage;
+				App.ThemeMgr.SetCurrentUserTheme (selectedTheme);
+				ThemeManager.Apply (selectedTheme);
+			}
 		}
 	}
 }

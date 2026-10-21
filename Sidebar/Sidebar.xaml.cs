@@ -36,7 +36,7 @@ namespace Sidebar
 		{
 			Current = this;
 			InitializeComponent ();
-			if (DWMAPI.IsElderWindows ()) AllowsTransparency = false;
+			if (DWMAPI.IsElderWindows () && !App.CurrentUserConfig.ForceTransparency) AllowsTransparency = false;
 			InitTilesList ();
 		}
 		#region Instance
