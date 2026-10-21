@@ -6,13 +6,16 @@
 		xmlns:winform="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:Sidebar"
         mc:Ignorable="d" Loaded="Window_Loaded" Closed="Window_Closed"
-        Title="ConfigWindow" Height="490.4" Width="430">
+        Title="ConfigWindow" Height="507.2" Width="430">
 	<Window.Resources>
 		<Style TargetType="Control">
 			<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
 		</Style>
 		<Style TargetType="TextBlock">
 			<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		</Style>
+		<Style TargetType="TabItem">
+			<Setter Property="Padding" Value="10,5"></Setter>
 		</Style>
 	</Window.Resources>
 	<Grid>

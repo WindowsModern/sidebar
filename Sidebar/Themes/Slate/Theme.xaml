@@ -10,7 +10,7 @@
 	<s:String x:Key="ThemeDisplayName">Slate</s:String>
 	<s:String x:Key="ThemePublisherDisplayName">Windows Modern</s:String>
 	<s:String x:Key="ThemeDescription">Slate style in Windows Longhorn.</s:String>
-	<s:String x:Key="ThemeLogo">Logo.png</s:String>
+	<s:String x:Key="ThemeLogo">Logo.jpg</s:String>
 	<!-- Options -->
 	<s:Boolean x:Key="EnableBlur">false</s:Boolean>
 	<s:Boolean x:Key="EnableShadow">false</s:Boolean>
