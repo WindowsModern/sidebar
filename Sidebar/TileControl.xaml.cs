@@ -319,6 +319,7 @@ namespace Sidebar
 			newHeight = Math.Max (minH, Math.Min (maxH, newHeight));
 			if (newHeight < 0) newHeight = 0;
 			TileContentContainerControl.Height = newHeight;
+			Instance.Config.Height = newHeight;
 		}
 		private void TileSplitterThumb_DragCompleted (object sender, DragCompletedEventArgs e)
 		{

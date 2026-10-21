@@ -22,20 +22,6 @@ namespace Sidebar
 		{
 			if (Instance == null) return;
 			Instance.SetSettingsStorage (new InitConfig (Config.Ini.FilePath), new NativeCompatible.XmlConfig (Config.Xml.FilePath));
-			_tileContent = Instance.Load ();
-			if (_tileContent != null)
-			{
-				var panel = TileUI as Panel;
-				if (panel != null)
-				{
-					panel.Children.Add (_tileContent);
-				}
-				else
-				{
-					var cc = TileUI as ContentControl;
-					if (cc != null) cc.Content = _tileContent;
-				}
-			}
 			Instance.ShowFlyoutEvent += Instance_ShowFlyoutEvent;
 			Instance.ShowOptionsEvent += Instance_ShowOptionsEvent;
 			Instance.CaptionChanged += Instance_CaptionChanged;
@@ -50,6 +36,20 @@ namespace Sidebar
 			PropertiesClosed += LongBarTile_PropertiesClosed;
 			SidebarDirectionChanged += LongBarTile_SidebarDirectionChanged;
 			ThemeChanged += LongBarTile_ThemeChanged;
+			_tileContent = Instance.Load ();
+			if (_tileContent != null)
+			{
+				var panel = TileUI as Panel;
+				if (panel != null)
+				{
+					panel.Children.Add (_tileContent);
+				}
+				else
+				{
+					var cc = TileUI as ContentControl;
+					if (cc != null) cc.Content = _tileContent;
+				}
+			}
 			PushCurrentTitle ();
 			PushCurrentIcon ();
 		}

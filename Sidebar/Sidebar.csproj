@@ -103,6 +103,9 @@
       <HintPath>..\packages\WpfAnimatedGif.1.4.18\lib\net\WpfAnimatedGif.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WPFToolkit">
+      <HintPath>..\..\..\..\..\Desktop\Files2\LongBar 2.1 Build 351\WPFToolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -148,6 +151,9 @@
       <DependentUpon>TilePropertiesForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinForm.cs" />
+    <Content Include="WPFToolkit.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Signature.pfx" />
     <Page Include="ConfigWindow.xaml">
@@ -907,7 +913,6 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\CoreLib\CoreLib.csproj">
       <Project>{61407357-f222-4705-b8ff-96f6ac80617a}</Project>
