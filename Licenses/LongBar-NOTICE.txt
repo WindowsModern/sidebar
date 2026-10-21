@@ -1,0 +1,14 @@
+LongBar
+=======
+
+Project: LongBar
+Source:  https://sourceforge.net/projects/longbar/
+License: Microsoft Public License (MS-PL)
+Copyright: LongBar Project Group, 2009-2010 (as stated in the LongBar
+           assembly metadata and project materials).
+
+The complete MS-PL text is in LongBar-MS-PL.txt.
+
+Sidebar contains modified portions of LongBar. The current list of derived
+files and the description of modifications are maintained in the repository
+root NOTICE file.

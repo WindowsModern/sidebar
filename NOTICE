@@ -1,34 +1,72 @@
-This project contains portions of code derived from the LongBar project.
+Sidebar
+Copyright (c) 2026 Windows Modern.
 
-LongBar is licensed under the Microsoft Public License (Ms-PL).
-Copyright of the original LongBar code belongs to its original authors.
+This project is licensed under the Microsoft Public License (MS-PL).
+The complete license text is in LICENSE and Licenses/MS-PL.txt.
 
-The following files contain code derived from LongBar:
+===============================================================================
+LongBar attribution
+===============================================================================
 
-- CoreLib/Shell.cs
-  Portions derived from LongBar/Core/General/Sidebar.cs
+This project contains portions of code and XAML derived from the LongBar
+project:
 
-- Sidebar/Themes/Aero/Theme.xaml
-  Portions derived from LongBar/LongBar/General/Themes/Aero.theme.xaml
+    https://sourceforge.net/projects/longbar/
 
-- Sidebar/Themes/Slate/Theme.xaml
-  Portions derived from LongBar theme files.
+LongBar is licensed under the Microsoft Public License (MS-PL).
+Original copyright belongs to the LongBar Project Group (2009-2010).
+The complete LongBar MS-PL text is retained in
+Licenses/LongBar-MS-PL.txt (and the historical LICENSE - LongBar file).
 
-- Sidebar/Themes/Plex/Theme.xaml
-  Portions derived from LongBar theme files.
+The following files contain portions derived from LongBar and have been
+modified for Sidebar. The modifications include namespace and API changes,
+layout/theme-key updates, .NET Framework 4.0 compatibility changes, and
+integration with the current Sidebar code.
 
-- Sidebar/Sidebar.xaml
-  Portions derived from LongBar/LongBar.xaml
+  CoreLib/Shell.cs
+      Portions derived from LongBar/Core/General/Sidebar.cs.
 
-- Sidebar/Tile.xaml
-  Portions derived from LongBar/Tile.xaml
+  Sidebar/Themes/Aero/Theme.xaml
+      Portions derived from LongBar/Themes/Aero.theme.xaml.
 
-- Sidebar/Flyout.xaml
-  Portions derived from LongBar/Flyout.xaml
+  SGStore/MainWindow.xaml
+  SGStore/MainWindow.xaml.cs
+      Portions derived from LongBar/Library.xaml and Library.xaml.cs.
 
-- SGStore/MainWindow.xaml
-  Portions derived from LongBar/Library.xaml
+  OtherSDKs/LongBarTileLib/
+      LongBar TileLib compatibility SDK. Tile.cs and AssemblyInfo.cs are
+      adapted from LongBar/TileLib. The original LongBar copyright notice
+      is retained in Properties/AssemblyInfo.cs.
 
-These files have been modified for use in the Sidebar project.
+  OtherSDKs/KSideBarTileSDK/
+      Karl's Sidebar tile SDK compatibility sources, adapted from
+      LongBar/KSideBarTileLib. The original LongBar copyright notice is
+      retained in Properties/AssemblyInfo.cs.
 
-The original LongBar source code and copyright notices are retained in accordance with the terms of the Microsoft Public License (Ms-PL).
+The LongBar name and logo are trademarks or identifiers of the original
+LongBar project. The MS-PL does not grant trademark rights, and this project
+does not claim endorsement by or affiliation with the LongBar project. The
+LongBar application icon has been removed from the LongBarTileLib build.
+
+===============================================================================
+Third-party components
+===============================================================================
+
+Cauldron / Capgemini.Cauldron.Win32.UserInformation (UserTile):
+    MIT License. See UserTile/LICENSE - Cauldron and UserTile/NOTICE.
+
+NuGet packages used by the solution (including AvalonEdit, Newtonsoft.Json,
+HtmlAgilityPack, SharpZipLib, and others):
+    These packages retain their own licenses and notices. See the license
+    and package metadata under packages/ for the exact terms. They are
+    dependencies and are not part of the LongBar-derived code listed above.
+
+===============================================================================
+License retention
+===============================================================================
+
+All copyright, patent, trademark, and attribution notices that were present
+in the LongBar source are retained. If this project is distributed in source
+form, it is distributed under the MS-PL with a complete copy of the license.
+If distributed in compiled form, it is distributed under a license that
+complies with the MS-PL.
