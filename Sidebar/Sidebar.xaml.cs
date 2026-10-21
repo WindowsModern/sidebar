@@ -1608,7 +1608,7 @@ namespace Sidebar
 			this.MaxWidth = maxWidthDip;
 		}
 		#endregion
-		#region System Event
+		#region System Events
 		private void InitSystemEventHandlers ()
 		{
 			ScreenChangeNotifier.ScaleChanged += ScreenChangeNotifier_ScaleChanged;
