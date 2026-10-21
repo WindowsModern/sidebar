@@ -1,0 +1,315 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:pres="clr-namespace:SGTheme"
+					xmlns:snt="clr-namespace:Sidebar;assembly=Native"
+                    xmlns:local="clr-namespace:SGTheme">
+	<!--  Notification  -->
+	<Style x:Key="NotificationWindow" TargetType="Window">
+		<Setter Property="MinWidth" Value="152" />
+		<Setter Property="MinHeight" Value="67" />
+		<Setter Property="MaxWidth" Value="354" />
+		<Setter Property="MaxHeight" Value="275" />
+	</Style>
+	<Style x:Key="NotificationRegionBorder" TargetType="Border">
+		<Setter Property="CornerRadius" Value="5" />
+		<Setter Property="ClipToBounds" Value="True" />
+		<Setter Property="Margin" Value="0,0,9,10" />
+	</Style>
+	<Style x:Key="NotificationBaseBackground" TargetType="Border">
+		<Setter Property="Background" Value="#070707" />
+		<Setter Property="Background" Value="#20FFFFFF" />
+		<!-- <Setter Property="Background" Value="{Binding ThemeBrush, Source={x:Static pres:DwmThemeProvider.Instance}}" /> -->
+		<Setter Property="CornerRadius" Value="5" />
+	</Style>
+	<Style x:Key="NotificationBackgroundImageSlice9" TargetType="snt:Slice9Image">
+		<Setter Property="Visibility" Value="Collapsed" />
+	</Style>
+	<Style x:Key="NotificationBackgroundHighlight" TargetType="Border">
+		<Setter Property="CornerRadius" Value="5" />
+		<Setter Property="Background">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+					<GradientStop Offset="0" Color="#7EFFFFFF" />
+					<GradientStop Offset="0.5" Color="#00FFFFFF" />
+					<GradientStop Offset="0.95" Color="#00FFFFFF" />
+					<GradientStop Offset="1" Color="#7EFFFFFF" />
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="OpacityMask">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+					<GradientStop Offset="0" Color="#FFFFFFFF" />
+					<GradientStop Offset="1" Color="#00FFFFFF" />
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationBorder" TargetType="Border">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="CornerRadius" Value="5" />
+		<Setter Property="BorderBrush" Value="#61676F" />
+		<Setter Property="Margin" Value="0,15,0,0" />
+	</Style>
+	<Style x:Key="NotificationHeader" TargetType="StackPanel">
+		<Setter Property="Orientation" Value="Horizontal" />
+		<Setter Property="HorizontalAlignment" Value="Right" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="Margin" Value="0,2,7,0" />
+		<Setter Property="Height" Value="14" />
+	</Style>
+	<Style x:Key="NotificationOptionsButton" TargetType="Button">
+		<Setter Property="Width" Value="Auto" />
+		<Setter Property="Height" Value="Auto" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<TextBlock x:Name="PART_TextBlock" FontFamily="{DynamicResource GlobalFontFamily}" FontSize="10" Foreground="Black" Text="{pres:StringResource SIDEBAR_OPTIONS}">
+						<TextBlock.Effect>
+							<DropShadowEffect x:Name="PART_Glow" BlurRadius="6" Opacity="0.6" ShadowDepth="0" Color="White" />
+						</TextBlock.Effect>
+					</TextBlock>
+					<ControlTemplate.Triggers>
+						<EventTrigger RoutedEvent="MouseEnter">
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="BlurRadius" To="14" Duration="0:0:0.15" />
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+								</Storyboard>
+							</BeginStoryboard>
+						</EventTrigger>
+						<EventTrigger RoutedEvent="MouseLeave">
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="BlurRadius" To="6" Duration="0:0:0.15" />
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="Opacity" To="0.6" Duration="0:0:0.15" />
+								</Storyboard>
+							</BeginStoryboard>
+						</EventTrigger>
+						<EventTrigger RoutedEvent="TouchEnter">
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="BlurRadius" To="14" Duration="0:0:0.15" />
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+								</Storyboard>
+							</BeginStoryboard>
+						</EventTrigger>
+						<EventTrigger RoutedEvent="TouchLeave">
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="BlurRadius" To="6" Duration="0:0:0.15" />
+									<DoubleAnimation Storyboard.TargetName="PART_Glow" Storyboard.TargetProperty="Opacity" To="0.6" Duration="0:0:0.15" />
+								</Storyboard>
+							</BeginStoryboard>
+						</EventTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationCloseButton" TargetType="Button">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid>
+						<Image x:Name="Normal" Source="..\Images\Notification\CloseNormal.png" />
+						<Image x:Name="Hover" Opacity="0" Source="..\Images\Notification\CloseLight.png" />
+						<Image x:Name="Active" Opacity="0" Source="..\Images\Notification\ClosePress.png" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.EnterActions>
+							<Trigger.ExitActions>
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Active" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
+									</Storyboard>
+								</BeginStoryboard>
+							</Trigger.ExitActions>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Margin" Value="5,0,0,0" />
+	</Style>
+	<Style x:Key="NotificationIcon" TargetType="Image">
+		<Setter Property="Width" Value="16" />
+		<Setter Property="Height" Value="16" />
+		<Setter Property="Margin" Value="4,21,0,0" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="Effect">
+			<Setter.Value>
+				<DropShadowEffect BlurRadius="6" Opacity="0.8" ShadowDepth="0" Color="White" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationIconReflection" TargetType="Image">
+		<Setter Property="Width" Value="16" />
+		<Setter Property="Height" Value="16" />
+		<Setter Property="Margin" Value="4,37,0,0" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<ScaleTransform ScaleY="-1" />
+			</Setter.Value>
+		</Setter>
+		<Setter Property="OpacityMask">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+					<GradientStop Offset="1" Color="#33FFFFFF" />
+					<GradientStop Offset="0" Color="#00FFFFFF" />
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationTextAreaOuterBorder" TargetType="Border">
+		<Setter Property="BorderBrush">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+					<GradientStop Offset="0" Color="#55BABEC0" />
+					<GradientStop Offset="0.5" Color="#55FFFFFF" />
+					<GradientStop Offset="1" Color="#55BABEC0" />
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Margin" Value="20,15,5,0" />
+		<Setter Property="CornerRadius" Value="4" />
+		<Setter Property="BorderThickness" Value="0" />
+	</Style>
+	<Style x:Key="NotificationTextAreaInnerBorder" TargetType="Border">
+		<Setter Property="BorderBrush">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+					<GradientStop Offset="0" Color="#5554585A" />
+					<GradientStop Offset="0.25" Color="#55D0D8DA" />
+					<GradientStop Offset="0.5" Color="#00FFFFFF" />
+					<GradientStop Offset="0.75" Color="#55D0D8DA" />
+					<GradientStop Offset="1" Color="#5554585A" />
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="CornerRadius" Value="3" />
+		<Setter Property="BorderThickness" Value="0" />
+	</Style>
+	<Style x:Key="NotificationTextAreaTextPart" TargetType="Border">
+		<Setter Property="BorderBrush" Value="#05FFFFFF" />
+		<Setter Property="CornerRadius" Value="2" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Margin" Value="0" />
+		<Setter Property="Cursor" Value="Hand" />
+	</Style>
+	<Style x:Key="NotificationTextAreaBackgroundImageSlice9" TargetType="snt:Slice9Image">
+		<Setter Property="Visibility" Value="Collapsed" />
+	</Style>
+	<Style x:Key="NotificationTimeout" TargetType="Control">
+		<Setter Property="Background" Value="#B2FF8B25" />
+		<Setter Property="Margin" Value="0,-3,0,0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Control">
+					<Rectangle Fill="{TemplateBinding Background}" Opacity="{TemplateBinding Opacity}" OpacityMask="{TemplateBinding OpacityMask}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Width" Value="5" />
+		<Setter Property="HorizontalAlignment" Value="Right" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="Margin" Value="0,-10,1,0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Control">
+					<DockPanel>
+						<Border Height="10" Background="{TemplateBinding Background}" DockPanel.Dock="Top">
+							<Border.OpacityMask>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0.0" Color="#00FFFFFF" />
+									<GradientStop Offset="1.0" Color="#FFFFFFFF" />
+								</LinearGradientBrush>
+							</Border.OpacityMask>
+						</Border>
+						<Border Background="{TemplateBinding Background}" />
+					</DockPanel>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationHeightClipContainer" TargetType="Grid">
+		<Setter Property="Width" Value="0" />
+		<Setter Property="Height" Value="15" />
+		<Setter Property="Tag" Value="5" />
+	</Style>
+	<Style x:Key="NotificationTitle" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="FontSize" Value="13" />
+		<Setter Property="Margin" Value="5,5,5,0" />
+		<Setter Property="Effect">
+			<Setter.Value>
+				<DropShadowEffect BlurRadius="6" Opacity="1" ShadowDepth="0" Color="White" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationContent" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="Margin" Value="5,3,5,5" />
+		<Setter Property="Effect">
+			<Setter.Value>
+				<DropShadowEffect BlurRadius="6" Opacity="1" ShadowDepth="0" Color="White" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NotificationIconPart" TargetType="Grid">
+		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="ClipToBounds" Value="True" />
+	</Style>
+	<Storyboard x:Key="NotificationEnter">
+		<DoubleAnimation Storyboard.TargetName="BackgroundHeightChange" Storyboard.TargetProperty="Height" From="15" To="0" Duration="0:0:0.4" />
+		<DoubleAnimation Storyboard.TargetName="HeaderBar" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.4" />
+		<ThicknessAnimation Storyboard.TargetName="BackgroundBorder" Storyboard.TargetProperty="Margin" From="0,15,0,0" To="0" Duration="0:0:0.4" />
+	</Storyboard>
+	<Storyboard x:Key="NotificationLeave">
+		<DoubleAnimation Storyboard.TargetName="BackgroundHeightChange" Storyboard.TargetProperty="Height" From="0" To="15" Duration="0:0:0.4" />
+		<DoubleAnimation Storyboard.TargetName="HeaderBar" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.4" />
+		<ThicknessAnimation Storyboard.TargetName="BackgroundBorder" Storyboard.TargetProperty="Margin" From="0" To="0,15,0,0" Duration="0:0:0.4" />
+	</Storyboard>
+	<Storyboard x:Key="NotificationLoaded">
+		<DoubleAnimation Storyboard.TargetName="NotificationUI" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
+	</Storyboard>
+	<Storyboard x:Key="NotificationUnloaded">
+		<DoubleAnimation Storyboard.TargetName="NotificationUI" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.5" />
+	</Storyboard>
+	<Storyboard x:Key="NotificationContentLoaded" />
+	<Storyboard x:Key="NotificationContentEnter" />
+	<Storyboard x:Key="NotificationContentLeave" />
+</ResourceDictionary>

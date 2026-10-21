@@ -1,0 +1,33 @@
+<UserControl x:Class="SGTheme.Tiles.Common.IconItemWithText"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SGTheme.Tiles.Common"
+             mc:Ignorable="d" Height="200"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel Orientation="Vertical">
+		<Button Margin="5" Style="{DynamicResource TileIconItemWithTextButtonStyle}">
+			<StackPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Center">
+				<Image Width="16" Height="16" Style="{DynamicResource PreviewIconStyle}"></Image>
+				<TextBlock Style="{DynamicResource TileIconItemWithTextItemTextPart}">Settings</TextBlock>
+			</StackPanel>
+		</Button>
+		<Border Height="24" Margin="5" BorderBrush="{DynamicResource TileIconItemWithTextHoverBorderBrush}" Background="{DynamicResource TileIconItemWithTextHoverBackground}">
+			<StackPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Center">
+				<Image Width="16" Height="16" Style="{DynamicResource PreviewIconStyle}"></Image>
+				<TextBlock Style="{DynamicResource TileIconItemWithTextItemTextPart}">Settings</TextBlock>
+			</StackPanel>
+		</Border>
+		<Border Height="24" Margin="5" BorderBrush="{DynamicResource TileIconItemWithTextPressedBorderBrush}" Background="{DynamicResource TileIconItemWithTextPressedBackground}">
+			<StackPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Center">
+				<Image Width="16" Height="16" Style="{DynamicResource PreviewIconStyle}"></Image>
+				<TextBlock Style="{DynamicResource TileIconItemWithTextItemTextPart}">Settings</TextBlock>
+			</StackPanel>
+		</Border>
+		<Border Height="24" Margin="5" BorderBrush="{DynamicResource TileIconItemWithTextHoverBorderBrush}" Background="{DynamicResource TileIconItemWithTextHoverBackground}">
+		</Border>
+		<Border Height="24" Margin="5" BorderBrush="{DynamicResource TileIconItemWithTextPressedBorderBrush}" Background="{DynamicResource TileIconItemWithTextPressedBackground}">
+		</Border>
+	</StackPanel>
+</UserControl>

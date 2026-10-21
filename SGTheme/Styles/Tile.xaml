@@ -1,0 +1,118 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:pst="clr-namespace:SGTheme"
+                    xmlns:local="clr-namespace:SGTheme">
+	<ControlTemplate x:Key="TileSplliterTemplate" TargetType="Control">
+		<Grid Background="Transparent">
+			<Line Name="SplitterLine1" HorizontalAlignment="Stretch" Stretch="Fill" Stroke="#53000000" StrokeThickness="1" X1="0" X2="100" />
+		</Grid>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Trigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<ColorAnimation Storyboard.TargetName="SplitterLine1" Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" To="#53FFFFFF" Duration="0:0:0.15"/>
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<ColorAnimation Storyboard.TargetName="SplitterLine1" Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" To="#53000000" Duration="0:0:0.15"/>
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.ExitActions>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+	<Style x:Key="TileSplliter" TargetType="Thumb">
+		<Setter Property="DockPanel.Dock" Value="Bottom"></Setter>
+		<Setter Property="Height" Value="4"></Setter>
+		<Setter Property="Cursor" Value="SizeNS" />
+		<Setter Property="Template" Value="{DynamicResource TileSplliterTemplate}"></Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsPinned, RelativeSource={RelativeSource AncestorType={x:Type local:TileControl}}}" Value="True">
+				<Setter Property="DockPanel.Dock" Value="Top"/>
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="TileBackground" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="TileHeaderContainer" TargetType="Grid">
+		<Setter Property="Height" Value="20"></Setter>
+		<Setter Property="DockPanel.Dock" Value="Top"></Setter>
+		<Setter Property="Background" Value="Transparent"></Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsPinned, RelativeSource={RelativeSource AncestorType={x:Type local:TileControl}}}" Value="True">
+				<Setter Property="Visibility" Value="Collapsed"/>
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="TileHeaderBackground" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="TileHeaderDisplayName" TargetType="TextBlock">
+		<Setter Property="Text" Value="Title"></Setter>
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="DockPanel.Dock" Value="Left"></Setter>
+		<Setter Property="VerticalAlignment" Value="Center"></Setter>
+		<Setter Property="Margin" Value="6,0"></Setter>
+		<Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
+		<Setter Property="TextWrapping" Value="NoWrap"></Setter>
+		<Setter Property="FontSize" Value="10"></Setter>
+	</Style>
+	<Style x:Key="TileHeaderIcon" TargetType="Image">
+		<Setter Property="Width" Value="16"></Setter>
+		<Setter Property="Height" Value="16"></Setter>
+		<Setter Property="DockPanel.Dock" Value="Right"></Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsReversed, Source={x:Static pst:SidebarUIConfig.Instance}}" Value="True">
+				<Setter Property="DockPanel.Dock" Value="Left"/>
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="TileHeaderHighlight" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="TileContentBackground" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="TileContentHighlight" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="TileHighlight" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+	<Style x:Key="TileFlyoutIcon" TargetType="Control">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Control">
+					<Polygon Name="FlyoutIcon" Points="0,0 7,0 7,7" VerticalAlignment="Top" IsHitTestVisible="True" RenderTransformOrigin="0.5,0.5" Cursor="Hand" AllowDrop="False" Stroke="#FD000000" StrokeThickness="1" Fill="White" Margin="1,2,1,0" SnapsToDevicePixels="True" UseLayoutRounding="True" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" HorizontalAlignment="Right" />
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding IsReversed, Source={x:Static pst:SidebarUIConfig.Instance}}" Value="True">
+							<Setter TargetName="FlyoutIcon" Property="HorizontalAlignment" Value="Left"/>
+							<Setter TargetName="FlyoutIcon" Property="RenderTransform">
+								<Setter.Value>
+									<ScaleTransform ScaleX="-1" ScaleY="1"/>
+								</Setter.Value>
+							</Setter>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding IsPinned, RelativeSource={RelativeSource AncestorType={x:Type local:TileControl}}}" Value="True">
+							<Setter Property="Margin" Value="1,4"/>
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Opacity" Value="0"></Setter>
+		<Setter Property="IsHitTestVisible" Value="False"></Setter>
+	</Style>
+	<Storyboard x:Key="TileShowFlyoutIconWhenEnter">
+		<DoubleAnimation Storyboard.TargetName="FlyoutIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15"/>
+	</Storyboard>
+	<Storyboard x:Key="TileShowFlyoutIconWhenLeave">
+		<DoubleAnimation Storyboard.TargetName="FlyoutIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15"/>
+	</Storyboard>
+</ResourceDictionary>

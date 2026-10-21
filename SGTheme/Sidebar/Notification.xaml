@@ -1,0 +1,34 @@
+<!--
+    Preview of Sidebar's Notification window for SGTheme.
+    Visual-only; styles are theme-overridable via Notification* keys.
+-->
+<UserControl x:Class="SGTheme.Sidebar.Notification"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="110" d:DesignWidth="300"
+             Width="300" Height="110">
+	<Grid Background="Transparent">
+		<Border Style="{DynamicResource NotificationRegionBorder}">
+			<Grid>
+				<Border Style="{DynamicResource NotificationBaseBackground}"/>
+				<Border Style="{DynamicResource NotificationBorder}"/>
+				<StackPanel Style="{DynamicResource NotificationHeader}">
+					<Button Style="{DynamicResource NotificationOptionsButton}" Content="Options"/>
+					<Button Style="{DynamicResource NotificationCloseButton}"/>
+				</StackPanel>
+				<Image Style="{DynamicResource NotificationIcon}" Source="Images/default.ico"/>
+				<Border Style="{DynamicResource NotificationTextAreaTextPart}" Margin="32,20,10,14">
+					<StackPanel>
+						<TextBlock Style="{DynamicResource NotificationTitle}" Text="Notification"/>
+						<TextBlock Style="{DynamicResource NotificationContent}"
+						           Text="Click here to learn how to keep your computer up to date automatically."/>
+					</StackPanel>
+				</Border>
+				<Control Style="{DynamicResource NotificationTimeout}"/>
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

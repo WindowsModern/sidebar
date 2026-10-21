@@ -1,0 +1,39 @@
+<UserControl x:Class="SGTheme.Tiles.Feeds.FlyoutPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SGTheme.Tiles.Feeds"
+             mc:Ignorable="d" Width="378" Height="721"
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<Control Style="{DynamicResource FlyoutBackground}" />
+		<Button Name="FlyoutHeader" Style="{DynamicResource FlyoutHeader}" VerticalAlignment="Top" />
+		<Grid Name="FlyoutContent" Style="{DynamicResource FlyoutContentContainer}">
+			<Grid>
+				<DockPanel Width="370">
+					<Grid DockPanel.Dock="Top" Height="52">
+						<Rectangle Style="{DynamicResource TileFeedFlyoutHeaderBackground}"></Rectangle>
+						<TextBlock Name="FeedTitle" TextTrimming="CharacterEllipsis" Style="{DynamicResource TileFeedFlyoutHeaderTitle}">Feed Title</TextBlock>
+						<Button Name="ButtonBack" Focusable="False" HorizontalAlignment="Left" Style="{DynamicResource TileFeedFlyoutSwitchButton}">3</Button>
+						<Button Name="ButtonNext" Focusable="False" HorizontalAlignment="Right" Style="{DynamicResource TileFeedFlyoutSwitchButton}">4</Button>
+					</Grid>
+					<Line DockPanel.Dock="Top" Style="{DynamicResource TileFeedFlyoutLine}"></Line>
+					<ScrollViewer Style="{DynamicResource TileFeedFlyoutContentPart}" VerticalScrollBarVisibility="Auto">
+						<WrapPanel Style="{DynamicResource TileFeedFlyoutContentContainer}" Name="FeedItemList">
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+							<local:FlyoutFeedItem></local:FlyoutFeedItem>
+						</WrapPanel>
+					</ScrollViewer>
+				</DockPanel>
+			</Grid>
+		</Grid>
+		<Control Style="{DynamicResource FlyoutHighlight}" IsHitTestVisible="False" />
+	</Grid>
+</UserControl>

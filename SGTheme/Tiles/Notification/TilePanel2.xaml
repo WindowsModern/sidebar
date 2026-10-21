@@ -1,0 +1,24 @@
+<!--
+    Preview of NotificationTile's TilePanel2 for SGTheme.
+    Sample notification list using NotificationTile theme keys.
+-->
+<UserControl x:Class="SGTheme.Tiles.Notification.TilePanel2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="220" d:DesignWidth="150"
+             Width="150" Height="220"
+             ClipToBounds="True">
+	<Grid>
+		<StackPanel Margin="6,5,8,0">
+			<Button Style="{DynamicResource TileNotificationButton}" HorizontalAlignment="Left" Margin="0,0,0,4"/>
+			<Button Style="{DynamicResource TileNotificationButton}" HorizontalAlignment="Left" Margin="0,0,0,4"/>
+			<Button Style="{DynamicResource TileNotificationButton}" HorizontalAlignment="Left" Margin="0,0,0,4"/>
+			<Button Style="{DynamicResource TileNotificationButton}" HorizontalAlignment="Left" Margin="0,0,0,4"/>
+			<TextBlock Text="Notifications" FontSize="10" Foreground="{DynamicResource GlobalForegroundBrush}"
+			           FontFamily="{DynamicResource GlobalFontFamily}" Margin="0,4,0,0"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

@@ -1,0 +1,38 @@
+<UserControl x:Class="SGTheme.Tiles.Search.FlyoutPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SGTheme.Tiles.Search"
+			 xmlns:p="clr-namespace:SGTheme"
+             mc:Ignorable="d" Width="398" Height="99"
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<Control Style="{DynamicResource FlyoutBackground}" />
+		<Button Name="FlyoutHeader" Style="{DynamicResource FlyoutHeader}" VerticalAlignment="Top" />
+		<Grid Name="FlyoutContent" Style="{DynamicResource FlyoutContentContainer}">
+			<Border Style="{DynamicResource TileSearchFlyoutContainerBorder}">
+				<Grid>
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+						<TextBox Name="SearchText" Style="{DynamicResource TileSearchFlyoutCustomTextboxStyle}" TextChanged="SearchText_TextChanged" KeyDown="SearchText_KeyDown">
+						</TextBox>
+						<ComboBox Name="SearchProviderSelect" Style="{DynamicResource TileSearchFlyoutCustomComboBoxStyle}"
+						  SelectionChanged="SearchProviderSelect_SelectionChanged"
+						  >
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<Image Width="16" Height="16" Margin="3,3,5,3"/>
+										<TextBlock Margin="0,0,3,0" Text="{Binding Value}" VerticalAlignment="Center"/>
+									</StackPanel>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button Style="{DynamicResource TileSearchFlyoutCustomNextButtonStyle}" Click="Button_Click"></Button>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</Grid>
+		<Control Style="{DynamicResource FlyoutHighlight}" IsHitTestVisible="False" />
+	</Grid>
+</UserControl>

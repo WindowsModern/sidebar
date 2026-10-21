@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SGTheme">
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="Utilities.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Sidebar.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Tile.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Flyout.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="DragDrop.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Notification.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="MessageBox.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Tiles\Styles.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Materials.xaml"></ResourceDictionary>
+	</ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

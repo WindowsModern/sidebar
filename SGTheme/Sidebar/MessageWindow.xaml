@@ -1,0 +1,35 @@
+<!--
+    Preview of Sidebar's MessageWindow for SGTheme.
+    Visual-only; styles are theme-overridable via MessageWindow* keys.
+-->
+<UserControl x:Class="SGTheme.Sidebar.MessageWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="260" d:DesignWidth="480"
+             Width="480" Height="260">
+	<Grid Background="Transparent">
+		<Control Style="{DynamicResource MessageWindowBackground}"/>
+		<DockPanel Background="{DynamicResource UtilDwmOpaqueThemeBrush}">
+			<TextBlock Name="MessageTitle" Style="{DynamicResource MessageWindowTitle}" Text="Message"
+			           Foreground="{DynamicResource GlobalForegroundBrush}"/>
+			<TextBlock Name="MessageDescription" Style="{DynamicResource MessageWindowText}"
+			           Text="Something went wrong while loading the sidebar configuration."
+			           Foreground="{DynamicResource GlobalForegroundBrush}"/>
+			<Grid Style="{DynamicResource MessageWindowButtonAera}">
+				<Control Style="{DynamicResource MessageWindowControlsBackground}"/>
+				<StackPanel Style="{DynamicResource MessageWindowButtonsContainer}">
+					<Button Style="{DynamicResource MessageWindowControlButton}" Content="Copy Info"/>
+					<Button Style="{DynamicResource MessageWindowControlButton}" Content="OK"/>
+				</StackPanel>
+			</Grid>
+			<Expander Style="{DynamicResource MessageWindowDetailExpander}" Header="Details" IsExpanded="True"
+			          Foreground="{DynamicResource GlobalForegroundBrush}">
+				<TextBox Style="{DynamicResource MessageWindowDetailMessage}"
+				         Text="Exception details would appear here."/>
+			</Expander>
+		</DockPanel>
+	</Grid>
+</UserControl>

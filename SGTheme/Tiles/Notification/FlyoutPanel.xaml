@@ -1,0 +1,75 @@
+<!--
+    Preview of NotificationTile's FlyoutPanel for SGTheme.
+    Sample rows using the same TileNotificationFlyout* theme keys as the real flyout.
+-->
+<UserControl x:Class="SGTheme.Tiles.Notification.FlyoutPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="360"
+             Width="360" Height="400">
+	<Grid>
+		<DockPanel>
+			<Button Name="GotoRulesAlertButton" Content="Go to Rules and Alerts"
+			        Style="{DynamicResource TileNotificationRulesAndAlertsButton}">
+				<Button.Template>
+					<ControlTemplate TargetType="Button">
+						<StackPanel Orientation="Horizontal">
+							<Image Style="{DynamicResource TileNotificationRulesAndAlertsImage}"/>
+							<TextBlock Style="{DynamicResource TileNotificationRulesAndAlerts}" Text="{TemplateBinding Content}"/>
+						</StackPanel>
+					</ControlTemplate>
+				</Button.Template>
+			</Button>
+			<ScrollViewer Style="{DynamicResource TileNotificationFlyoutScrollViewer}">
+				<StackPanel Margin="8">
+					<TextBlock Style="{DynamicResource TileNotificationFlyoutDateTitle}" Text="Today"/>
+					<Grid Margin="0,2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Style="{DynamicResource TileNotificationFlyoutItemTime}" Text="09:41"/>
+						<Image Grid.Column="1" Style="{DynamicResource TileNotificationFlyoutItemImage}" Margin="4,0"/>
+						<StackPanel Grid.Column="2" Style="{DynamicResource TileNotificationFlyoutItemTextPart}">
+							<TextBlock Style="{DynamicResource TileNotificationFlyoutItemTitle}" Text="Update available"/>
+							<TextBlock Style="{DynamicResource TileNotificationFlyoutItemText}" Text="A new sidebar update is ready."/>
+						</StackPanel>
+						<Button Grid.Column="0" Grid.ColumnSpan="3" Style="{DynamicResource TileNotificationFlyoutItemButton}"/>
+					</Grid>
+					<Grid Margin="0,2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Style="{DynamicResource TileNotificationFlyoutItemTime}" Text="08:12"/>
+						<Image Grid.Column="1" Style="{DynamicResource TileNotificationFlyoutItemImage}" Margin="4,0"/>
+						<StackPanel Grid.Column="2" Style="{DynamicResource TileNotificationFlyoutItemTextPart}">
+							<TextBlock Style="{DynamicResource TileNotificationFlyoutItemTitle}" Text="Message"/>
+							<TextBlock Style="{DynamicResource TileNotificationFlyoutItemText}" Text="Notification history is enabled."/>
+						</StackPanel>
+						<Button Grid.Column="0" Grid.ColumnSpan="3" Style="{DynamicResource TileNotificationFlyoutItemButton}"/>
+					</Grid>
+					<Grid Margin="0,2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Style="{DynamicResource TileNotificationFlyoutItemTime}" Text="Yesterday"/>
+						<Image Grid.Column="1" Style="{DynamicResource TileNotificationFlyoutItemImage}" Margin="4,0"/>
+						<StackPanel Grid.Column="2" Style="{DynamicResource TileNotificationFlyoutItemTextPart}">
+							<TextBlock Style="{DynamicResource TileNotificationFlyoutItemTitle}" Text="Welcome"/>
+							<TextBlock Style="{DynamicResource TileNotificationFlyoutItemText}" Text="Your notifications will appear here."/>
+						</StackPanel>
+						<Button Grid.Column="0" Grid.ColumnSpan="3" Style="{DynamicResource TileNotificationFlyoutItemButton}"/>
+					</Grid>
+				</StackPanel>
+			</ScrollViewer>
+		</DockPanel>
+	</Grid>
+</UserControl>

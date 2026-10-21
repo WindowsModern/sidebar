@@ -1,0 +1,30 @@
+<!--
+    Derived in part from the LongBar project (https://sourceforge.net/projects/longbar/).
+    Copyright (c) LongBar Project Group 2009-2010.
+    Licensed under the Microsoft Public License (MS-PL); see LICENSE.
+    Modified for the Sidebar SGTheme, Copyright (c) 2026 Windows Modern.
+-->
+<UserControl x:Class="SGTheme.Sidebar.Sidebar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="150"
+             Background="Transparent"
+             Width="150" Height="600">
+	<Grid>
+		<Grid Name="SidebarView">
+			<Control Style="{DynamicResource SidebarBackground}" />
+			<Grid>
+				<Button Name="TopOptionsButton" Style="{DynamicResource SidebarOptionsTop}" Focusable="False"/>
+				<Control Style="{DynamicResource SidebarOptionsSplliter}" />
+				<DockPanel Name="TilesContainer" Style="{DynamicResource SidebarTilesRegion}">
+					<StackPanel Name="PinnedTilesControl" Style="{DynamicResource SidebarPinnedTilesControl}" />
+					<StackPanel Name="TilesControl" Style="{DynamicResource SidebarTilesControl}" />
+				</DockPanel>
+			</Grid>
+			<Control IsHitTestVisible="False" Style="{DynamicResource SidebarHighlightSide}" />
+		</Grid>
+	</Grid>
+</UserControl>

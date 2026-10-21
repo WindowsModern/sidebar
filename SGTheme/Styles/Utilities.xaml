@@ -1,0 +1,84 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:s="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:SGTheme"
+					xmlns:pst="clr-namespace:SGTheme">
+	<s:Boolean x:Key="EnableBlur">true</s:Boolean>
+	<s:Boolean x:Key="EnableBlurForFlyout">false</s:Boolean>
+	<s:Boolean x:Key="EnableBlurForDrag">false</s:Boolean>
+	<s:Boolean x:Key="EnableNotificationBlur">true</s:Boolean>
+	<s:Boolean x:Key="EnableNotificationClipRound">true</s:Boolean>
+	
+	<!--  Global Fonts  -->
+	<FontFamily x:Key="GlobalFontFamily">
+		Microsoft YaHei, Segoe UI, Ebrima, Nirmala, Gadugi, Segoe UI Emoji, Segoe UI Symbol,
+		Meiryo, Leelawadee, Microsoft JhengHei, Malgun Gothic, Estrangelo Edessa, Microsoft Himalaya,
+		Microsoft New Tai Lue, Microsoft PhagsPa, Microsoft Tai Le, Microsoft Yi Baiti, Mongolian Baiti,
+		MV Boli, Myanmar Text, Javanese Text, Cambria Math
+	</FontFamily>
+	
+	<!--  Global  -->
+	<SolidColorBrush x:Key="GlobalForegroundBrush" Color="{Binding ForegroundColor, Source={x:Static pst:DwmThemeProvider.Instance}}" />
+	<s:Double x:Key="GlobalFontSize">10</s:Double>
+	<s:Double x:Key="GlobalNormalFontSize">10</s:Double>
+	<s:Double x:Key="GlobalNormalFontSizeSmall">9</s:Double>
+	<Style x:Key="GlobalControlTextDisplay" TargetType="Control">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
+	</Style>
+	<Style x:Key="GlobalTextBlockTextDisplay" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
+	</Style>
+	<Style x:Key="AutoHideScrollViewer" TargetType="ScrollViewer">
+		<Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+		<Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+		<Setter Property="local:AutoHideScrollBar.IsEnabled" Value="True"></Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="ScrollViewer">
+					<Grid Background="{TemplateBinding Background}">
+						<ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Margin="{TemplateBinding Padding}" CanContentScroll="{TemplateBinding CanContentScroll}" Content="{TemplateBinding Content}" />
+						<ScrollBar x:Name="PART_VerticalScrollBar" Width="6" Margin="0,0,2,8" HorizontalAlignment="Right" Orientation="Vertical" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Value="{TemplateBinding VerticalOffset}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Opacity="0" />
+						<ScrollBar x:Name="PART_HorizontalScrollBar" Height="6" Margin="0,0,8,2" VerticalAlignment="Bottom" Orientation="Horizontal" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}" Value="{TemplateBinding HorizontalOffset}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Opacity="0" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<!-- Utilities -->
+	
+	<!-- DWM Themes -->
+	<!-- DWM 主题画刷：半透明系统主题颜色，ARGB，Alpha 来自 DWM 取色，可能小于 255 -->
+	<SolidColorBrush x:Key="UtilDwmThemeBrush" Color="{Binding ThemeColor, Source={x:Static pst:DwmThemeProvider.Instance}}" />
+	<!-- DWM 主题画刷：不透明系统主题颜色，强制 A=255 -->
+	<SolidColorBrush x:Key="UtilDwmOpaqueThemeBrush" Color="{Binding ThemeColorOpaque, Source={x:Static pst:DwmThemeProvider.Instance}}" />
+	<!-- DWM 前景画刷：不透明黑或白，按主题亮度自动选择 -->
+	<SolidColorBrush x:Key="UtilDwmForegroundBrush" Color="{Binding ForegroundColor, Source={x:Static pst:DwmThemeProvider.Instance}}" />
+
+	<!-- System Explorer Shell -->
+	<!-- 系统任务栏位置绑定：true=任务栏在顶部，false=不在顶部；不是颜色值 -->
+	<Binding x:Key="UtilSystemIsTaskbarTopBinding" Path="IsTaskbarTop" Source="{x:Static pst:SystemExplorerShell.Instance}" />
+	<!-- 应用深色模式绑定：true=应用使用深色，false=浅色；不是颜色值 -->
+	<Binding x:Key="UtilSystemIsAppDarkModeBinding" Path="IsAppDarkMode" Source="{x:Static pst:SystemExplorerShell.Instance}" />
+	<!-- Shell 深色模式绑定：true=Shell 使用深色，false=浅色；不是颜色值 -->
+	<Binding x:Key="UtilSystemIsShellDarkModeBinding" Path="IsShellDarkMode" Source="{x:Static pst:SystemExplorerShell.Instance}" />
+
+	<!-- Sidebar UI Config -->
+	<!-- 侧边栏方向绑定：true=Direction 为 Left（已反转），false=Right；不是颜色值 -->
+	<Binding x:Key="UtilSidebarIsReversedBinding" Path="IsReversed" Source="{x:Static pst:SidebarUIConfig.Instance}" />
+
+	<!-- Converters -->
+	<!-- 对象转可见性转换器：非 null=Visible，null=Collapsed；支持 Invert/Hidden 参数；无颜色值 -->
+	<x:Static x:Key="UtilObjectToVisibilityConverter" Member="pst:ObjectToVisibilityConverter.Instance" />
+	<!-- 字符串资源转换器：把绑定到的资源 key 转为当前语言文本；无颜色值 -->
+	<x:Static x:Key="UtilStringResourceConverter" Member="pst:StringResourceConverter.Instance" />
+	<!-- 日历模式转布尔转换器：Month=true，其他=false；无颜色值 -->
+	<x:Static x:Key="UtilCalendarModeToBooleanConverter" Member="pst:CalendarModeToBooleanConverter.Instance" />
+
+	<!-- 本地化字符串：侧边栏选项，带回退；值为当前语言文本，找不到时用 fallback -->
+	<pst:StringResourceExtension x:Key="UtilStringSidebarOptions" Key="SIDEBAR_OPTIONS" Fallback="Options" />
+</ResourceDictionary>

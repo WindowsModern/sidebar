@@ -1,0 +1,24 @@
+<UserControl x:Class="SGTheme.Tiles.Clock.TileShortTime"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SGTheme.Tiles.Clock"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid Width="Auto" Height="Auto">
+		<DockPanel LastChildFill="False" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType=local:TileShortTime}}">
+			<TextBlock Name="TimeText" Text="12:50" Style="{DynamicResource TileClockShortTimeTimePart}">
+				<TextBlock.Effect>
+					<DropShadowEffect ShadowDepth="1" BlurRadius="4" Color="Black" Opacity="0.6"/>
+				</TextBlock.Effect>
+			</TextBlock>
+			<TextBlock Name="BlankSpace" Text="&#x00A0;" Style="{DynamicResource TileClockShortTimeBlankPart}" />
+			<TextBlock Name="MeridiemText" Text="AM" Style="{DynamicResource TileClockShortTimeMeridiemPart}">
+				<TextBlock.Effect>
+					<DropShadowEffect ShadowDepth="1" BlurRadius="4" Color="Black" Opacity="0.6"/>
+				</TextBlock.Effect>
+			</TextBlock>
+		</DockPanel>
+	</Grid>
+</UserControl>

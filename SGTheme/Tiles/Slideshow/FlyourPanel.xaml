@@ -1,0 +1,29 @@
+<UserControl x:Class="SGTheme.Tiles.Slideshow.FlyourPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SGTheme.Tiles.Slideshow"
+             mc:Ignorable="d" Width="360" Height="280"
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<Control Style="{DynamicResource FlyoutBackground}" />
+		<Button Name="FlyoutHeader" Style="{DynamicResource FlyoutHeader}" VerticalAlignment="Top" />
+		<Grid Name="FlyoutContent" Style="{DynamicResource FlyoutContentContainer}">
+			<Grid>
+				<DockPanel>
+					<TextBlock Name="FileName" DockPanel.Dock="Top" TextTrimming="CharacterEllipsis" Style="{DynamicResource TileSlideshowFlyoutFileName}">PictureFileName.png</TextBlock>
+					<StackPanel MinHeight="27" Margin="0,3,0,3" DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+						<Button Name="BtnBack" Style="{DynamicResource TileSlideshowBackButton}"></Button>
+						<Button Name="BtnNext" Margin="10,0,10,0" Style="{DynamicResource TileSlideshowNextButton}"></Button>
+						<Button Name="BtnOpenFile" Style="{DynamicResource TileSlideshowOpenFileButton}"></Button>
+					</StackPanel>
+					<Viewbox>
+						<TextBlock Margin="50">There's no image.</TextBlock>
+					</Viewbox>
+				</DockPanel>
+			</Grid>
+		</Grid>
+		<Control Style="{DynamicResource FlyoutHighlight}" IsHitTestVisible="False" />
+	</Grid>
+</UserControl>

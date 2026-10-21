@@ -1,0 +1,339 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SGTheme">
+	<LinearGradientBrush x:Key="TileIconItemHoverBackground" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Offset="0" Color="#4DABABAB" />
+		<GradientStop Offset="1" Color="#70727272" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="TileIconItemPressedBackground" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Offset="0" Color="#39565656" />
+		<GradientStop Offset="1" Color="#398C8C8C" />
+	</LinearGradientBrush>
+	<SolidColorBrush x:Key="TileIconItemHoverBorderBrush" Color="#44E9E9E9" />
+	<SolidColorBrush x:Key="TileIconItemPressedBorderBrush" Color="#47DADADA" />
+	<Style x:Key="TileIconItemButtonStyle" TargetType="Button">
+		<Setter Property="Width" Value="24" />
+		<Setter Property="Height" Value="24" />
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="Padding" Value="4,4,4,4" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border x:Name="border" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="1" Opacity="1">
+						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard />
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="Background">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemHoverBackground}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemHoverBorderBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="Background">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemPressedBackground}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemPressedBorderBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<ItemsPanelTemplate x:Key="TileIconItemWrapPanel">
+		<WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" />
+	</ItemsPanelTemplate>
+	<LinearGradientBrush x:Key="TileIconItemWithTextHoverBackground" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Offset="0" Color="#4DABABAB" />
+		<GradientStop Offset="1" Color="#70727272" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="TileIconItemWithTextPressedBackground" StartPoint="0,0" EndPoint="0,1">
+		<GradientStop Offset="0" Color="#39565656" />
+		<GradientStop Offset="1" Color="#398C8C8C" />
+	</LinearGradientBrush>
+	<SolidColorBrush x:Key="TileIconItemWithTextHoverBorderBrush" Color="#44E9E9E9" />
+	<SolidColorBrush x:Key="TileIconItemWithTextPressedBorderBrush" Color="#47DADADA" />
+	<Style x:Key="TileIconItemWithTextButtonStyle" TargetType="Button">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="Height" Value="24" />
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Padding" Value="4,4,4,4" />
+		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border x:Name="border" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="1" Opacity="1">
+						<ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard />
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="Background">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemWithTextHoverBackground}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemWithTextHoverBorderBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="Background">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemWithTextPressedBackground}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TileIconItemWithTextPressedBorderBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<ItemsPanelTemplate x:Key="TileIconItemWithTextWrapPanel">
+		<WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical" />
+	</ItemsPanelTemplate>
+	<Style x:Key="TileIconItemWithTextItemTextPart" TargetType="TextBlock">
+		<Setter Property="Margin" Value="4,0,0,0" />
+		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+		<Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}" />
+		<Setter Property="Foreground" Value="{DynamicResource GlobalForegroundBrush}" />
+		<Setter Property="FontSize" Value="{DynamicResource GlobalFontSize}" />
+		<Setter Property="VerticalAlignment" Value="Center"></Setter>
+	</Style>
+	<Style x:Key="TileIconItemTileContainer" TargetType="ItemsControl">
+		<Setter Property="Margin" Value="5,3,1,3" />
+	</Style>
+	
+	<ControlTemplate x:Key="TileIconItemTemplate" TargetType="Button">
+		<Grid>
+			<Border x:Name="BackgroundActive" Opacity="0">
+				<Border.Background>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<GradientStop Offset="0" Color="Transparent" />
+						<GradientStop Offset="0.25" Color="#77000000" />
+						<GradientStop Offset="0.75" Color="#77000000" />
+						<GradientStop Offset="1" Color="Transparent" />
+					</LinearGradientBrush>
+				</Border.Background>
+			</Border>
+			<Border x:Name="BackgroundOuter" Margin="0,3" BorderThickness="1,0" Opacity="0">
+				<Border.BorderBrush>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<GradientStop Offset="0" Color="Transparent" />
+						<GradientStop Offset="0.25" Color="#66000000" />
+						<GradientStop Offset="0.75" Color="#66000000" />
+						<GradientStop Offset="1" Color="Transparent" />
+					</LinearGradientBrush>
+				</Border.BorderBrush>
+			</Border>
+			<Border x:Name="BackgroundInner" Margin="1,3" BorderThickness="1,0" Opacity="0">
+				<Border.BorderBrush>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<GradientStop Offset="0" Color="Transparent" />
+						<GradientStop Offset="0.25" Color="#CCFFFFFF" />
+						<GradientStop Offset="0.75" Color="#CCFFFFFF" />
+						<GradientStop Offset="1" Color="Transparent" />
+					</LinearGradientBrush>
+				</Border.BorderBrush>
+			</Border>
+			<ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}"/>
+			<Viewbox x:Name="BottonLight" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Opacity="0">
+				<Grid Width="20" Height="20" ClipToBounds="True">
+					<Ellipse Margin="3,15,3,-7">
+						<Ellipse.Fill>
+							<RadialGradientBrush Center="0.5,1" GradientOrigin="0.5,1" RadiusX="0.5" RadiusY="1">
+								<GradientStop Offset="0" Color="White" />
+								<GradientStop Offset="1" Color="#00FFFFFF" />
+							</RadialGradientBrush>
+						</Ellipse.Fill>
+					</Ellipse>
+				</Grid>
+			</Viewbox>
+		</Grid>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Trigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+							<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+							<DoubleAnimation Storyboard.TargetName="BottonLight" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+							<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+							<DoubleAnimation Storyboard.TargetName="BottonLight" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.ExitActions>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Trigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.ExitActions>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+	<ControlTemplate x:Key="TileIconItemWithTextTemplate" TargetType="Button">
+		<Grid>
+			<Border x:Name="BackgroundActive" Opacity="0">
+				<Border.Background>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<GradientStop Offset="0" Color="Transparent" />
+						<GradientStop Offset="0.25" Color="#77000000" />
+						<GradientStop Offset="0.75" Color="#77000000" />
+						<GradientStop Offset="1" Color="Transparent" />
+					</LinearGradientBrush>
+				</Border.Background>
+			</Border>
+			<Border x:Name="BackgroundOuter" Margin="0,3" BorderThickness="1,0" Opacity="0">
+				<Border.BorderBrush>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<GradientStop Offset="0" Color="Transparent" />
+						<GradientStop Offset="0.25" Color="#66000000" />
+						<GradientStop Offset="0.75" Color="#66000000" />
+						<GradientStop Offset="1" Color="Transparent" />
+					</LinearGradientBrush>
+				</Border.BorderBrush>
+			</Border>
+			<Border x:Name="BackgroundInner" Margin="1,3" BorderThickness="1,0" Opacity="0">
+				<Border.BorderBrush>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<GradientStop Offset="0" Color="Transparent" />
+						<GradientStop Offset="0.25" Color="#CCFFFFFF" />
+						<GradientStop Offset="0.75" Color="#CCFFFFFF" />
+						<GradientStop Offset="1" Color="Transparent" />
+					</LinearGradientBrush>
+				</Border.BorderBrush>
+			</Border>
+			<ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}"/>
+		</Grid>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Trigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+							<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundOuter" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+							<DoubleAnimation Storyboard.TargetName="BackgroundInner" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.ExitActions>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Trigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="BackgroundActive" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1" />
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.ExitActions>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+	
+	<Style x:Key="TileIconItemForTrayTile" TargetType="Button">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="Height" Value="24" />
+		<Setter Property="Width" Value="24"></Setter>
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Padding" Value="4,4,4,4" />
+		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="Template" Value="{DynamicResource TileIconItemTemplate}"></Setter>
+	</Style>
+	<ItemsPanelTemplate x:Key="TileIconItemWrapPanelForTrayTile">
+		<WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" />
+	</ItemsPanelTemplate>
+	<Style x:Key="TileIconItemTileContainerForTrayTile" TargetType="ItemsControl">
+		<Setter Property="Margin" Value="5,3,1,3" />
+		<Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+	</Style>
+	<Style x:Key="TileIconItemWithTextForTrayTile" TargetType="Button">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="Height" Value="Auto" />
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Padding" Value="4,4,4,4" />
+		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="Template" Value="{DynamicResource TileIconItemWithTextTemplate}"></Setter>
+	</Style>
+	<ItemsPanelTemplate x:Key="TileIconItemWithTextWrapPanelForTrayTile">
+		<WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical" />
+	</ItemsPanelTemplate>
+
+	<Style x:Key="TileIconItemForQuickLaunchTile" TargetType="Button">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="Height" Value="28" />
+		<Setter Property="Width" Value="28"></Setter>
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Padding" Value="4,4,4,4" />
+		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="Template" Value="{DynamicResource TileIconItemTemplate}"></Setter>
+	</Style>
+	<ItemsPanelTemplate x:Key="TileIconItemWrapPanelForQuickLaunchTile">
+		<WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" />
+	</ItemsPanelTemplate>
+	<Style x:Key="TileIconItemTileContainerForQuickLaunchTile" TargetType="ItemsControl">
+		<Setter Property="Margin" Value="5,3,1,3" />
+	</Style>
+	<Style x:Key="TileIconItemWithTextForQuickLaunchTile" TargetType="Button">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="Height" Value="Auto" />
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="Padding" Value="4,4,4,4" />
+		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="Template" Value="{DynamicResource TileIconItemWithTextTemplate}"></Setter>
+	</Style>
+	<ItemsPanelTemplate x:Key="TileIconItemWithTextWrapPanelForQuickLaunchTile">
+		<WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical" />
+	</ItemsPanelTemplate>
+</ResourceDictionary>

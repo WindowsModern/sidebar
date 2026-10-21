@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SGTheme"
+					xmlns:pst="clr-namespace:SGTheme">
+	<Style x:Key="DragWindowWindow" TargetType="Window">
+		<Setter Property="Background" Value="Transparent"></Setter>
+	</Style>
+	<Style x:Key="DragWindowBackground" TargetType="Control">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Control">
+					<Grid Background="Transparent">
+						<Border Background="{Binding ThemeBrush, Source={x:Static pst:DwmThemeProvider.Instance}}" />
+						<Border x:Name="SideBorder" BorderBrush="#53000000" BorderThickness="1"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="DragWindowContentContainer" TargetType="Grid">
+		<Setter Property="Margin" Value="1"></Setter>
+	</Style>
+	<Style x:Key="DragWindowHighlight" TargetType="Control">
+		<Setter Property="Visibility" Value="Collapsed"></Setter>
+	</Style>
+</ResourceDictionary>
