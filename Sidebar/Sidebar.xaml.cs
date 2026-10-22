@@ -24,6 +24,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using System.Windows.Controls.Primitives;
 using System.Security.Cryptography;
+using System.ComponentModel;
 
 namespace Sidebar
 {
@@ -1466,13 +1467,14 @@ namespace Sidebar
 			var cc = App.CurrentUserConfig;
 			Width = cc.Width;
 			ApplyScrollMode (cc.CanScroll);
-			if (cc.IsMinimum) MinimumSidebar ();
 			UpdateLayout ();
 			RefreshWndPos ();
 			if (cc.OccupyWorkingArea & !cc.IsMinimum) appBar.Register ();
+			RefreshWndPos ();
 			if (cc.OverlapTaskbar) taskbarHelper.Register ();
 			RefreshWndPos ();
 			Topmost = cc.Topmost;
+			if (cc.IsMinimum) MinimumSidebar ();
 		}
 		#endregion
 		#region Notify Icon
@@ -2250,6 +2252,14 @@ namespace Sidebar
 		}
 		private void Window_Closed (object sender, EventArgs e)
 		{
+			App.Current.Shutdown ();
+		}
+		protected override void OnClosing (CancelEventArgs e)
+		{
+			appBar?.Unregister ();
+			appBar?.Dispose ();
+			taskbarHelper?.Unregister ();
+			taskbarHelper?.Dispose ();
 			DestroySidebarTheme ();
 			DestroyPipeServerSubscribe ();
 			DestroyAeroPeek ();
@@ -2263,15 +2273,12 @@ namespace Sidebar
 			UninitTilesList ();
 			FlushPendingRemovals ();
 			App.CurrentUserConfig.PropertyChanged -= CurrentUserConfig_PropertyChanged;
-			var cc = App.CurrentUserConfig;
-			if (cc.OverlapTaskbar) taskbarHelper.Unregister ();
-			if (cc.OccupyWorkingArea) appBar.Unregister ();
 			notifyIcon.Visible = false;
 			notifyIcon?.Dispose ();
 			notifyIcon = null;
 			DestoryHwndSource ();
 			Current = null;
-			App.Current.Shutdown ();
+			base.OnClosing (e);
 		}
 		private void Window_SizeChanged (object sender, System.Windows.SizeChangedEventArgs e)
 		{
