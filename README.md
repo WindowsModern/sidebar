@@ -8,6 +8,12 @@
 * This project utilizes AI assistance in some aspects of development.
 * Sep. 23, 2026: Due to new ideas about the project’s direction and the difficulty of maintaining and updating the old system, the project will undergo a major overhaul soon. This overhaul will also be incompatible with the previous tiles. Therefore, tile developers for this project, please take note.
 
+## Required Runtime Environment
+
+- Microsoft .NET Framework 4.0
+- Microsoft .NET Framework 3.0 (3.5 SP1)
+- Microsoft Visual C++ 2015 Redistributable
+
 ## Release
 
 Download the latest release from the Releases section.
