@@ -1234,6 +1234,8 @@ namespace Sidebar
 		private MultiView<ITileElement> taskbarTilesList;
 		private ProjectedView<string, ITileElement> taskbarTopTiles;
 		private ProjectedView<string, ITileElement> taskbarBottomTiles;
+		private View<ITileElement> taskbarTopTilesListNoNull;
+		private View<ITileElement> taskbarBottomTilesListNoNull;
 		private DispatcherTimer taskbarPosTimer = new DispatcherTimer () {
 			Interval = TimeSpan.FromMilliseconds (50)
 		};
@@ -1263,8 +1265,10 @@ namespace Sidebar
 			taskbarTilesList = new MultiView<ITileElement> ();
 			taskbarTopTiles = new ProjectedView<string, ITileElement> (cc.PinnedTiles, ResolveTileVisual);
 			taskbarBottomTiles = new ProjectedView<string, ITileElement> (cc.PinnedBottomTiles, ResolveTileVisual);
-			taskbarTilesList.AddSource (taskbarTopTiles);
-			taskbarTilesList.AddSource (taskbarBottomTiles);
+			taskbarTopTilesListNoNull = taskbarTopTiles.Where (ite => ite != null);
+			taskbarBottomTilesListNoNull = taskbarBottomTiles.Where (ite => ite != null);
+			taskbarTilesList.AddSource (taskbarTopTilesListNoNull);
+			taskbarTilesList.AddSource (taskbarBottomTilesListNoNull);
 			if (cc.IsMinimum)
 			{
 				if (TaskbarTiles.ItemsSource == null)
@@ -1274,6 +1278,16 @@ namespace Sidebar
 		private void DestroyTaskbarTilesList ()
 		{
 			if (TaskbarTiles != null) TaskbarTiles.ItemsSource = null;
+			if (taskbarTopTilesListNoNull != null)
+			{
+				taskbarTopTilesListNoNull?.Dispose ();
+				taskbarTopTilesListNoNull = null;
+			}
+			if (taskbarBottomTilesListNoNull != null)
+			{
+				taskbarBottomTilesListNoNull?.Dispose ();
+				taskbarBottomTilesListNoNull = null;
+			}
 			if (taskbarTilesList != null)
 			{
 				taskbarTilesList.Dispose ();
