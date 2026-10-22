@@ -8,6 +8,12 @@
 * This project utilizes AI assistance in some aspects of development.
 * Sep. 23, 2026: Due to new ideas about the project’s direction and the difficulty of maintaining and updating the old system, the project will undergo a major overhaul soon. This overhaul will also be incompatible with the previous tiles. Therefore, tile developers for this project, please take note.
 
+## Required Runtime Environment
+
+- Microsoft .NET Framework 4.0
+- Microsoft .NET Framework 3.0 (3.5 SP1)
+- Microsoft Visual C++ 2015 Redistributable
+
 ## Release
 
 Download the latest release from the Releases section.
@@ -24,5 +30,6 @@ Sidebar was inspired by the LongBar project. Thanks to the original LongBar auth
 
 ## Screenshot
 
-<img width="1024" height="768" alt="Windows XP Professional-2026-06-28-21-41-17" src="https://github.com/user-attachments/assets/bb8a1c5d-67a3-4f29-b0e8-8f70a8d8a50e" />
+<img width="1024" height="768" alt="Windows XP Professional-2026-10-22-10-24-30" src="https://github.com/user-attachments/assets/2beb5aca-10df-4f89-a5c1-64545a969a27" />
+
 
